@@ -7,7 +7,7 @@ Hold and position a squirming animal; release at the right moment to drop it in 
 
 ## Status
 
-The first playable handling experiment is live. Hold and drag the tortoise, wait for a useful squirming orientation, then release it onto the stack. The build uses the Blender character study with a simplified Rapier collider, automatic placement height, an orthographic tracking camera, score, and restart.
+The first playable handling experiment is live. Press to summon the next tortoise, drag while it squirms through three-dimensional orientations, then release it onto the stack. The build uses the Blender character study with a simplified Rapier collider, automatic placement height, an orthographic tracking camera, score, and restart.
 
 The gameplay screen intentionally contains no title or tagline—only the score, restart control, and a non-text gesture cue that disappears after the first touch.
 

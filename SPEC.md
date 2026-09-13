@@ -4,7 +4,7 @@
 
 First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps.
 
-The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. It includes relative one-finger positioning, smooth rotational squirming while held, exact-orientation release, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, falling detection, and restart. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The gameplay UI has no title or tagline. A production Vite build passes locally and the current mobile interaction check settles five consecutive centered releases, increments the score, and resets cleanly without browser errors. The playable GitHub Pages build has also passed the same mobile browser check over HTTPS, and its custom unknown-route response returns HTTP 404.
+The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses; that same press begins relative one-finger positioning and pronounced three-axis squirming. It includes exact-orientation release, generous rotation clearance above the stack, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, falling detection, and restart. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The gameplay UI has no title or tagline. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, settling, score increment, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
 
 ## Goal
 
@@ -23,10 +23,11 @@ No timer, combos, multiplayer, inventory, or progression systems for the first d
 ## Handling
 
 - One-finger hold, drag, release. No rotation buttons or manipulation modes.
-- Smooth semi-random 3D rotational wandering while held: momentum, pauses, small turns and occasional larger rolls. Upside-down orientations are possible.
+- Keep the next animal hidden until the player presses; the press summons it and begins handling.
+- Smooth, pronounced semi-random 3D rotational wandering while held: momentum, brief pauses, strong turns and occasional faster rolls. Upside-down orientations are possible.
 - Temperament varies by species, but useful release windows must occur regularly.
 - Capture the visible orientation exactly on release; stop deliberate squirming. Start by removing most angular momentum, then tune through playtests.
-- Automatic height keeps the held animal a short distance above first contact; a landing preview indicates contact, not guaranteed stability.
+- Automatic height keeps the held animal far enough above first contact to rotate freely around any axis without visually intersecting the stack; a landing preview indicates contact, not guaranteed stability.
 - Offset the animal from the finger for visibility, and use relative dragging to avoid jumps.
 - Held animals cannot push the tower around. Released animals use physics.
 - Prototype and validate the mapping of screen dragging to horizontal/depth placement; depth clarity remains an interaction risk.

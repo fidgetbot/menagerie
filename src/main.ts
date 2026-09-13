@@ -121,6 +121,7 @@ let lastTime = performance.now() / 1000;
 
 const halfExtents = new THREE.Vector3(1.06, 1.18, 0.66);
 const rotationMatrix = new THREE.Matrix4();
+const heldClearance = 1.15;
 
 function makeRig(model: THREE.Object3D) {
   const feet: THREE.Object3D[] = [];
@@ -206,7 +207,9 @@ function createHeld() {
   heldRig = makeRig(heldModel);
   held.add(heldModel);
   heldPosition.set(0, -0.25);
-  held.position.set(heldPosition.x, heldPosition.y, landingTop(heldPosition.x, heldPosition.y) + halfExtents.z + 0.14);
+  held.position.set(heldPosition.x, heldPosition.y, landingTop(heldPosition.x, heldPosition.y) + halfExtents.z + heldClearance);
+  squirmVelocity.set(0, 0, 0);
+  squirmTarget.set(0, 0, 0);
   scene.add(held);
   preview.visible = true;
 }
@@ -235,16 +238,16 @@ function animateRig(rig: Pick<Turtle, "eyes" | "head" | "feet">, time: number, i
 function updateSquirm(dt: number, time: number) {
   if (!held || pointerId === null) return;
   if (time >= squirmChangeAt) {
-    const pause = Math.random() < 0.28;
-    const energy = Math.random() < 0.12 ? 0.82 : 0.40;
+    const pause = Math.random() < 0.12;
+    const energy = Math.random() < 0.28 ? 3.20 : 1.90;
     squirmTarget.set(
       pause ? 0 : THREE.MathUtils.randFloatSpread(energy),
+      pause ? 0 : THREE.MathUtils.randFloatSpread(energy * 0.95),
       pause ? 0 : THREE.MathUtils.randFloatSpread(energy * 0.82),
-      pause ? 0 : THREE.MathUtils.randFloatSpread(energy * 0.58),
     );
-    squirmChangeAt = time + (pause ? THREE.MathUtils.randFloat(0.28, 0.55) : THREE.MathUtils.randFloat(0.65, 1.25));
+    squirmChangeAt = time + (pause ? THREE.MathUtils.randFloat(0.12, 0.26) : THREE.MathUtils.randFloat(0.68, 1.28));
   }
-  squirmVelocity.lerp(squirmTarget, 1 - Math.exp(-dt * 4.5));
+  squirmVelocity.lerp(squirmTarget, 1 - Math.exp(-dt * 7.0));
   const speed = squirmVelocity.length();
   if (speed > 0.0001) {
     const axis = squirmVelocity.clone().normalize();
@@ -259,7 +262,7 @@ function updateHeld(dt: number, time: number) {
   const top = landingTop(heldPosition.x, heldPosition.y);
   held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
   held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
-  held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + 0.14, 14, dt);
+  held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + heldClearance, 14, dt);
   preview.position.set(held.position.x, held.position.y, top + 0.025);
   const scale = THREE.MathUtils.clamp(1.15 - top * 0.035, 0.82, 1.15);
   preview.scale.setScalar(scale);
@@ -294,7 +297,6 @@ function updatePhysics(dt: number, time: number) {
         scoreElement.textContent = String(score);
         scoreElement.classList.add("bump");
         setTimeout(() => scoreElement.classList.remove("bump"), 180);
-        createHeld();
       }
     }
 
@@ -360,11 +362,15 @@ function reset() {
   scoreElement.textContent = "0";
   scoreElement.classList.remove("lost", "bump");
   createTurtle(new THREE.Vector3(0, 0, 0.65), new THREE.Quaternion(), true);
-  createHeld();
 }
 
 canvas.addEventListener("pointerdown", (event) => {
-  if (!held || lost || pointerId !== null) return;
+  if (lost || pointerId !== null) return;
+  if (!held) {
+    if (turtles.some((turtle) => !turtle.counted)) return;
+    createHeld();
+  }
+  if (!held) return;
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   dragOrigin.set(event.clientX, event.clientY);
@@ -391,7 +397,9 @@ canvas.addEventListener("pointerup", (event) => {
 });
 
 canvas.addEventListener("pointercancel", (event) => {
-  if (event.pointerId === pointerId) pointerId = null;
+  if (event.pointerId !== pointerId) return;
+  pointerId = null;
+  releaseHeld();
 });
 
 restartButton.addEventListener("click", reset);
