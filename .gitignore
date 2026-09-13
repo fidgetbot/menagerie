@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vite/
+coverage/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+*.blend1
+*.blend2
+tmp/
+renders/
