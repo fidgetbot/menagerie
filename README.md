@@ -12,7 +12,7 @@ First Blender character-design study complete. No playable implementation or dep
 ![Character lineup](assets/previews/lineup-v01.png)
 
 - [Editable Blender scene](assets/source/menagerie-lineup-v01.blend)
-- [Tortoise close-up](assets/previews/tortoise-detail-v01.png)
+- Close-ups: [Tortoise](assets/previews/tortoise-detail-v01.png) · [Capybara](assets/previews/capybara-detail-v01.png) · [Toucan](assets/previews/toucan-detail-v01.png)
 - [Asset notes and regeneration](assets/README.md)
 
 See [SPEC.md](SPEC.md) for the agreed direction, scope, and implementation milestones.
