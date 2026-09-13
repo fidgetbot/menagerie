@@ -7,7 +7,13 @@ Hold and position a squirming animal; release at the right moment to drop it in 
 
 ## Status
 
-Design foundation only. No playable implementation or deployment yet.
+First Blender character-design study complete. No playable implementation or deployment yet.
+
+![Character lineup](assets/previews/lineup-v01.png)
+
+- [Editable Blender scene](assets/source/menagerie-lineup-v01.blend)
+- [Tortoise close-up](assets/previews/tortoise-detail-v01.png)
+- [Asset notes and regeneration](assets/README.md)
 
 See [SPEC.md](SPEC.md) for the agreed direction, scope, and implementation milestones.
 

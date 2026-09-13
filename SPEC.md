@@ -2,7 +2,7 @@
 
 ## Status
 
-Initial agreed design. Implementation, asset generation, simulation tuning, and deployment have not started. Technical parameters below are prototype targets, not validated results.
+First character-design study created in Blender: three editable sculptures, a lineup render, and a tortoise close-up. Models use procedural geometry and simple material colors, not UV texture maps. No rigs, gameplay, collision simulation validation, or deployment yet. Technical parameters below remain prototype targets, not validated results.
 
 ## Goal
 
