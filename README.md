@@ -7,7 +7,9 @@ Hold and position a squirming animal; release at the right moment to drop it in 
 
 ## Status
 
-First Blender character-design study complete. No playable implementation or deployment yet.
+First Blender character-design study and GitHub Pages delivery pipeline complete. The live site currently contains a deployment smoke test, not playable gameplay.
+
+**Live:** https://fidgetbot.github.io/menagerie/
 
 ![Character lineup](assets/previews/lineup-v01.png)
 
@@ -19,4 +21,4 @@ See [SPEC.md](SPEC.md) for the agreed direction, scope, and implementation miles
 
 ## Planned technology
 
-TypeScript, Vite, Three.js, and Rapier. Blender models and animation exported as GLB; generated sound effects and music using Stable Audio 3. Railway serves the browser build; gameplay runs on the client.
+TypeScript, Vite, Three.js, and Rapier. Blender models and animation exported as GLB; generated sound effects and music using Stable Audio 3. GitHub Actions deploys the static browser build to GitHub Pages; gameplay runs entirely on the client.

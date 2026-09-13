@@ -2,7 +2,7 @@
 
 ## Status
 
-First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps. No rigs, gameplay, collision simulation validation, or deployment yet. Technical parameters below remain prototype targets, not validated results.
+First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps. A public GitHub Pages pipeline has been deployed and externally verified with a mobile-ready static smoke page and custom 404 response. No rigs, gameplay, or collision simulation validation yet. Technical parameters below remain prototype targets, not validated results.
 
 ## Goal
 
@@ -66,7 +66,7 @@ Held animals blink, look toward landing spots, move non-supporting parts and squ
 - Rapier for fixed-timestep physics and headless Node shape simulations, sharing parameters with gameplay.
 - Blender source models and animation exported to GLB; simple compound collision shapes closely follow visible geometry.
 - Stable Audio 3 for generated creature sounds, impacts, wobble cues and music; audition, edit and document generated assets. Unlock Web Audio on first touch.
-- Railway hosting; game simulation runs entirely on the player's device.
+- GitHub Actions deploys the static build to GitHub Pages; game simulation runs entirely on the player's device.
 - Optimize mesh complexity, textures, shadows and draw calls for real phones. Performance targets must be measured before claiming readiness.
 
 ## Shape validation
@@ -79,7 +79,7 @@ Before polishing models, test all nine ordered species pairings. Vary placement 
 2. Shared headless simulation harness and shape tuning.
 3. Three-animal art lineup at gameplay scale plus close-up; refine the visual direction.
 4. Optimized generated models, expressive animation, generated audio and polish.
-5. Phone testing and Railway deployment; verify the live playable build.
+5. Phone testing and GitHub Pages deployment; verify the live playable build.
 
 ## Repository practice
 
