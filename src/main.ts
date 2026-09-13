@@ -6,7 +6,6 @@ import RAPIER from "@dimforge/rapier3d-compat";
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
-const gesture = document.querySelector<HTMLDivElement>("#gesture")!;
 
 await RAPIER.init();
 
@@ -376,7 +375,6 @@ canvas.addEventListener("pointerdown", (event) => {
   dragOrigin.set(event.clientX, event.clientY);
   positionOrigin.copy(heldPosition);
   squirmChangeAt = 0;
-  gesture.classList.add("hidden");
 });
 
 canvas.addEventListener("pointermove", (event) => {
