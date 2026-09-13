@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#dce8dd">
+    <title>Menagerie</title>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game" aria-label="Animal stacking game"></canvas>
+      <output id="score" aria-label="Score">0</output>
+      <button id="restart" type="button" aria-label="Restart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg>
+      </button>
+      <div id="gesture" aria-hidden="true"><i></i><b></b></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

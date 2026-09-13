@@ -2,7 +2,9 @@
 
 ## Status
 
-First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps. A public GitHub Pages pipeline has been deployed and externally verified with a mobile-ready static smoke page and custom 404 response. No rigs, gameplay, or collision simulation validation yet. Technical parameters below remain prototype targets, not validated results.
+First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps.
+
+The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. It includes relative one-finger positioning, smooth rotational squirming while held, exact-orientation release, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, falling detection, and restart. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The gameplay UI has no title or tagline. A production Vite build passes locally and the current mobile interaction check settles five consecutive centered releases, increments the score, and resets cleanly without browser errors. Live Pages verification remains required for the newly playable build.
 
 ## Goal
 
@@ -75,9 +77,9 @@ Before polishing models, test all nine ordered species pairings. Vary placement 
 
 ## Milestones
 
-1. Graybox touch/physics prototype: three rough animal shapes, squirm/release, fixed tracking camera, score and restart.
-2. Shared headless simulation harness and shape tuning.
-3. Three-animal art lineup at gameplay scale plus close-up; refine the visual direction.
+1. Playable touch/physics experiment: one finished-study tortoise, squirm/release, fixed tracking camera, score and restart. **Implemented; phone feel still needs human playtesting.**
+2. Shared headless simulation harness and shape tuning; expand from the tortoise to all three colliders.
+3. Three-animal art lineup at gameplay scale plus close-ups; refine the visual direction. **First study complete.**
 4. Optimized generated models, expressive animation, generated audio and polish.
 5. Phone testing and GitHub Pages deployment; verify the live playable build.
 

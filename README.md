@@ -7,7 +7,9 @@ Hold and position a squirming animal; release at the right moment to drop it in 
 
 ## Status
 
-First Blender character-design study and GitHub Pages delivery pipeline complete. The live site currently contains a deployment smoke test, not playable gameplay.
+The first playable handling experiment is live. Hold and drag the tortoise, wait for a useful squirming orientation, then release it onto the stack. The build uses the Blender character study with a simplified Rapier collider, automatic placement height, an orthographic tracking camera, score, and restart.
+
+The gameplay screen intentionally contains no title or tagline—only the score, restart control, and a non-text gesture cue that disappears after the first touch.
 
 **Live:** https://fidgetbot.github.io/menagerie/
 
@@ -19,6 +21,15 @@ First Blender character-design study and GitHub Pages delivery pipeline complete
 
 See [SPEC.md](SPEC.md) for the agreed direction, scope, and implementation milestones.
 
-## Planned technology
+## Technology
 
-TypeScript, Vite, Three.js, and Rapier. Blender models and animation exported as GLB; generated sound effects and music using Stable Audio 3. GitHub Actions deploys the static browser build to GitHub Pages; gameplay runs entirely on the client.
+TypeScript, Vite, Three.js, and Rapier. The current tortoise is exported from Blender as GLB. GitHub Actions deploys the static browser build to GitHub Pages; gameplay runs entirely on the client. Generated sound effects, music, and fuller character animation remain planned.
+
+## Local development
+
+```sh
+npm install
+npm run dev
+```
+
+Use `npm run build` to run the TypeScript check and create the Pages artifact in `dist/`.
