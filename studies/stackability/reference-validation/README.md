@@ -1,6 +1,6 @@
 # Rebuilt assets: validation pass
 
-**Current status: dragonfly deferred by user request. The six-species release excludes its loading/selection. The 51 applicable scenarios below are clean; the original seven-species findings are preserved for future dragonfly work.**
+**Current status: six-species build released at `ad0c70e`; dragonfly deferred by user request. The six-species release excludes its loading/selection. The 51 applicable scenarios below are clean; the original seven-species findings are preserved for future dragonfly work.**
 
 ## Candidate
 

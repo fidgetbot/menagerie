@@ -130,3 +130,5 @@ Validation outcome: 69 baseline browser scenarios completed; one reproducible up
 ### Dragonfly deferred
 
 The playable roster is tortoise, capybara, toucan, rebuilt armadillo, rebuilt ram and rebuilt lower-tail skunk. Dragonfly is excluded from loading and random selection while its collision issue is deferred; source/export assets are retained for future work. The blocked dragonfly/toucan interaction is therefore not reachable in gameplay.
+
+Six-species release deployed to GitHub Pages at `ad0c70e`. The rebuilt armadillo, ram and skunk replace the earlier approximations; dragonfly remains excluded from model loading and random selection. The six-species production smoke passed locally, and the deployed JS and three replacement GLBs match the tested artifacts.
