@@ -124,6 +124,7 @@ type Animal = {
   hadSupport: boolean;
   lowering: boolean;
   lastSafeZ: number;
+  stackFrictionRestored: boolean;
   resolutionTimer?: number;
 };
 
@@ -152,6 +153,11 @@ const devSpeciesSequence = (devParams?.get("sequence") ?? "")
   .split(",")
   .filter((species): species is SpeciesId => speciesIds.includes(species as SpeciesId));
 let devSpeciesIndex = 0;
+const devRotations = (devParams?.get("rotations") ?? "")
+  .split(";")
+  .map((value) => value.split(",").map(Number))
+  .filter((value) => value.length === 4 && value.every(Number.isFinite));
+let devRotationIndex = 0;
 const rotationMatrix = new THREE.Matrix4();
 const controlAxis = new THREE.Vector3();
 const cameraRight = new THREE.Vector3();
@@ -248,7 +254,7 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z };
+  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z, stackFrictionRestored: fixed };
   animals.push(animal);
   recorder.event("animal_created", { id: animal.id, species, fixed, position: vector(position), rotation: quaternion(rotation) });
   return animal;
@@ -297,8 +303,11 @@ function createHeld() {
   heldHalfExtents.copy(template.halfExtents);
   heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
+  const devRotation = devRotations[devRotationIndex++ % devRotations.length];
   const eulerDegrees = ["rx", "ry", "rz"].map((key) => Number(devParams?.get(key)));
-  if (eulerDegrees.every(Number.isFinite)) {
+  if (devRotation) {
+    held.quaternion.set(devRotation[0], devRotation[1], devRotation[2], devRotation[3]).normalize();
+  } else if (eulerDegrees.every(Number.isFinite)) {
     held.quaternion.setFromEuler(new THREE.Euler(...eulerDegrees.map(THREE.MathUtils.degToRad) as [number, number, number]));
   } else {
     held.quaternion.copy(randomQuaternion());
@@ -458,12 +467,10 @@ function countAnimal(animal: Animal) {
   if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
   animal.counted = true;
   animal.landingPulse = 1;
-  animal.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-  animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-  for (let index = 0; index < animal.body.numColliders(); index += 1) {
-    animal.body.collider(index).setFriction(stackedFriction);
-  }
-  animal.body.sleep();
+  // Scoring is bookkeeping, not a physics transition. Forcing a marginally
+  // supported body asleep here can preserve penetration in Rapier's contact
+  // cache; a later solver pass then ejects the whole stack. Leave velocity,
+  // constraints, and sleep state untouched so the solver finishes naturally.
   score += 1;
   recorder.event("scored", { id: animal.id, species: animal.species, score, position: vector(animal.body.translation()), rotation: quaternion(animal.body.rotation()) });
   scoreElement.value = String(score);
@@ -520,6 +527,16 @@ function updatePhysics(dt: number, time: number) {
     animal.group.position.set(p.x, p.y, p.z);
     animal.group.quaternion.set(r.x, r.y, r.z, r.w);
     animateRig(animal, time + animal.birth, animal.fixed ? 0.18 : 0.28);
+
+    if (animal.counted && !animal.fixed && !animal.stackFrictionRestored && animal.body.isSleeping()) {
+      // Restore grippy stacking friction only after Rapier itself has accepted
+      // the contact configuration and put the body to sleep.
+      for (let index = 0; index < animal.body.numColliders(); index += 1) {
+        animal.body.collider(index).setFriction(stackedFriction);
+      }
+      animal.stackFrictionRestored = true;
+      recorder.event("natural_sleep", { id: animal.id, species: animal.species, position: vector(p) });
+    }
 
     if (animal.counted && !animal.fixed) maxStackUpwardSpeed = Math.max(maxStackUpwardSpeed, animal.body.linvel().z);
     if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame("platform_contact");
