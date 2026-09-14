@@ -8,8 +8,8 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 
 ## How to play
 
-- **Drag inside the ring** to tumble the waiting animal.
-- **Drag around the ring** to twist it clockwise or anticlockwise.
+- **Drag across the animal** to tumble it.
+- **Sweep around it** to twist it clockwise or anticlockwise.
 - **Flick** to spin it; touch again to stop and fine-tune.
 - **Tap Drop** to place it in its current orientation.
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
@@ -66,9 +66,11 @@ npm run test:expansion
 
 The stacking harness checks the 36 ordered species pairings and nine tilted/inverted placements, observes each result for ten seconds, and checks for unresolved turns, browser errors, physics anomalies, and replay failures. Natural topples are valid outcomes. Results and screenshots are written to ignored `tmp/expansion-test/`.
 
-`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rotation-ring.mjs` checks direct twist, sphere tumbling, drag-back undo, gesture locking, guide stability, momentum, touch-to-stop, cancellation, and placement orientation on phone and desktop layouts.
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, touch-to-stop, placement orientation, and bubble/no-bubble parity on phone and desktop layouts.
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
+
+Append `?bubble=1` to show the optional translucent rotation bubble while dragging. The default `?bubble=0` presentation has no rotation graphic; both variants use exactly the same control mapping.
 
 ### Project layout
 

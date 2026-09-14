@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "test:expansion": "node scripts/test-expansion.mjs"
+    "test:expansion": "node scripts/test-expansion.mjs",
+    "test:rotation": "node scripts/test-rounded-arcball.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "0.20.0",

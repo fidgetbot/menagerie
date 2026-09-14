@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { FlightRecorder } from "./trace";
-import { RotationGuide } from "./rotation-guide";
+import { RoundedArcball } from "./rounded-arcball";
 import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
@@ -14,6 +14,7 @@ const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace
 const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
+const bubbleEnabled = runtimeParams.get("bubble") === "1";
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
 shareTraceButton.hidden = !recorder.enabled;
 
@@ -175,9 +176,10 @@ let devRotationIndex = 0;
 const rotationMatrix = new THREE.Matrix4();
 const controlAxis = new THREE.Vector3();
 const controlRotation = new THREE.Quaternion();
-const rotationGuide = new RotationGuide();
+const rotationControl = new RoundedArcball(bubbleEnabled);
 const priorDragRotation = new THREE.Quaternion();
 const dragDelta = new THREE.Quaternion();
+const heldGesturePosition = new THREE.Vector3();
 const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
@@ -351,8 +353,8 @@ function releaseHeld() {
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
   if (!held || lost) return;
-  rotationGuide.end();
-  rotationGuide.update(null, camera);
+  rotationControl.end();
+  rotationControl.update(null, camera);
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
   newestReleased = animal;
   fallingFor = 0;
@@ -453,18 +455,29 @@ function updateRotationControl(dt: number) {
 function updateHeld(dt: number, time: number) {
   if (!held) return;
   updateRotationControl(dt);
-  const extent = verticalExtent(held.quaternion, heldHalfExtents);
-  const top = landingTop(heldPosition.x, heldPosition.y);
-  held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
-  held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
-  held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + heldClearance, 14, dt);
+  if (pointerId !== null) {
+    // Rotation changes the clearance required by asymmetric pieces. Freezing
+    // the pivot during a gesture prevents those corrections from making the
+    // animal drift away from the finger or out of the optional bubble.
+    held.position.copy(heldGesturePosition);
+  } else {
+    const extent = verticalExtent(held.quaternion, heldHalfExtents);
+    const top = landingTop(heldPosition.x, heldPosition.y);
+    held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
+    held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
+    held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + heldClearance, 14, dt);
+  }
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
+  if (diagnosticsEnabled) {
+    canvas.dataset.heldPosition = held.position.toArray().join(",");
+    canvas.dataset.heldQuaternion = held.quaternion.toArray().join(",");
+  }
 }
 
 function endGame(reason = "unknown", animal?: Animal) {
   if (lost) return;
-  rotationGuide.end();
-  rotationGuide.update(null, camera);
+  rotationControl.end();
+  rotationControl.update(null, camera);
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
   // Never retarget the camera to an older piece during a collapse.
@@ -744,7 +757,7 @@ function recordTrace(dt: number) {
 }
 
 function reset() {
-  rotationGuide.end();
+  rotationControl.end();
   recorder.event("reset", { score, engineFault });
   fallTarget = null;
   newestReleased = null;
@@ -786,9 +799,11 @@ canvas.addEventListener("pointerdown", (event) => {
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   spinVelocity.set(0, 0, 0);
+  heldGesturePosition.copy(held.position);
   lastDragTime = performance.now();
   dragOrigin.set(event.clientX, event.clientY);
-  rotationGuide.begin(event.clientX, event.clientY, held.quaternion, camera);
+  rotationControl.update(held, camera);
+  rotationControl.begin(event.clientX, event.clientY, held.quaternion, camera);
   rotationInput.set(0, 0);
   recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
 });
@@ -801,13 +816,13 @@ canvas.addEventListener("pointermove", (event) => {
   const distance = rotationInput.length();
   if (distance === 0) return;
   priorDragRotation.copy(held.quaternion);
-  rotationGuide.move(event.clientX, event.clientY, held.quaternion);
+  rotationControl.move(event.clientX, event.clientY, held.quaternion);
   dragDelta.copy(held.quaternion).multiply(priorDragRotation.invert()).normalize();
   if (dragDelta.w < 0) dragDelta.set(-dragDelta.x, -dragDelta.y, -dragDelta.z, -dragDelta.w);
   const angle = 2 * Math.acos(THREE.MathUtils.clamp(dragDelta.w, -1, 1));
   controlAxis.set(dragDelta.x, dragDelta.y, dragDelta.z).normalize();
-  const speed = Math.min(2.5, angle / Math.max(0.008, (now - lastDragTime) / 1000));
-  spinVelocity.copy(controlAxis).multiplyScalar(speed * 0.65);
+  const speed = Math.min(1.5, angle / Math.max(0.008, (now - lastDragTime) / 1000));
+  spinVelocity.copy(controlAxis).multiplyScalar(speed * 0.45);
   lastDragTime = now;
 });
 
@@ -815,7 +830,7 @@ function finishPointer(pointer: number, reason: string) {
   if (pointer !== pointerId) return;
   recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
-  rotationGuide.end();
+  rotationControl.end();
   rotationInput.set(0, 0);
   if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) spinVelocity.set(0, 0, 0);
 }
@@ -904,7 +919,7 @@ function frame(nowMilliseconds: number) {
       updatePhysics(dt, time);
       updateCamera(dt);
     }
-    rotationGuide.update(held, camera);
+    rotationControl.update(held, camera);
     renderer.render(scene, camera);
     recordTrace(dt);
   } catch (error) {

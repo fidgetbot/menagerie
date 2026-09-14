@@ -6,7 +6,7 @@ const results=[];
 for(const target of ['armadillo','ram','skunk']){
  for(let i=0;i<80&&(await page.locator('#game').getAttribute('data-held-species'))!==target;i++){await page.reload();await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies);}
  if((await page.locator('#game').getAttribute('data-held-species'))!==target)throw Error(`Missing ${target}`);
- const g=await page.locator('#rotation-guide').boundingBox();const x=g.x+g.width/2,y=g.y+g.height/2;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+45,y+20,{steps:8});await page.waitForTimeout(100);await page.mouse.up();await page.locator("#drop").click();
+ const g=await page.locator('#rotation-bubble').evaluate(e=>({x:Number(e.dataset.centerX),y:Number(e.dataset.centerY)}));const x=g.x,y=g.y;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+45,y+20,{steps:8});await page.waitForTimeout(100);await page.mouse.up();await page.locator("#drop").click();
  await page.waitForFunction(()=>document.querySelector('#score').classList.contains('lost')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});await page.waitForTimeout(10000);
  await page.evaluate(()=>dispatchEvent(new Event('pagehide')));const trace=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('menagerie-flight-recorder-v1')));
  const lost=await page.locator('#score').evaluate(e=>e.classList.contains('lost'));const score=await page.locator('#score').textContent();
