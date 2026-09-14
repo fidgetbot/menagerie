@@ -151,6 +151,24 @@ html, body, #app {
 #restart:active { transform: scale(.92); }
 #restart svg { width: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
+#share-trace {
+  position: absolute;
+  z-index: 5;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(18px, calc(env(safe-area-inset-bottom) + 8px));
+  min-height: 42px;
+  padding: 0 17px;
+  border: 1px solid #ffffff94;
+  border-radius: 22px;
+  background: #173c3ad9;
+  box-shadow: 0 6px 20px #315b4c25;
+  color: #fffdf3;
+  font: 650 13px/1 "Avenir Next", "Helvetica Neue", sans-serif;
+  letter-spacing: .045em;
+}
+
+#share-trace[hidden] { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   #tutorial { transition: none; }
 }

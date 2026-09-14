@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
+import { FlightRecorder } from "./trace";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
@@ -9,8 +10,12 @@ const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
 const gameOver = document.querySelector<HTMLElement>("#game-over")!;
 const playAgainButton = document.querySelector<HTMLButtonElement>("#play-again")!;
-const devParams = import.meta.env.DEV ? new URLSearchParams(location.search) : null;
+const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
+const runtimeParams = new URLSearchParams(location.search);
+const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
+const recorder = new FlightRecorder(runtimeParams.has("trace"));
+shareTraceButton.hidden = !recorder.enabled;
 
 await RAPIER.init();
 
@@ -102,6 +107,7 @@ const platformCollider = world.createCollider(
 );
 
 type Animal = {
+  id: number;
   species: SpeciesId;
   halfExtents: THREE.Vector3;
   body: RAPIER.RigidBody;
@@ -138,6 +144,8 @@ let lastTime = performance.now() / 1000;
 let lastFrameWallTime = performance.now();
 let engineFault = false;
 let devFaultInjected = false;
+let nextAnimalId = 1;
+const activeUpwardAnomalies = new Set<number>();
 
 let speciesBag: SpeciesId[] = [];
 const devSpeciesSequence = (devParams?.get("sequence") ?? "")
@@ -153,6 +161,18 @@ const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
 const loweringSpeed = 4.2;
+
+function number(value: number) {
+  return Math.round(value * 10000) / 10000;
+}
+
+function vector(value: { x: number; y: number; z: number }) {
+  return [number(value.x), number(value.y), number(value.z)];
+}
+
+function quaternion(value: { x: number; y: number; z: number; w: number }) {
+  return [number(value.x), number(value.y), number(value.z), number(value.w)];
+}
 
 function randomQuaternion() {
   // Uniform random rotation rather than independent Euler angles, which bias
@@ -228,8 +248,9 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z };
+  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z };
   animals.push(animal);
+  recorder.event("animal_created", { id: animal.id, species, fixed, position: vector(position), rotation: quaternion(rotation) });
   return animal;
 }
 
@@ -291,11 +312,13 @@ function createHeld() {
   rotationInput.set(0, 0);
   scene.add(held);
   canvas.dataset.heldSpecies = heldSpecies;
+  recorder.event("held_ready", { species: heldSpecies, position: vector(held.position), rotation: quaternion(held.quaternion) });
 }
 
 function releaseHeld() {
   if (!held || lost) return;
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
+  recorder.event("released", { id: animal.id, species: animal.species, position: vector(held.position), rotation: quaternion(held.quaternion) });
   // Preserve the generous rotation clearance without turning it into impact
   // energy. Descend as a non-colliding sensor to the actual collider surface.
   animal.lowering = true;
@@ -366,6 +389,7 @@ function intersectsLandingSurface(animal: Animal) {
 
 function finishLowering(animal: Animal, time: number) {
   const position = animal.body.translation();
+  recorder.event("lowering_contact", { id: animal.id, species: animal.species, intersectingZ: number(position.z), safeZ: number(animal.lastSafeZ) });
   animal.body.setTranslation({ x: position.x, y: position.y, z: animal.lastSafeZ }, true);
   for (let index = 0; index < animal.body.numColliders(); index += 1) {
     animal.body.collider(index).setSensor(false);
@@ -408,8 +432,9 @@ function updateHeld(dt: number, time: number) {
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
 }
 
-function endGame() {
+function endGame(reason = "unknown") {
   if (lost) return;
+  recorder.event("game_over", { reason, score, engineFault });
   lost = true;
   for (const animal of animals) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
@@ -440,6 +465,7 @@ function countAnimal(animal: Animal) {
   }
   animal.body.sleep();
   score += 1;
+  recorder.event("scored", { id: animal.id, species: animal.species, score, position: vector(animal.body.translation()), rotation: quaternion(animal.body.rotation()) });
   scoreElement.value = String(score);
   scoreElement.textContent = String(score);
   scoreElement.classList.add("bump");
@@ -456,18 +482,18 @@ function resolveOverdueAnimal(animal: Animal) {
     const frameStopped = performance.now() - lastFrameWallTime > 1500;
     if (frameStopped) {
       engineFault = true;
-      endGame();
+      endGame("frame_watchdog");
     } else if (animal.lowering) {
-      endGame();
+      endGame("lowering_timeout");
     } else if (touchesStack(animal)) {
       countAnimal(animal);
     } else {
-      endGame();
+      endGame("unsupported_watchdog");
     }
   } catch (error) {
     console.error("Failed to resolve overdue animal", error);
     engineFault = true;
-    endGame();
+    endGame("watchdog_exception");
   }
 }
 
@@ -496,7 +522,7 @@ function updatePhysics(dt: number, time: number) {
     animateRig(animal, time + animal.birth, animal.fixed ? 0.18 : 0.28);
 
     if (animal.counted && !animal.fixed) maxStackUpwardSpeed = Math.max(maxStackUpwardSpeed, animal.body.linvel().z);
-    if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame();
+    if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame("platform_contact");
 
     if (!lost && !animal.fixed && !animal.counted && !animal.lowering) {
       const linear = animal.body.linvel();
@@ -509,6 +535,13 @@ function updatePhysics(dt: number, time: number) {
         // Absorb the first impact like a soft toy, then restore strong static
         // stacking friction once the placement has been counted.
         animal.hadSupport = true;
+        recorder.event("first_support", {
+          id: animal.id,
+          species: animal.species,
+          position: vector(p),
+          linearVelocity: vector(linear),
+          angularVelocity: vector(angular),
+        });
         animal.body.setLinvel({ x: linear.x * 0.45, y: linear.y * 0.45, z: Math.min(linear.z, 0) }, true);
         animal.body.setAngvel({ x: angular.x * 0.55, y: angular.y * 0.55, z: angular.z * 0.55 }, true);
       }
@@ -541,11 +574,11 @@ function updatePhysics(dt: number, time: number) {
       } else if (age > 8 && !supported) {
         // Defensive deadline: a release must always resolve, even if a future
         // collider configuration avoids both the platform and the stack.
-        endGame();
+        endGame("unsupported_deadline");
       }
     }
 
-    if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame();
+    if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame("out_of_bounds");
     if (animal.landingPulse > 0) {
       animal.landingPulse = Math.max(0, animal.landingPulse - dt * 4.5);
       const squash = Math.sin(animal.landingPulse * Math.PI) * 0.035;
@@ -583,7 +616,58 @@ function resize() {
   camera.updateProjectionMatrix();
 }
 
+function recordTrace(dt: number) {
+  if (!recorder.enabled) return;
+  const bodies = animals.map((animal) => {
+    const position = animal.body.translation();
+    const rotation = animal.body.rotation();
+    const linearVelocity = animal.body.linvel();
+    const angularVelocity = animal.body.angvel();
+    const upwardAnomaly = (animal.counted || animal.hadSupport) && linearVelocity.z > 0.75;
+    if (upwardAnomaly && !activeUpwardAnomalies.has(animal.id)) {
+      activeUpwardAnomalies.add(animal.id);
+      recorder.event("upward_anomaly", {
+        id: animal.id,
+        species: animal.species,
+        counted: animal.counted,
+        position: vector(position),
+        linearVelocity: vector(linearVelocity),
+        angularVelocity: vector(angularVelocity),
+      });
+    } else if (!upwardAnomaly && linearVelocity.z < 0.25) {
+      activeUpwardAnomalies.delete(animal.id);
+    }
+    return {
+      id: animal.id,
+      species: animal.species,
+      counted: animal.counted,
+      fixed: animal.fixed,
+      lowering: animal.lowering,
+      supported: animal.hadSupport,
+      sleeping: animal.body.isSleeping(),
+      p: vector(position),
+      q: quaternion(rotation),
+      v: vector(linearVelocity),
+      w: vector(angularVelocity),
+    };
+  });
+  recorder.sample({
+    dt: number(dt),
+    accumulator: number(accumulator),
+    score,
+    lost,
+    engineFault,
+    pointer: pointerId,
+    rotationInput: [number(rotationInput.x), number(rotationInput.y)],
+    held: held && heldSpecies ? { species: heldSpecies, p: vector(held.position), q: quaternion(held.quaternion) } : null,
+    bodies,
+  });
+  const snapshot = recorder.snapshot();
+  shareTraceButton.title = `Share trace (${snapshot.samples} samples)`;
+}
+
 function reset() {
+  recorder.event("reset", { score, engineFault });
   for (const animal of animals.splice(0)) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
     world.removeRigidBody(animal.body);
@@ -618,6 +702,7 @@ canvas.addEventListener("pointerdown", (event) => {
   canvas.setPointerCapture(pointerId);
   dragOrigin.set(event.clientX, event.clientY);
   rotationInput.set(0, 0);
+  recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
 });
 
 canvas.addEventListener("pointermove", (event) => {
@@ -625,36 +710,42 @@ canvas.addEventListener("pointermove", (event) => {
   rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
 });
 
-function finishPointer(pointer: number) {
+function finishPointer(pointer: number, reason: string) {
   if (pointer !== pointerId) return;
+  recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
   rotationInput.set(0, 0);
   releaseHeld();
 }
 
-canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId));
+canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId, "canvas_pointerup"));
 canvas.addEventListener("pointercancel", (event) => {
-  finishPointer(event.pointerId);
+  finishPointer(event.pointerId, "canvas_pointercancel");
 });
 // Mobile browsers can revoke pointer capture when their own chrome or a system
 // gesture takes over. Without this path, the old pointer ID remains latched and
 // all later presses are ignored, leaving the animal suspended indefinitely.
-canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId));
-addEventListener("pointerup", (event) => finishPointer(event.pointerId), { capture: true });
-addEventListener("pointercancel", (event) => finishPointer(event.pointerId), { capture: true });
+canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId, "lost_pointer_capture"));
+addEventListener("pointerup", (event) => finishPointer(event.pointerId, "window_pointerup"), { capture: true });
+addEventListener("pointercancel", (event) => finishPointer(event.pointerId, "window_pointercancel"), { capture: true });
 addEventListener("touchend", finishInterruptedPointer, { capture: true });
 addEventListener("touchcancel", finishInterruptedPointer, { capture: true });
 
 function finishInterruptedPointer() {
-  if (pointerId !== null) finishPointer(pointerId);
+  if (pointerId !== null) finishPointer(pointerId, "touch_or_page_interruption");
 }
 
-addEventListener("blur", finishInterruptedPointer);
+addEventListener("blur", () => {
+  recorder.event("window_blur", { pointer: pointerId });
+  finishInterruptedPointer();
+});
 document.addEventListener("visibilitychange", () => {
+  recorder.event("visibility_changed", { state: document.visibilityState, pointer: pointerId });
   if (document.visibilityState === "hidden") finishInterruptedPointer();
 });
 
 function restartGame() {
+  recorder.event("restart_requested", { score, engineFault });
   // Rebuild the Rapier/WebGL state after an engine fault; ordinary gameplay
   // losses still use the faster in-memory reset.
   if (engineFault) location.reload();
@@ -663,6 +754,22 @@ function restartGame() {
 
 restartButton.addEventListener("click", restartGame);
 playAgainButton.addEventListener("click", restartGame);
+shareTraceButton.addEventListener("click", async () => {
+  shareTraceButton.disabled = true;
+  const label = shareTraceButton.textContent;
+  try {
+    recorder.event("trace_shared", recorder.snapshot());
+    shareTraceButton.textContent = "Preparing…";
+    await recorder.share();
+    shareTraceButton.textContent = "Shared";
+  } catch (error) {
+    if (!(error instanceof DOMException && error.name === "AbortError")) console.error("Could not share trace", error);
+    shareTraceButton.textContent = label;
+  } finally {
+    shareTraceButton.disabled = false;
+    setTimeout(() => { shareTraceButton.textContent = label; }, 1200);
+  }
+});
 addEventListener("resize", resize);
 
 resize();
@@ -682,10 +789,12 @@ function frame(nowMilliseconds: number) {
       updateCamera(dt);
     }
     renderer.render(scene, camera);
+    recordTrace(dt);
   } catch (error) {
     console.error("Menagerie frame failed", error);
+    recorder.event("frame_exception", { message: error instanceof Error ? error.message : String(error) });
     engineFault = true;
-    endGame();
+    endGame("frame_exception");
   }
 }
 
