@@ -9,7 +9,7 @@ Hold and position a squirming animal; release at the right moment to drop it in 
 
 The first playable handling experiment is live. Press to summon the next tortoise, drag while it squirms through three-dimensional orientations, then release it onto the stack. The build uses the Blender character study with a simplified Rapier collider, automatic placement height, an orthographic tracking camera, score, and restart.
 
-The current gameplay screen contains only the score and restart control. The earlier animated startup gesture cue has been removed; concise written instructions are the intended replacement.
+The animated startup gesture cue has been replaced by four compact written instructions in the concept study's restrained, letter-spaced typographic style. They fade after the first successful landing, leaving only the score and restart control.
 
 **Live:** https://fidgetbot.github.io/menagerie/
 

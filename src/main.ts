@@ -5,6 +5,7 @@ import RAPIER from "@dimforge/rapier3d-compat";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
+const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
 
 await RAPIER.init();
@@ -295,6 +296,7 @@ function updatePhysics(dt: number, time: number) {
         scoreElement.value = String(score);
         scoreElement.textContent = String(score);
         scoreElement.classList.add("bump");
+        tutorial.classList.add("hidden");
         setTimeout(() => scoreElement.classList.remove("bump"), 180);
       }
     }
