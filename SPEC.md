@@ -10,9 +10,9 @@ The active roster is tortoise, capybara, toucan, armadillo, ram, and skunk. Only
 
 ## Controls and interface
 
-Drag displacement directly rotates the waiting animal around camera-relative axes. Flick momentum decays exponentially; touching catches it immediately. Finger release never drops it. Position and height are automatic. The bottom Drop button commits the visible orientation with zero rotational momentum, disables while settling, and becomes Play again immediately on loss. Play again resets the run, score, controls, and camera. There is no top-right restart control or Game over overlay.
+A thin muted-teal ring with two small directional arrows surrounds the waiting animal. Its 44-pixel-wide invisible rim target selects twist about the viewing direction; starting inside selects sphere-based tumble. The selected gesture and guide position remain fixed until pointer release. Rotation is anchored to the pointer-down orientation, so returning to the start undoes the drag. Touches outside catch the animal without rotating it. Gentle flick momentum is capped at 1.625 rad/s and decays exponentially at rate 5/s; touching catches it immediately. The rim brightens during twisting, and the guide disappears on Drop. Finger release never drops it. Position and height are automatic. The bottom Drop button commits the visible orientation with zero rotational momentum, disables while settling, and becomes Play again immediately on loss. Play again resets the run, score, controls, and camera. There is no top-right restart control or Game over overlay.
 
-The initial two-line stacking goal fades after the first score. There is no gesture tutorial text. On page load only, the first animal receives a 4.4 rad/s diagonal flick using ordinary damping; reduced-motion preference skips this cue. Ordinary replay and subsequent animals receive no opening flick. Cancellation, blur, and page hiding stop rotation without placing a piece.
+The initial two-line stacking goal fades after the first score. There is no gesture tutorial text or XYZ axis labeling. On page load only, the first animal receives a 4.4 rad/s diagonal flick using ordinary damping; reduced-motion preference skips this cue. Ordinary replay and subsequent animals receive no opening flick. Cancellation, blur, and page hiding stop rotation without placing a piece.
 
 ## Camera
 

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { FlightRecorder } from "./trace";
+import { RotationGuide } from "./rotation-guide";
 import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
@@ -173,9 +174,10 @@ const devRotations = (devParams?.get("rotations") ?? "")
 let devRotationIndex = 0;
 const rotationMatrix = new THREE.Matrix4();
 const controlAxis = new THREE.Vector3();
-const cameraRight = new THREE.Vector3();
-const cameraUp = new THREE.Vector3();
 const controlRotation = new THREE.Quaternion();
+const rotationGuide = new RotationGuide();
+const priorDragRotation = new THREE.Quaternion();
+const dragDelta = new THREE.Quaternion();
 const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
@@ -349,6 +351,8 @@ function releaseHeld() {
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
   if (!held || lost) return;
+  rotationGuide.end();
+  rotationGuide.update(null, camera);
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
   newestReleased = animal;
   fallingFor = 0;
@@ -440,8 +444,8 @@ function updateRotationControl(dt: number) {
   const speed = spinVelocity.length();
   if (speed < 0.025) { spinVelocity.set(0, 0, 0); return; }
   // Exact exponential decay keeps the flick consistent across frame rates.
-  const decay = Math.exp(-3.2 * dt);
-  controlRotation.setFromAxisAngle(controlAxis.copy(spinVelocity).normalize(), speed * (1 - decay) / 3.2);
+  const decay = Math.exp(-5.0 * dt);
+  controlRotation.setFromAxisAngle(controlAxis.copy(spinVelocity).normalize(), speed * (1 - decay) / 5.0);
   held.quaternion.premultiply(controlRotation).normalize();
   spinVelocity.multiplyScalar(decay);
 }
@@ -459,6 +463,8 @@ function updateHeld(dt: number, time: number) {
 
 function endGame(reason = "unknown", animal?: Animal) {
   if (lost) return;
+  rotationGuide.end();
+  rotationGuide.update(null, camera);
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
   // Never retarget the camera to an older piece during a collapse.
@@ -738,6 +744,7 @@ function recordTrace(dt: number) {
 }
 
 function reset() {
+  rotationGuide.end();
   recorder.event("reset", { score, engineFault });
   fallTarget = null;
   newestReleased = null;
@@ -781,6 +788,7 @@ canvas.addEventListener("pointerdown", (event) => {
   spinVelocity.set(0, 0, 0);
   lastDragTime = performance.now();
   dragOrigin.set(event.clientX, event.clientY);
+  rotationGuide.begin(event.clientX, event.clientY, held.quaternion, camera);
   rotationInput.set(0, 0);
   recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
 });
@@ -792,15 +800,14 @@ canvas.addEventListener("pointermove", (event) => {
   dragOrigin.set(event.clientX, event.clientY);
   const distance = rotationInput.length();
   if (distance === 0) return;
-  const radius = Math.max(100, Math.min(innerWidth, innerHeight) * 0.43);
-  cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
-  cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
-  controlAxis.copy(cameraUp).multiplyScalar(rotationInput.x).addScaledVector(cameraRight, rotationInput.y).normalize();
-  const angle = distance / radius;
-  controlRotation.setFromAxisAngle(controlAxis, angle);
-  held.quaternion.premultiply(controlRotation).normalize();
-  const speed = Math.min(5, angle / Math.max(0.008, (now - lastDragTime) / 1000));
-  spinVelocity.lerp(controlAxis.multiplyScalar(speed), 0.65);
+  priorDragRotation.copy(held.quaternion);
+  rotationGuide.move(event.clientX, event.clientY, held.quaternion);
+  dragDelta.copy(held.quaternion).multiply(priorDragRotation.invert()).normalize();
+  if (dragDelta.w < 0) dragDelta.set(-dragDelta.x, -dragDelta.y, -dragDelta.z, -dragDelta.w);
+  const angle = 2 * Math.acos(THREE.MathUtils.clamp(dragDelta.w, -1, 1));
+  controlAxis.set(dragDelta.x, dragDelta.y, dragDelta.z).normalize();
+  const speed = Math.min(2.5, angle / Math.max(0.008, (now - lastDragTime) / 1000));
+  spinVelocity.copy(controlAxis).multiplyScalar(speed * 0.65);
   lastDragTime = now;
 });
 
@@ -808,6 +815,7 @@ function finishPointer(pointer: number, reason: string) {
   if (pointer !== pointerId) return;
   recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
+  rotationGuide.end();
   rotationInput.set(0, 0);
   if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) spinVelocity.set(0, 0, 0);
 }
@@ -896,6 +904,7 @@ function frame(nowMilliseconds: number) {
       updatePhysics(dt, time);
       updateCamera(dt);
     }
+    rotationGuide.update(held, camera);
     renderer.render(scene, camera);
     recordTrace(dt);
   } catch (error) {

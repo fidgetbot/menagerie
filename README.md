@@ -8,7 +8,8 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 
 ## How to play
 
-- **Drag** to rotate the waiting animal directly.
+- **Drag inside the ring** to tumble the waiting animal.
+- **Drag around the ring** to twist it clockwise or anticlockwise.
 - **Flick** to spin it; touch again to stop and fine-tune.
 - **Tap Drop** to place it in its current orientation.
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
@@ -65,7 +66,7 @@ npm run test:expansion
 
 The stacking harness checks the 36 ordered species pairings and nine tilted/inverted placements, observes each result for ten seconds, and checks for unresolved turns, browser errors, physics anomalies, and replay failures. Natural topples are valid outcomes. Results and screenshots are written to ignored `tmp/expansion-test/`.
 
-`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-trackball.mjs` checks rotation, momentum, touch-to-stop, placement orientation, and input cancellation against development or production builds.
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rotation-ring.mjs` checks direct twist, sphere tumbling, drag-back undo, gesture locking, guide stability, momentum, touch-to-stop, cancellation, and placement orientation on phone and desktop layouts.
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
 
