@@ -82,7 +82,7 @@ modelTemplate.traverse((object) => {
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
 world.timestep = 1 / 60;
 const platformBody = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, -0.22));
-world.createCollider(
+const platformCollider = world.createCollider(
   RAPIER.ColliderDesc.cylinder(0.22, 3)
     .setRotation({ x: Math.SQRT1_2, y: 0, z: 0, w: Math.SQRT1_2 })
     .setFriction(0.86),
@@ -122,6 +122,22 @@ let lastTime = performance.now() / 1000;
 const halfExtents = new THREE.Vector3(1.06, 1.18, 0.66);
 const rotationMatrix = new THREE.Matrix4();
 const heldClearance = 1.15;
+
+function randomQuaternion() {
+  // Uniform random rotation rather than independent Euler angles, which bias
+  // heavily toward some orientations.
+  const u1 = Math.random();
+  const u2 = Math.random() * Math.PI * 2;
+  const u3 = Math.random() * Math.PI * 2;
+  const a = Math.sqrt(1 - u1);
+  const b = Math.sqrt(u1);
+  return new THREE.Quaternion(
+    a * Math.sin(u2),
+    a * Math.cos(u2),
+    b * Math.sin(u3),
+    b * Math.cos(u3),
+  );
+}
 
 function makeRig(model: THREE.Object3D) {
   const feet: THREE.Object3D[] = [];
@@ -206,8 +222,13 @@ function createHeld() {
   heldModel = modelTemplate.clone(true);
   heldRig = makeRig(heldModel);
   held.add(heldModel);
+  held.quaternion.copy(randomQuaternion());
   heldPosition.set(0, -0.25);
-  held.position.set(heldPosition.x, heldPosition.y, landingTop(heldPosition.x, heldPosition.y) + halfExtents.z + heldClearance);
+  held.position.set(
+    heldPosition.x,
+    heldPosition.y,
+    landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion) + heldClearance,
+  );
   squirmVelocity.set(0, 0, 0);
   squirmTarget.set(0, 0, 0);
   scene.add(held);
@@ -233,6 +254,17 @@ function animateRig(rig: Pick<Turtle, "eyes" | "head" | "feet">, time: number, i
   });
   const blink = Math.sin(time * 0.73 + 1.4) > 0.985 ? 0.16 : 1;
   rig.eyes.forEach((eye) => { eye.scale.z = blink; });
+}
+
+function touchesPlatform(turtle: Turtle) {
+  for (let index = 0; index < turtle.body.numColliders(); index += 1) {
+    let touching = false;
+    world.contactPair(turtle.body.collider(index), platformCollider, (manifold) => {
+      if (manifold.numSolverContacts() > 0) touching = true;
+    });
+    if (touching) return true;
+  }
+  return false;
 }
 
 function updateSquirm(dt: number, time: number) {
@@ -283,7 +315,9 @@ function updatePhysics(dt: number, time: number) {
     turtle.group.quaternion.set(r.x, r.y, r.z, r.w);
     animateRig(turtle, time + turtle.birth, turtle.fixed ? 0.18 : 0.28);
 
-    if (!turtle.fixed && !turtle.counted) {
+    if (!turtle.fixed && touchesPlatform(turtle)) lost = true;
+
+    if (!lost && !turtle.fixed && !turtle.counted) {
       const linear = turtle.body.linvel();
       const angular = turtle.body.angvel();
       const quiet = turtle.body.isSleeping()
@@ -301,7 +335,7 @@ function updatePhysics(dt: number, time: number) {
       }
     }
 
-    if (!turtle.fixed && (p.z < -3 || Math.hypot(p.x, p.y) > 5.2)) lost = true;
+    if (!turtle.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) lost = true;
     if (turtle.landingPulse > 0) {
       turtle.landingPulse = Math.max(0, turtle.landingPulse - dt * 4.5);
       const squash = Math.sin(turtle.landingPulse * Math.PI) * 0.035;

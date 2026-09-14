@@ -4,7 +4,7 @@
 
 First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps.
 
-The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses; that same press begins relative one-finger positioning and pronounced three-axis squirming. It includes exact-orientation release, generous rotation clearance above the stack, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, falling detection, and restart. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The animated startup gesture slider has been replaced by four short written instructions, styled after the concept study typography and faded after the first successful landing. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, settling, score increment, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
+The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses; it appears in a uniformly randomized three-dimensional orientation, and that same press begins relative one-finger positioning and pronounced three-axis squirming. It includes exact-orientation release, generous rotation clearance above the stack, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, platform-contact fall detection, and restart. Any released tortoise touching the platform ends the run, including one that previously scored and later falls from the stack. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The animated startup gesture slider has been replaced by four short written instructions, styled after the concept study typography and faded after the first successful landing. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, valid settlement, platform-fall failure, score behavior, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
 
 ## Goal
 
@@ -24,6 +24,7 @@ No timer, combos, multiplayer, inventory, or progression systems for the first d
 
 - One-finger hold, drag, release. No rotation buttons or manipulation modes.
 - Keep the next animal hidden until the player presses; the press summons it and begins handling.
+- Give every summoned animal an independent, uniformly randomized 3D starting orientation.
 - Smooth, pronounced semi-random 3D rotational wandering while held: momentum, brief pauses, strong turns and occasional faster rolls. Upside-down orientations are possible.
 - Temperament varies by species, but useful release windows must occur regularly.
 - Capture the visible orientation exactly on release; stop deliberate squirming. Start by removing most angular momentum, then tune through playtests.
