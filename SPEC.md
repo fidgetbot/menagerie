@@ -126,3 +126,7 @@ Following visual review of the seven-animal integration, the four new models are
 `review/reference-assets-validation` exports the reviewed Blender source using `scripts/export_reference_animals.py`. Visual meshes and convex collision pieces share one transform; horns and the skunk tail use multiple hull sections to retain their concavity. The dragonfly and skunk use uniform scale 0.72, versus 0.9 for armadillo/ram, to fit the existing fixed phone camera without changing proportions. The original three models and colliders, scoring/sleep logic, controls, and silent audio state are unchanged. Validation evidence and browser screenshots live in `studies/stackability/reference-validation/`. This review branch is not deployed.
 
 Validation outcome: 69 baseline browser scenarios completed; one reproducible upward-anomaly case (toucan landing on dragonfly) prevents a clean release. The candidate remains on the review branch; exploratory mass/friction tweaks were rejected and reverted. See the validation README and replay trace for the unresolved contact behavior.
+
+### Dragonfly deferred
+
+The playable roster is tortoise, capybara, toucan, rebuilt armadillo, rebuilt ram and rebuilt lower-tail skunk. Dragonfly is excluded from loading and random selection while its collision issue is deferred; source/export assets are retained for future work. The blocked dragonfly/toucan interaction is therefore not reachable in gameplay.

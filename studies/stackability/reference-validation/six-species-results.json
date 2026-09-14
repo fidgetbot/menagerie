@@ -1,0 +1,554 @@
+[
+  {
+    "a": "tortoise",
+    "b": "toucan",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "tortoise",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "tortoise",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "tortoise",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "tortoise",
+    "b": "ram",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "tortoise",
+    "b": "skunk",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "toucan",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "skunk",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "capybara",
+    "b": "ram",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "toucan",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "ram",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "toucan",
+    "b": "skunk",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "toucan",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "ram",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "skunk",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "toucan",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "skunk",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "tortoise",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "capybara",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "toucan",
+    "rx": 0,
+    "score": "1",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "armadillo",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "ram",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 0,
+    "score": "2",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 30,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 90,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 180,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 30,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 90,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 180,
+    "score": "0",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 30,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 90,
+    "score": "0",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 180,
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "0",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  }
+]

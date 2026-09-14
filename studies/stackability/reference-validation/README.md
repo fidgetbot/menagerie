@@ -1,6 +1,6 @@
 # Rebuilt assets: validation pass
 
-**Status: testing completed; one reproducible collision response blocks a clean release. Live game unchanged.**
+**Current status: dragonfly deferred by user request. The six-species release excludes its loading/selection. The 51 applicable scenarios below are clean; the original seven-species findings are preserved for future dragonfly work.**
 
 ## Candidate
 
@@ -40,3 +40,7 @@ node scripts/check-reference-production.mjs
 ```
 
 Use `TEST_URL` to override the local server URL. The isolated replay writes its full trace. Physics harness diagnostics require the dev server; the production smoke intentionally uses actual random orientations and real input.
+
+## Six-species release
+
+Dragonfly has been removed from the selectable roster; its assets remain archived for future refinement. `six-species-results.json` selects the 36 unchanged non-dragonfly upright pairings plus 15 tilt cases from the completed sweep. All 51 resolved with no anomaly markers/page errors and clean resets. No collider or physics setting for these six species changed after that sweep. The production-input smoke was rerun with the reduced roster.

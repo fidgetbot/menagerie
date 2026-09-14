@@ -1,7 +1,7 @@
 import {webkit} from 'playwright';
 import fs from 'node:fs/promises';
 await fs.mkdir("tmp",{recursive:true});const browser=await webkit.launch();const results=[];
-for(const species of ['armadillo','dragonfly','ram','skunk']){
+for(const species of ['armadillo','ram','skunk']){
  const page=await browser.newPage({viewport:{width:402,height:874},deviceScaleFactor:2,isMobile:true,hasTouch:true});const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const start=Date.now();await page.goto(`${process.env.TEST_URL ?? "http://127.0.0.1:5173/menagerie/"}?diagnostics&sequence=${species}&rx=0`,{waitUntil:'networkidle'});
  await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies);await page.waitForTimeout(400);

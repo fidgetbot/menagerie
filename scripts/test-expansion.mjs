@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 const output=new URL(process.env.TEST_OUTPUT ?? '../tmp/expansion-test/',import.meta.url);
 await fs.mkdir(output,{recursive:true});
 const browser=await webkit.launch({headless:true});
-const species=['tortoise','capybara','toucan','armadillo','dragonfly','ram','skunk'];
+const species=['tortoise','capybara','toucan','armadillo','ram','skunk'];
 const jobs=species.flatMap(a=>species.map(b=>({a,b,rx:0})));
 for(const a of species.slice(3))for(const rx of [30,90,180])jobs.push({a,b:a,rx});
 if(process.env.TEST_CROSS_AXIS){

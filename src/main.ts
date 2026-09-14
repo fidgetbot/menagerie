@@ -72,7 +72,7 @@ scene.add(ground);
 type SpeciesId = "tortoise" | "capybara" | "toucan" | keyof typeof expansionColliders;
 type ModelTemplate = { model: THREE.Object3D; halfExtents: THREE.Vector3 };
 
-const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan", "armadillo", "dragonfly", "ram", "skunk"];
+const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan", "armadillo", "ram", "skunk"];
 const loader = new GLTFLoader();
 const loadedModels = await Promise.all(
   speciesIds.map(async (species) => [species, (await loader.loadAsync(`${import.meta.env.BASE_URL}models/${species}.glb`)).scene] as const),
