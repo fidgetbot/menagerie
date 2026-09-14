@@ -120,3 +120,9 @@ Skunk replaces zebra in the proposed concept set (not gameplay). `studies/stacka
 ### Reference-led Blender rebuild (review stage)
 
 Following visual review of the seven-animal integration, the four new models are being rebuilt against the approved concept illustrations. `scripts/build_reference_animals.py` authors separate editable Blender sculptures in `assets/source/menagerie-reference-rebuild.blend`; actual geometry renders are in `assets/previews/reference-models/`. This pass separates visual modeling from the provisional physics proxies. It is an art-review artifact, not a runtime replacement: the deployed GLBs, colliders, controls and silent audio state are unchanged. Any eventual game exports need fresh visual/collider alignment and mobile checks.
+
+### Rebuilt asset validation branch
+
+`review/reference-assets-validation` exports the reviewed Blender source using `scripts/export_reference_animals.py`. Visual meshes and convex collision pieces share one transform; horns and the skunk tail use multiple hull sections to retain their concavity. The dragonfly and skunk use uniform scale 0.72, versus 0.9 for armadillo/ram, to fit the existing fixed phone camera without changing proportions. The original three models and colliders, scoring/sleep logic, controls, and silent audio state are unchanged. Validation evidence and browser screenshots live in `studies/stackability/reference-validation/`. This review branch is not deployed.
+
+Validation outcome: 69 baseline browser scenarios completed; one reproducible upward-anomaly case (toucan landing on dragonfly) prevents a clean release. The candidate remains on the review branch; exploratory mass/friction tweaks were rejected and reverted. See the validation README and replay trace for the unresolved contact behavior.

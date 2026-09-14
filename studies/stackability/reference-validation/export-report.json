@@ -1,0 +1,22 @@
+{
+  "armadillo": {
+    "colliders": 12,
+    "hullVertices": 4613,
+    "bytes": 374352
+  },
+  "dragonfly": {
+    "colliders": 18,
+    "hullVertices": 6534,
+    "bytes": 385072
+  },
+  "ram": {
+    "colliders": 32,
+    "hullVertices": 3684,
+    "bytes": 608316
+  },
+  "skunk": {
+    "colliders": 23,
+    "hullVertices": 3205,
+    "bytes": 749488
+  }
+}

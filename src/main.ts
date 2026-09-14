@@ -246,8 +246,10 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: b
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.34, 0.76, 0.19, 0.06).setTranslation(0, -0.68, 0.52), 0.10), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.45, 0.34, 0.07, 0.03).setTranslation(0, 0.31, -0.91), 2.6), body);
   } else {
-    for (const { h, p, r, d } of expansionColliders[species]) {
-      world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(h[0], h[1], h[2], r).setTranslation(p[0], p[1], p[2]), d), body);
+    for (const { vertices, d } of expansionColliders[species]) {
+      const shape = RAPIER.ColliderDesc.convexHull(new Float32Array(vertices));
+      if (!shape) throw new Error(`Invalid collision hull for ${species}`);
+      world.createCollider(material(shape, d), body);
     }
   }
 }

@@ -1,0 +1,138 @@
+[
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "dragonfly",
+    "b": "dragonfly",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "armadillo",
+    "b": "armadillo",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "dragonfly",
+    "b": "dragonfly",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "0",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "ram",
+    "b": "ram",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "0",
+    "lost": true,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 90,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.7071067811865475,
+      0,
+      0.7071067811865476
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  },
+  {
+    "a": "skunk",
+    "b": "skunk",
+    "rx": 30,
+    "axis": "y",
+    "rotation": [
+      0,
+      0.25881904510252074,
+      0,
+      0.9659258262890683
+    ],
+    "score": "1",
+    "lost": false,
+    "anomalies": [],
+    "errors": [],
+    "reset": "0"
+  }
+]

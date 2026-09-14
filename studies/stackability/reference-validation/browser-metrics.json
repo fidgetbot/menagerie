@@ -1,0 +1,30 @@
+[
+  {
+    "species": "armadillo",
+    "readyMs": 1107,
+    "medianFrameMs": 17,
+    "p95FrameMs": 18,
+    "errors": []
+  },
+  {
+    "species": "dragonfly",
+    "readyMs": 1067,
+    "medianFrameMs": 17,
+    "p95FrameMs": 18,
+    "errors": []
+  },
+  {
+    "species": "ram",
+    "readyMs": 1074,
+    "medianFrameMs": 17,
+    "p95FrameMs": 18,
+    "errors": []
+  },
+  {
+    "species": "skunk",
+    "readyMs": 1081,
+    "medianFrameMs": 17,
+    "p95FrameMs": 18,
+    "errors": []
+  }
+]

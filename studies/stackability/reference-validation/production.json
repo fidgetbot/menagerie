@@ -1,0 +1,42 @@
+{
+  "seen": [
+    "armadillo",
+    "capybara",
+    "toucan",
+    "ram",
+    "skunk",
+    "tortoise",
+    "dragonfly"
+  ],
+  "results": [
+    {
+      "target": "armadillo",
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "reset": "0"
+    },
+    {
+      "target": "dragonfly",
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "reset": "0"
+    },
+    {
+      "target": "ram",
+      "score": "0",
+      "lost": true,
+      "anomalies": [],
+      "reset": "0"
+    },
+    {
+      "target": "skunk",
+      "score": "0",
+      "lost": true,
+      "anomalies": [],
+      "reset": "0"
+    }
+  ],
+  "errors": []
+}
