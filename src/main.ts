@@ -37,6 +37,8 @@ const camera = new THREE.OrthographicCamera(-4, 4, 5, -5, 0.1, 60);
 camera.up.set(0, 0, 1);
 const cameraTarget = new THREE.Vector3(0, 0, 1.9);
 let cameraHeight = 1.9;
+let fallTarget: Animal | null = null;
+let endingElapsed = 0;
 
 scene.add(new THREE.HemisphereLight(0xf8fbef, 0x547667, 2.1));
 const key = new THREE.DirectionalLight(0xfff5de, 4.1);
@@ -452,10 +454,12 @@ function updateHeld(dt: number, time: number) {
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
 }
 
-function endGame(reason = "unknown") {
+function endGame(reason = "unknown", animal?: Animal) {
   if (lost) return;
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
+  fallTarget ??= animal ?? null;
+  endingElapsed = 0;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
   for (const animal of animals) {
@@ -471,8 +475,14 @@ function endGame(reason = "unknown") {
   pointerId = null;
   scoreElement.classList.add("lost");
   tutorial.classList.add("hidden");
+  if (engineFault || !fallTarget) showGameOver();
+}
+
+function showGameOver() {
+  if (!gameOver.classList.contains("hidden")) return;
   gameOver.classList.remove("hidden");
   playAgainButton.focus({ preventScroll: true });
+  recorder.event("final_view", { cameraHeight });
 }
 
 function countAnimal(animal: Animal) {
@@ -552,7 +562,7 @@ function updatePhysics(dt: number, time: number) {
     }
 
     if (animal.counted && !animal.fixed) maxStackUpwardSpeed = Math.max(maxStackUpwardSpeed, animal.body.linvel().z);
-    if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame("platform_contact");
+    if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame("platform_contact", animal);
 
     if (!lost && !animal.fixed && !animal.counted && !animal.lowering) {
       const linear = animal.body.linvel();
@@ -604,11 +614,11 @@ function updatePhysics(dt: number, time: number) {
       } else if (age > 8 && !supported) {
         // Defensive deadline: a release must always resolve, even if a future
         // collider configuration avoids both the platform and the stack.
-        endGame("unsupported_deadline");
+        endGame("unsupported_deadline", animal);
       }
     }
 
-    if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame("out_of_bounds");
+    if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame("out_of_bounds", animal);
     if (animal.landingPulse > 0) {
       animal.landingPulse = Math.max(0, animal.landingPulse - dt * 4.5);
       const squash = Math.sin(animal.landingPulse * Math.PI) * 0.035;
@@ -626,8 +636,23 @@ function updateCamera(dt: number) {
     const r = animal.body.rotation();
     highest = Math.max(highest, p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w), animal.halfExtents));
   }
-  const desired = Math.max(1.9, highest + 1.25);
-  cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, 2.7, dt);
+  // Follow only a descending body already below the stack's top and clear of support.
+  if (!lost && !fallTarget) {
+    fallTarget = animals.find(animal => !animal.fixed && !animal.lowering
+      && animal.body.linvel().z < -1 && animal.body.translation().z < highest - 0.6
+      && !touchesStack(animal)) ?? null;
+    if (fallTarget) recorder.event("fall_camera", { id: fallTarget.id });
+  }
+  if (!lost && fallTarget && touchesStack(fallTarget)) fallTarget = null;
+  let desired = Math.max(1.9, highest + 1.25);
+  if (fallTarget) desired = Math.max(1.9, Math.min(cameraHeight, fallTarget.body.translation().z + 1.0));
+  if (lost) {
+    endingElapsed += dt;
+    desired = 1.9;
+  }
+  cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, fallTarget ? 4 : 2.7, dt);
+  if (lost && (Math.abs(cameraHeight - 1.9) < 0.06 || endingElapsed > 2.8)) showGameOver();
+  if (diagnosticsEnabled) canvas.dataset.cameraHeight = cameraHeight.toFixed(4);
   cameraTarget.set(0, 0.05, cameraHeight);
   camera.position.set(6.9, -12.3, cameraHeight + 6.0);
   camera.lookAt(cameraTarget);
@@ -698,6 +723,9 @@ function recordTrace(dt: number) {
 
 function reset() {
   recorder.event("reset", { score, engineFault });
+  fallTarget = null;
+  endingElapsed = 0;
+  cameraHeight = 1.9;
   for (const animal of animals.splice(0)) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
     world.removeRigidBody(animal.body);

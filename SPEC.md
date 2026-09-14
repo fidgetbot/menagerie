@@ -146,3 +146,7 @@ Rescaled skunk: all 16 affected pairing/tilt scenarios resolved without upward-a
 ### Initial rotation invitation
 
 On page load only, the first incoming animal receives a pronounced diagonal flick (4.4 rad/s initial speed, existing exponential damping). Touch or Drop catches it immediately. Subsequent pieces and ordinary restarts stay still; reduced-motion preference skips this decorative cue. No extra instruction text is added.
+
+### Falling-animal ending camera
+
+A clearly descending, unsupported body below the stack top invites a downward camera follow; supporting contact cancels a recovered fall. The first target is retained during a collapse. On loss, ease to platform framing at the existing fixed zoom/angle, then reveal Game over (maximum 2.8-second delay). Restart remains available and clears the ending state. Engine faults show recovery immediately. Physics and scoring rules are unchanged.
