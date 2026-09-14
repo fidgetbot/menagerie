@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { FlightRecorder } from "./trace";
-import { CeramicAudio, type CeramicContact, type CeramicMaterial } from "./audio";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
@@ -16,7 +15,6 @@ const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
-const ceramicAudio = new CeramicAudio(!runtimeParams.has("mute"));
 shareTraceButton.hidden = !recorder.enabled;
 
 await RAPIER.init();
@@ -100,14 +98,11 @@ for (const [species, model] of loadedModels) {
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
 world.timestep = 1 / 60;
-const physicsEvents = new RAPIER.EventQueue(true);
 const platformBody = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, -0.22));
 const platformCollider = world.createCollider(
   RAPIER.ColliderDesc.cylinder(0.22, 3)
     .setRotation({ x: Math.SQRT1_2, y: 0, z: 0, w: Math.SQRT1_2 })
-    .setFriction(0.86)
-    .setActiveEvents(RAPIER.ActiveEvents.CONTACT_FORCE_EVENTS)
-    .setContactForceEventThreshold(0.5),
+    .setFriction(0.86),
   platformBody,
 );
 
@@ -134,7 +129,6 @@ type Animal = {
 };
 
 const animals: Animal[] = [];
-const animalsByBody = new Map<number, Animal>();
 let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
@@ -225,8 +219,6 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: b
       .setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min)
       .setRestitution(0)
       .setRestitutionCombineRule(RAPIER.CoefficientCombineRule.Min)
-      .setActiveEvents(RAPIER.ActiveEvents.CONTACT_FORCE_EVENTS)
-      .setContactForceEventThreshold(0.5)
       .setDensity(density);
 
   if (species === "tortoise") {
@@ -264,7 +256,6 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   const rig = makeRig(model, species);
   const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z, stackFrictionRestored: fixed };
   animals.push(animal);
-  animalsByBody.set(body.handle, animal);
   recorder.event("animal_created", { id: animal.id, species, fixed, position: vector(position), rotation: quaternion(rotation) });
   return animal;
 }
@@ -513,51 +504,6 @@ function resolveOverdueAnimal(animal: Animal) {
   }
 }
 
-function processContactAudio(time: number) {
-  const contacts = new Map<string, CeramicContact>();
-  physicsEvents.drainContactForceEvents((event) => {
-    const colliderA = world.getCollider(event.collider1());
-    const colliderB = world.getCollider(event.collider2());
-    const bodyA = colliderA?.parent();
-    const bodyB = colliderB?.parent();
-    if (!bodyA || !bodyB || bodyA.handle === bodyB.handle) return;
-    const animalA = animalsByBody.get(bodyA.handle);
-    const animalB = animalsByBody.get(bodyB.handle);
-    if (!animalA && bodyA.handle !== platformBody.handle) return;
-    if (!animalB && bodyB.handle !== platformBody.handle) return;
-    const firstHandle = Math.min(bodyA.handle, bodyB.handle);
-    const secondHandle = Math.max(bodyA.handle, bodyB.handle);
-    const key = `${firstHandle}:${secondHandle}`;
-    const materialA: CeramicMaterial = animalA?.species ?? "platform";
-    const materialB: CeramicMaterial = animalB?.species ?? "platform";
-    const positionA = bodyA.translation();
-    const positionB = bodyB.translation();
-    const impulse = event.totalForceMagnitude() * world.timestep;
-    if (!Number.isFinite(impulse)) return;
-    const existing = contacts.get(key);
-    if (existing) {
-      existing.impulse += impulse;
-    } else {
-      contacts.set(key, {
-        key,
-        materials: [materialA, materialB],
-        impulse,
-        pan: Math.max(-1, Math.min(1, (positionA.x + positionB.x) / 5.2)),
-        active: Boolean((animalA && !animalA.fixed && !bodyA.isSleeping()) || (animalB && !animalB.fixed && !bodyB.isSleeping())),
-      });
-    }
-  });
-  const triggers = ceramicAudio.process([...contacts.values()], time);
-  for (const trigger of triggers) {
-    recorder.event("ceramic_contact", {
-      pair: trigger.materials,
-      impulse: number(trigger.impulse),
-      intensity: number(trigger.intensity),
-    });
-  }
-  if (diagnosticsEnabled) canvas.dataset.audioTriggers = String(Number(canvas.dataset.audioTriggers ?? 0) + triggers.length);
-}
-
 function updatePhysics(dt: number, time: number) {
   accumulator = Math.min(accumulator + dt, 0.12);
   while (accumulator >= world.timestep) {
@@ -567,8 +513,7 @@ function updatePhysics(dt: number, time: number) {
       animal.lastSafeZ = position.z;
       animal.body.setNextKinematicTranslation({ x: position.x, y: position.y, z: position.z - loweringSpeed * world.timestep });
     }
-    world.step(physicsEvents);
-    processContactAudio(time);
+    world.step();
     for (const animal of animals) {
       if (animal.lowering && intersectsLandingSurface(animal)) finishLowering(animal, time);
     }
@@ -742,7 +687,6 @@ function reset() {
   recorder.event("reset", { score, engineFault });
   for (const animal of animals.splice(0)) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
-    animalsByBody.delete(animal.body.handle);
     world.removeRigidBody(animal.body);
     scene.remove(animal.group);
   }
@@ -753,7 +697,6 @@ function reset() {
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
   speciesBag = [];
-  ceramicAudio.reset();
   engineFault = false;
   devFaultInjected = false;
   score = 0;
@@ -770,7 +713,6 @@ function reset() {
 }
 
 canvas.addEventListener("pointerdown", (event) => {
-  ceramicAudio.unlock();
   if (lost || pointerId !== null) return;
   if (!held) return;
   pointerId = event.pointerId;
