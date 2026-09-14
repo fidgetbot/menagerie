@@ -14,7 +14,7 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
 - When the run ends, the same button becomes **Play again**.
 
-A soft shadow beneath the waiting animal hints at its landing footprint. Position and height are automatic, leaving you to find the right orientation. There is no timer. The camera follows the growing tower and eases down to a final view when the run ends.
+Position and height are automatic, leaving you to find the right orientation. There is no timer. The camera follows the growing tower and eases down to a final view when the run ends.
 
 ## The animals
 
