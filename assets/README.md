@@ -23,3 +23,9 @@ Finalization saves a normal standalone Blender file. The review script aligns la
 ## Review boundaries
 
 Still to validate: silhouettes at phone scale and inverted orientations, rig-friendly topology, exact stacking surfaces, collision shapes and physics. Capybara and toucan currently have a deliberately blocky construction; next art review should decide how much to soften or sculpt their profiles. No animation, UV mapping, or generated audio yet.
+
+## Approved runtime expansion
+
+`source/menagerie-final-expansion.blend` and `previews/final-expansion.png` contain the four approved additions: armadillo, dragonfly, ram, and lower-tail skunk. `scripts/build_final_animals.py` regenerates the standalone Blender source, preview, and four GLBs using background Blender. Run it only in a fresh/background process: it clears that process's scene. It resolves the checkout from its own path.
+
+The new exports share their body-local origin with `src/expansion-colliders.json`; do not center them on visual bounds. Colors use editable satin materials, with geometric armor bands, wings/veins, horns, and a striped curved tail. Eye and foot names support the existing cosmetic animation. Audio remains disabled. The rejected six-animal study remains archived, not used by gameplay.

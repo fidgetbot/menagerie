@@ -1,0 +1,615 @@
+{
+  "method": "Mobile WebKit 1.59.1; real development game; two upright drops for each of 49 ordered pairs; one drop at pitch 30/90/180 for each new species; ten seconds observation after resolution; real restart click; flight-recorder anomaly check",
+  "results": [
+    {
+      "a": "tortoise",
+      "b": "toucan",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "tortoise",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "toucan",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "capybara",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "toucan",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "toucan",
+      "b": "ram",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "toucan",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "toucan",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "toucan",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "capybara",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "skunk",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "tortoise",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "capybara",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "toucan",
+      "rx": 0,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "armadillo",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "dragonfly",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "ram",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "armadillo",
+      "rx": 30,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "skunk",
+      "rx": 0,
+      "score": "2",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "armadillo",
+      "rx": 90,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "armadillo",
+      "b": "armadillo",
+      "rx": 180,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "dragonfly",
+      "rx": 30,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "dragonfly",
+      "rx": 90,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "dragonfly",
+      "b": "dragonfly",
+      "rx": 180,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "ram",
+      "rx": 30,
+      "score": "1",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "ram",
+      "rx": 90,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "ram",
+      "b": "ram",
+      "rx": 180,
+      "score": "0",
+      "lost": true,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "skunk",
+      "rx": 30,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "skunk",
+      "rx": 90,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    },
+    {
+      "a": "skunk",
+      "b": "skunk",
+      "rx": 180,
+      "score": "1",
+      "lost": false,
+      "anomalies": [],
+      "errors": [],
+      "reset": "0"
+    }
+  ]
+}

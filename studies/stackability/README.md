@@ -53,3 +53,9 @@ Run `node studies/stackability/skunk-sweep.mjs`; raw evidence: `skunk-results.js
 All support preparations succeeded; no cases remained moving at the deadline. Peak upward velocity was 1.31 units/s in the baseline versus 0.95 in the lower-tail set, so these tests do not establish zero rebound. Percentages describe this centered structured grid, not player success rates. Old zebra aggregate uses a different cast and incoming set; comparisons with it are directional, not controlled head-to-head statistics. Skunk self-pairs change both support and incoming tail together.
 
 Recommendation: retain the small head and broad striped S tail, but explore a 25% lower tail for an easy-to-medium candidate. It retains a distinctive rear profile and improves both landing and platform behavior in this proxy study. Large sideways tilts remain challenging. Final visual model/collider matching and phone playtests are still required. No live-game changes.
+
+## Seven-animal runtime integration — 2026-09-14
+
+The approved armadillo, dragonfly, plain ram and lower-tail skunk now have actual Blender GLBs and runtime colliders. `integration-results.json` records 61 mobile WebKit scenarios against the real game state machine: all 49 upright ordered pairings and pitch 30/90/180 degrees for each new species. Each resolved turn was followed for ten seconds. All scenarios resolved with zero page exceptions/upward-anomaly markers and all reset checks returned zero. 41/49 upright pairings remained standing; eight fell naturally, mostly involving the ram as support. This is a focused regression, not a guarantee of balance for every orientation.
+
+Run `npm run dev`, then `npm run test:expansion` (Playwright WebKit required). The earlier proxy studies remain historical and are not a substitute for this runtime test.

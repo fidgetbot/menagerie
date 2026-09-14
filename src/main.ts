@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { FlightRecorder } from "./trace";
+import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
@@ -68,10 +69,10 @@ ground.rotation.x = 0;
 ground.receiveShadow = true;
 scene.add(ground);
 
-type SpeciesId = "tortoise" | "capybara" | "toucan";
+type SpeciesId = "tortoise" | "capybara" | "toucan" | keyof typeof expansionColliders;
 type ModelTemplate = { model: THREE.Object3D; halfExtents: THREE.Vector3 };
 
-const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan"];
+const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan", "armadillo", "dragonfly", "ram", "skunk"];
 const loader = new GLTFLoader();
 const loadedModels = await Promise.all(
   speciesIds.map(async (species) => [species, (await loader.loadAsync(`${import.meta.env.BASE_URL}models/${species}.glb`)).scene] as const),
@@ -85,7 +86,10 @@ for (const [species, model] of loadedModels) {
   const bounds = new THREE.Box3().setFromObject(model);
   const center = bounds.getCenter(new THREE.Vector3());
   const size = bounds.getSize(new THREE.Vector3());
-  model.position.sub(center);
+  // Expansion meshes are authored in the same body-local coordinates as their
+  // colliders. Recentering a raised tail/horn would misalign that geometry.
+  const expansion = species in expansionColliders;
+  if (!expansion) model.position.sub(center);
   model.updateMatrixWorld(true);
   model.traverse((object) => {
     if (object instanceof THREE.Mesh) {
@@ -93,7 +97,10 @@ for (const [species, model] of loadedModels) {
       object.receiveShadow = true;
     }
   });
-  modelTemplates.set(species, { model, halfExtents: size.multiplyScalar(0.5) });
+  const halfExtents = expansion
+    ? new THREE.Vector3(Math.max(Math.abs(bounds.min.x), Math.abs(bounds.max.x)), Math.max(Math.abs(bounds.min.y), Math.abs(bounds.max.y)), Math.max(Math.abs(bounds.min.z), Math.abs(bounds.max.z)))
+    : size.multiplyScalar(0.5);
+  modelTemplates.set(species, { model, halfExtents });
 }
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
@@ -201,8 +208,8 @@ function makeRig(model: THREE.Object3D, species: SpeciesId) {
   const eyes: THREE.Object3D[] = [];
   let head: THREE.Object3D | undefined;
   model.traverse((object) => {
-    if (["Paddling jade foot", "Tucked foot", "Broad resting foot"].some((name) => object.name.startsWith(name))) feet.push(object);
-    if (["Tortoise eye", "Sleepy eye", "Toucan eye"].some((name) => object.name.startsWith(name))
+    if (["Paddling jade foot", "Tucked foot", "Broad resting foot", "Living foot"].some((name) => object.name.startsWith(name))) feet.push(object);
+    if (["Tortoise eye", "Sleepy eye", "Toucan eye", "Living eye"].some((name) => object.name.startsWith(name))
       && !object.name.toLowerCase().includes("sparkle") && !object.name.toLowerCase().includes("glimmer")) eyes.push(object);
     if ((species === "tortoise" && object.name.startsWith("Curious head"))
       || (species === "capybara" && object.name.startsWith("Squared head"))
@@ -232,12 +239,16 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: b
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.62, 0.57, 0.46, 0.14).setTranslation(0, -0.65, 0.12), 0.42), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.50, 0.22, 0.23, 0.10).setTranslation(0, -1.12, -0.09), 0.20), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.58, 0.74, 0.07, 0.035).setTranslation(0, 0.22, -0.84), 2.4), body);
-  } else {
+  } else if (species === "toucan") {
     // The beak changes the silhouette and contacts, but stays deliberately light.
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.56, 0.55, 0.54, 0.16).setTranslation(0, 0.53, -0.18), 1.0), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.51, 0.47, 0.39, 0.14).setTranslation(0, 0.38, 0.57), 0.55), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.34, 0.76, 0.19, 0.06).setTranslation(0, -0.68, 0.52), 0.10), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.45, 0.34, 0.07, 0.03).setTranslation(0, 0.31, -0.91), 2.6), body);
+  } else {
+    for (const { h, p, r, d } of expansionColliders[species]) {
+      world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(h[0], h[1], h[2], r).setTranslation(p[0], p[1], p[2]), d), body);
+    }
   }
 }
 
