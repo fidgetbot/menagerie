@@ -303,6 +303,22 @@ function touchesPlatform(animal: Animal) {
   return false;
 }
 
+function touchesStack(animal: Animal) {
+  for (const support of animals) {
+    if (support === animal || !support.counted) continue;
+    for (let ownIndex = 0; ownIndex < animal.body.numColliders(); ownIndex += 1) {
+      for (let supportIndex = 0; supportIndex < support.body.numColliders(); supportIndex += 1) {
+        let touching = false;
+        world.contactPair(animal.body.collider(ownIndex), support.body.collider(supportIndex), (manifold) => {
+          if (manifold.numSolverContacts() > 0) touching = true;
+        });
+        if (touching) return true;
+      }
+    }
+  }
+  return false;
+}
+
 function updateRotationControl(dt: number) {
   if (!held || pointerId === null) return;
   const distance = rotationInput.length();
@@ -355,6 +371,21 @@ function endGame() {
   playAgainButton.focus({ preventScroll: true });
 }
 
+function countAnimal(animal: Animal) {
+  animal.counted = true;
+  animal.landingPulse = 1;
+  animal.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+  animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  animal.body.sleep();
+  score += 1;
+  scoreElement.value = String(score);
+  scoreElement.textContent = String(score);
+  scoreElement.classList.add("bump");
+  tutorial.classList.add("hidden");
+  setTimeout(() => scoreElement.classList.remove("bump"), 180);
+  createHeld();
+}
+
 function updatePhysics(dt: number, time: number) {
   accumulator = Math.min(accumulator + dt, 0.12);
   while (accumulator >= world.timestep) {
@@ -374,19 +405,24 @@ function updatePhysics(dt: number, time: number) {
     if (!lost && !animal.fixed && !animal.counted) {
       const linear = animal.body.linvel();
       const angular = animal.body.angvel();
-      const quiet = animal.body.isSleeping()
-        || (Math.hypot(linear.x, linear.y, linear.z) < 0.24 && Math.hypot(angular.x, angular.y, angular.z) < 0.30);
-      animal.quietFor = quiet ? animal.quietFor + dt : 0;
-      if (time - animal.birth > 0.65 && animal.quietFor > 0.58) {
-        animal.counted = true;
-        animal.landingPulse = 1;
-        score += 1;
-        scoreElement.value = String(score);
-        scoreElement.textContent = String(score);
-        scoreElement.classList.add("bump");
-        tutorial.classList.add("hidden");
-        setTimeout(() => scoreElement.classList.remove("bump"), 180);
-        createHeld();
+      const linearSpeed = Math.hypot(linear.x, linear.y, linear.z);
+      const angularSpeed = Math.hypot(angular.x, angular.y, angular.z);
+      const supported = touchesStack(animal);
+      const calm = animal.body.isSleeping() || (linearSpeed < 0.30 && angularSpeed < 0.42);
+      // Solver corrections at compound-collider corners can produce tiny speed
+      // spikes forever. Accumulate evidence of supported calm instead of
+      // erasing the entire timer on every single-frame spike.
+      if (supported && calm) animal.quietFor += dt;
+      else animal.quietFor = Math.max(0, animal.quietFor - dt * 0.45);
+
+      const age = time - animal.birth;
+      const gentlySupported = supported && linearSpeed < 0.85 && angularSpeed < 1.10;
+      if (age > 0.65 && (animal.quietFor > 0.58 || (age > 3.5 && gentlySupported) || (age > 6 && supported))) {
+        countAnimal(animal);
+      } else if (age > 8 && !supported) {
+        // Defensive deadline: a release must always resolve, even if a future
+        // collider configuration avoids both the platform and the stack.
+        endGame();
       }
     }
 
