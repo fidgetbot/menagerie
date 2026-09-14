@@ -18,6 +18,10 @@ Six editable preliminary ceramic models are saved in `assets/source/menagerie-ex
 
 These difficulty grades describe intended geometry, not measured physics balance. Models remain editable multi-part Blender objects; colliders, export optimization, and integration are deferred until design review. The live three-animal game is unchanged.
 
+## Four-candidate collision screening
+
+The revised concept set is red armadillo, dragonfly, plain-fleece ram, and zebra. A provisional Rapier proxy study in `studies/stackability/README.md` records 2,048 structured orientation cases and a small combined tweak comparison. Results favor armadillo/dragonfly as foundations and flag ram/zebra as harder, especially as upright supports. These are manually estimated collision shapes, not final visual assets or production-state-machine validation. Gameplay remains unchanged.
+
 ## Goal
 
 A small, compelling single-player 3D browser game, optimized for phone touch controls, showcasing generated models, animation, sound effects, and music. Inspired by animal-shaped stacking pieces in Beasts of Balance, with original creatures and presentation.
