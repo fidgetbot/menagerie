@@ -35,3 +35,21 @@ Modified set incoming stable counts /256: armadillo 205, dragonfly 181, ram 124,
 - Zebra: currently another hard piece, not medium. Positive 30-degree roll failed all 32 baseline cases. For a future medium variant, test a shorter/lower head and neck, shorter legs, or rearward body placement independently; wider feet alone produced only a modest change in the mixed comparison.
 
 No live-game code/assets were changed. These are hypotheses to guide final modeling, not proposed changes already applied to the approved illustrations.
+
+## Skunk replacement study — 2026-09-13
+
+Run `node studies/stackability/skunk-sweep.mjs`; raw evidence: `skunk-results.json`. The skunk replaces zebra in this study's seven-species cast. This is a manually estimated concept proxy, not a final mesh: low rounded body, small head, four feet, and six overlapping rounded tail segments preserving the broad S silhouette. Tail density is assumed 0.40 versus body 1.0. The variant scales tail vertical positions/extents to 75%, keeping its width and rearward reach; reduced volume also reduces tail mass. Thus this compares a practical lower-tail shape, not height independently of mass. Other species remain unchanged.
+
+896 unique cases: 448 per variant, covering skunk incoming on eight supports and all seven species incoming on upright dynamic skunk (32 poses each; self-pair counted once). Same physics, gentle placement, six-second support preparation and ten-second observation as above.
+
+| Role | Tall concept tail | 25% lower tail |
+|---|---:|---:|
+| Skunk incoming, stable | 140/256 (54.7%) | 180/256 (70.3%) |
+| Upright skunk incoming | 23/32 | 26/32 |
+| 30-degree roll incoming | 6/32 | 12/32 |
+| Upside-down incoming | 25/32 | 31/32 |
+| Upright skunk supporting next piece | 161/224 (71.9%) | 183/224 (81.7%) |
+
+All support preparations succeeded; no cases remained moving at the deadline. Peak upward velocity was 1.31 units/s in the baseline versus 0.95 in the lower-tail set, so these tests do not establish zero rebound. Percentages describe this centered structured grid, not player success rates. Old zebra aggregate uses a different cast and incoming set; comparisons with it are directional, not controlled head-to-head statistics. Skunk self-pairs change both support and incoming tail together.
+
+Recommendation: retain the small head and broad striped S tail, but explore a 25% lower tail for an easy-to-medium candidate. It retains a distinctive rear profile and improves both landing and platform behavior in this proxy study. Large sideways tilts remain challenging. Final visual model/collider matching and phone playtests are still required. No live-game changes.

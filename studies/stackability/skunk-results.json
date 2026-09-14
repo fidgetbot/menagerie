@@ -1,0 +1,9039 @@
+{
+  "method": "Same original harness; only skunk tail height changes in variant (25% lower); all other proxies unchanged",
+  "shapes": {
+    "tortoise": [
+      {
+        "h": [
+          0.76,
+          0.86,
+          0.26
+        ],
+        "p": [
+          0,
+          0,
+          -0.05
+        ],
+        "d": 0.55,
+        "r": 0.1
+      },
+      {
+        "h": [
+          0.72,
+          0.82,
+          0.06
+        ],
+        "p": [
+          0,
+          0,
+          -0.5
+        ],
+        "d": 3.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.76,
+          0.86,
+          0.06
+        ],
+        "p": [
+          0,
+          0,
+          0.54
+        ],
+        "d": 0.18,
+        "r": 0.02
+      },
+      {
+        "h": [
+          0.31,
+          0.3,
+          0.18
+        ],
+        "p": [
+          0,
+          -1.1,
+          -0.12
+        ],
+        "d": 0.2,
+        "r": 0.05
+      }
+    ],
+    "capybara": [
+      {
+        "h": [
+          0.67,
+          0.88,
+          0.48
+        ],
+        "p": [
+          0,
+          0.34,
+          -0.13
+        ],
+        "d": 0.95,
+        "r": 0.15
+      },
+      {
+        "h": [
+          0.62,
+          0.57,
+          0.46
+        ],
+        "p": [
+          0,
+          -0.65,
+          0.12
+        ],
+        "d": 0.42,
+        "r": 0.14
+      },
+      {
+        "h": [
+          0.5,
+          0.22,
+          0.23
+        ],
+        "p": [
+          0,
+          -1.12,
+          -0.09
+        ],
+        "d": 0.2,
+        "r": 0.1
+      },
+      {
+        "h": [
+          0.58,
+          0.74,
+          0.07
+        ],
+        "p": [
+          0,
+          0.22,
+          -0.84
+        ],
+        "d": 2.4,
+        "r": 0.035
+      }
+    ],
+    "toucan": [
+      {
+        "h": [
+          0.56,
+          0.55,
+          0.54
+        ],
+        "p": [
+          0,
+          0.53,
+          -0.18
+        ],
+        "d": 1,
+        "r": 0.16
+      },
+      {
+        "h": [
+          0.51,
+          0.47,
+          0.39
+        ],
+        "p": [
+          0,
+          0.38,
+          0.57
+        ],
+        "d": 0.55,
+        "r": 0.14
+      },
+      {
+        "h": [
+          0.34,
+          0.76,
+          0.19
+        ],
+        "p": [
+          0,
+          -0.68,
+          0.52
+        ],
+        "d": 0.1,
+        "r": 0.06
+      },
+      {
+        "h": [
+          0.45,
+          0.34,
+          0.07
+        ],
+        "p": [
+          0,
+          0.31,
+          -0.91
+        ],
+        "d": 2.6,
+        "r": 0.03
+      }
+    ],
+    "armadillo": [
+      {
+        "h": [
+          0.72,
+          0.85,
+          0.32
+        ],
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "d": 1,
+        "r": 0.14
+      },
+      {
+        "h": [
+          0.56,
+          0.72,
+          0.07
+        ],
+        "p": [
+          0,
+          0,
+          0.42
+        ],
+        "d": 0.4,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.29,
+          0.36,
+          0.22
+        ],
+        "p": [
+          0,
+          -1.05,
+          -0.13
+        ],
+        "d": 0.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.6,
+          0.72,
+          0.08
+        ],
+        "p": [
+          0,
+          0,
+          -0.43
+        ],
+        "d": 2.4,
+        "r": 0.04
+      }
+    ],
+    "dragonfly": [
+      {
+        "h": [
+          0.27,
+          0.55,
+          0.25
+        ],
+        "p": [
+          0,
+          -0.12,
+          0
+        ],
+        "d": 1,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.2,
+          0.68,
+          0.15
+        ],
+        "p": [
+          0,
+          0.92,
+          0.02
+        ],
+        "d": 0.4,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.39,
+          0.3,
+          0.24
+        ],
+        "p": [
+          0,
+          -0.85,
+          0
+        ],
+        "d": 0.5,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.25,
+          0.46,
+          0.07
+        ],
+        "p": [
+          0,
+          -0.1,
+          -0.38
+        ],
+        "d": 1.5,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.7,
+          0.22,
+          0.07
+        ],
+        "p": [
+          -0.9,
+          -0.38,
+          0.1
+        ],
+        "d": 0.22,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.7,
+          0.22,
+          0.07
+        ],
+        "p": [
+          -0.9,
+          0.38,
+          0.1
+        ],
+        "d": 0.22,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.7,
+          0.22,
+          0.07
+        ],
+        "p": [
+          0.9,
+          -0.38,
+          0.1
+        ],
+        "d": 0.22,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.7,
+          0.22,
+          0.07
+        ],
+        "p": [
+          0.9,
+          0.38,
+          0.1
+        ],
+        "d": 0.22,
+        "r": 0.07
+      }
+    ],
+    "ram": [
+      {
+        "h": [
+          0.6,
+          0.7,
+          0.45
+        ],
+        "p": [
+          0,
+          0.15,
+          0
+        ],
+        "d": 1,
+        "r": 0.15
+      },
+      {
+        "h": [
+          0.37,
+          0.36,
+          0.44
+        ],
+        "p": [
+          0,
+          -0.6,
+          0.43
+        ],
+        "d": 0.6,
+        "r": 0.1
+      },
+      {
+        "h": [
+          0.28,
+          0.23,
+          0.24
+        ],
+        "p": [
+          0,
+          -0.93,
+          0.26
+        ],
+        "d": 0.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.24
+        ],
+        "p": [
+          -0.4,
+          -0.38,
+          -0.63
+        ],
+        "d": 1.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.24
+        ],
+        "p": [
+          -0.4,
+          0.66,
+          -0.63
+        ],
+        "d": 1.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.24
+        ],
+        "p": [
+          0.4,
+          -0.38,
+          -0.63
+        ],
+        "d": 1.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.24
+        ],
+        "p": [
+          0.4,
+          0.66,
+          -0.63
+        ],
+        "d": 1.3,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.58,
+          1
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.36020386226674206,
+          0.8991276845855352
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.2558831153802916,
+          0.6999799184785955
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.29242890822411466,
+          0.49540589639481714
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.43424198711748097,
+          0.36771470498493014
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.6076911922437995,
+          0.3555649360281352
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.737584421223028,
+          0.44367076080014295
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.779650848123436,
+          0.5772908804789448
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          -0.56,
+          -0.7350462920788868,
+          0.6922246758132161
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.58,
+          1
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.36020386226674206,
+          0.8991276845855352
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.2558831153802916,
+          0.6999799184785955
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.29242890822411466,
+          0.49540589639481714
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.43424198711748097,
+          0.36771470498493014
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.6076911922437995,
+          0.3555649360281352
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.737584421223028,
+          0.44367076080014295
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.779650848123436,
+          0.5772908804789448
+        ],
+        "d": 0.65,
+        "r": 0.05
+      },
+      {
+        "h": [
+          0.12,
+          0.13,
+          0.13
+        ],
+        "p": [
+          0.56,
+          -0.7350462920788868,
+          0.6922246758132161
+        ],
+        "d": 0.65,
+        "r": 0.05
+      }
+    ],
+    "zebra": [
+      {
+        "h": [
+          0.5,
+          0.77,
+          0.39
+        ],
+        "p": [
+          0,
+          0.16,
+          0
+        ],
+        "d": 1,
+        "r": 0.12
+      },
+      {
+        "h": [
+          0.33,
+          0.28,
+          0.48
+        ],
+        "p": [
+          0,
+          -0.53,
+          0.51
+        ],
+        "d": 0.8,
+        "r": 0.09
+      },
+      {
+        "h": [
+          0.29,
+          0.43,
+          0.25
+        ],
+        "p": [
+          0,
+          -0.87,
+          0.87
+        ],
+        "d": 0.5,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.13,
+          0.17,
+          0.25
+        ],
+        "p": [
+          -0.34,
+          -0.38,
+          -0.57
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.13,
+          0.17,
+          0.25
+        ],
+        "p": [
+          -0.34,
+          0.7,
+          -0.57
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.13,
+          0.17,
+          0.25
+        ],
+        "p": [
+          0.34,
+          -0.38,
+          -0.57
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.13,
+          0.17,
+          0.25
+        ],
+        "p": [
+          0.34,
+          0.7,
+          -0.57
+        ],
+        "d": 1.2,
+        "r": 0.04
+      }
+    ],
+    "skunk": [
+      {
+        "h": [
+          0.52,
+          0.76,
+          0.32
+        ],
+        "p": [
+          0,
+          0,
+          0
+        ],
+        "d": 1,
+        "r": 0.1
+      },
+      {
+        "h": [
+          0.27,
+          0.32,
+          0.2
+        ],
+        "p": [
+          0,
+          -0.95,
+          -0.1
+        ],
+        "d": 0.5,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.13
+        ],
+        "p": [
+          -0.38,
+          -0.48,
+          -0.42
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.13
+        ],
+        "p": [
+          -0.38,
+          0.48,
+          -0.42
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.13
+        ],
+        "p": [
+          0.38,
+          -0.48,
+          -0.42
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.14,
+          0.18,
+          0.13
+        ],
+        "p": [
+          0.38,
+          0.48,
+          -0.42
+        ],
+        "d": 1.2,
+        "r": 0.04
+      },
+      {
+        "h": [
+          0.39,
+          0.23,
+          0.2
+        ],
+        "p": [
+          0,
+          0.91,
+          0.04
+        ],
+        "d": 0.4,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.39,
+          0.23,
+          0.24
+        ],
+        "p": [
+          0,
+          1.18,
+          0.32
+        ],
+        "d": 0.4,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.39,
+          0.22,
+          0.24
+        ],
+        "p": [
+          0,
+          1.26,
+          0.68
+        ],
+        "d": 0.4,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.39,
+          0.24,
+          0.24
+        ],
+        "p": [
+          0,
+          1.23,
+          1.03
+        ],
+        "d": 0.4,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.39,
+          0.32,
+          0.2
+        ],
+        "p": [
+          0,
+          1.4,
+          1.31
+        ],
+        "d": 0.4,
+        "r": 0.07
+      },
+      {
+        "h": [
+          0.39,
+          0.23,
+          0.2
+        ],
+        "p": [
+          0,
+          1.64,
+          1.26
+        ],
+        "d": 0.4,
+        "r": 0.07
+      }
+    ]
+  },
+  "results": [
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.03128918260335922
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.07291809469461441
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.014024200849235058
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0012667401460930705
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2615857422351837
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.024214671924710274
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.29980242252349854
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1672668606042862
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.39073124527931213
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.06628131121397018
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.14004985988140106
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.38526666164398193
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2013579159975052
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2558612525463104
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1883363574743271
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2548893094062805
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.31711259484291077
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.47861531376838684
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.26032358407974243
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.0016428091330453753
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.036487169563770294
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3406964838504791
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.030003195628523827
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.0446956641972065
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.0327451191842556
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.19386176764965057
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.04897246137261391
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.024085305631160736
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.023999586701393127
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.010424469597637653
+    },
+    {
+      "tweak": false,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0115217175334692
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.24800394475460052
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2584508955478668
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.23875808715820312
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.260399729013443
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1952923834323883
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11101976782083511
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1332596242427826
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13938097655773163
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.24988730251789093
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.12338221073150635
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2853628695011139
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.3232857584953308
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.04016023501753807
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1671997606754303
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.02940542623400688
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13082870841026306
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.2638343572616577
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.5251693725585938
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.186188206076622
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.012696551159024239
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2196422964334488
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.006186741404235363
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.18907427787780762
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.026926228776574135
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.026524649932980537
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2591864764690399
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.3105897903442383
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.20708726346492767
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.20595413446426392
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.01935655251145363
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2677200138568878
+    },
+    {
+      "tweak": false,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.015016710385680199
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.14752371609210968
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11056913435459137
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.12170354276895523
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.17702017724514008
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.19602161645889282
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1628027707338333
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.21622386574745178
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2788381278514862
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.22638484835624695
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2818495035171509
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.061720412224531174
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.35505467653274536
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1701841503381729
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.22831200063228607
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.10366886109113693
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08064927905797958
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11782854795455933
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.2709607481956482
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.1505204737186432
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.14861956238746643
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.23152083158493042
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.03027438372373581
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.025080785155296326
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.052155137062072754
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.11975327134132385
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.024273095652461052
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.049672435969114304
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.023491160944104195
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.14814534783363342
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.146063432097435
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.7404330372810364
+    },
+    {
+      "tweak": false,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1538388580083847
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1513524055480957
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.17957210540771484
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.20225387811660767
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.5243217945098877
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.03532003238797188
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.17364373803138733
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.18861141800880432
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.2138957530260086
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13881370425224304
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.39357441663742065
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.23713214695453644
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.1809728741645813
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11485276371240616
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1556137502193451
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.14925317466259003
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.5075757503509521
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.11345411837100983
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.27334001660346985
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2615363895893097
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.19980695843696594
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.005737930536270142
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3417733907699585
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.1796528846025467
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.11091233789920807
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.2886580228805542
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3623051345348358
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.1955271065235138
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.457322359085083
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.2087544947862625
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.016358930617570877
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.006235750392079353
+    },
+    {
+      "tweak": false,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.03839711472392082
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2107052206993103
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.19086533784866333
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17480804026126862
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.18235035240650177
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3475804924964905
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.13102105259895325
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17920352518558502
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.18926933407783508
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.47638216614723206
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.15537084639072418
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.09613129496574402
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.32377731800079346
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.18089382350444794
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1475996971130371
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.07555516064167023
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.19298644363880157
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.14923647046089172
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.03983674198389053
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.10838915407657623
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.011439166963100433
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.16332101821899414
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.16186459362506866
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17803727090358734
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.23717749118804932
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.03334265947341919
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1361977458000183
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.042537905275821686
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.117714524269104
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.08388876914978027
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.006925401743501425
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.055604834109544754
+    },
+    {
+      "tweak": false,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.007461728528141975
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.02041637897491455
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.06985205411911011
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0192718505859375
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.10670091211795807
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.36892732977867126
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.2129431813955307
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.31999385356903076
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.16472090780735016
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.5155630111694336
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.2585325241088867
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.31090742349624634
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.24665528535842896
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.09069350361824036
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.17899127304553986
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1214974895119667
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.14931082725524902
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.28927913308143616
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.296256959438324
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.3092692494392395
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.251334011554718
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.037946928292512894
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.34163349866867065
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.053645431995391846
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.25148072838783264
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.4720574617385864
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.07593092322349548
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.7693440914154053
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.09366198629140854
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6421310305595398
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 1.3099473714828491
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.4881266951560974
+    },
+    {
+      "tweak": false,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 1.1907345056533813
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.02008625492453575
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.06284341961145401
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.24240265786647797
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.04828625172376633
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.025872837752103806
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.23420171439647675
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5184940695762634
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.24483850598335266
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.15730376541614532
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.06473790109157562
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.17214709520339966
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.10460952669382095
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.05474163964390755
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1972263902425766
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.15819889307022095
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.09254644066095352
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.03590160235762596
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.07905446738004684
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0483856201171875
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.0978606790304184
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.1887061595916748
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.025524895638227463
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.07138460874557495
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.2733479142189026
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1508854478597641
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.16650636494159698
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.11690638959407806
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.20978914201259613
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2870407998561859
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03632667288184166
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.27566924691200256
+    },
+    {
+      "tweak": false,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.018868321552872658
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2302154153585434
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.02211231365799904
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.4078737199306488
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0182508397847414
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13697493076324463
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05461452901363373
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0494241900742054
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.053435008972883224
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.26171398162841797
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05477968975901604
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.20930710434913635
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08285566419363022
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.22507452964782715
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.18489830195903778
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2719290852546692
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.20111998915672302
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.22041870653629303
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.5064371824264526
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5947506427764893
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.5488687753677368
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11131637543439865
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03450736775994301
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2822219431400299
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.03393460065126419
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.028526730835437775
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.24862340092658997
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.03708742931485176
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2505621910095215
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.34072181582450867
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.19400747120380402
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.21047081053256989
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.19827111065387726
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.328219473361969
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05041686072945595
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.45868948101997375
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05396950617432594
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.32211947441101074
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2613309919834137
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.26189425587654114
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2818422019481659
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2709868252277374
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3043026626110077
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2503579258918762
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.24556851387023926
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.38183507323265076
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.5042553544044495
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.640521228313446
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2484699785709381
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.5694887042045593
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.04119987040758133
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5076102614402771
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.41218358278274536
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.34318259358406067
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09040671586990356
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5120788812637329
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08113352954387665
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.10055332630872726
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.44208118319511414
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17911487817764282
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.6979587078094482
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.561342716217041
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1931358426809311
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.6008496880531311
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.1923738270998001
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3136574625968933
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.14842158555984497
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.15288417041301727
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.33690962195396423
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.23986126482486725
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09837695956230164
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3790597915649414
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.12313707172870636
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.28578272461891174
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3390996754169464
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2494731992483139
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3337348699569702
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.22895871102809906
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.04482926428318024
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.23797765374183655
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3662398159503937
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3610880672931671
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.31002891063690186
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2620824873447418
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1717238873243332
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3624882996082306
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.30553358793258667
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.14112615585327148
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.036739762872457504
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13753634691238403
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.2560906410217285
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3503957688808441
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3804370164871216
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6602118015289307
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.044931329786777496
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3134455382823944
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.06569713354110718
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3633995056152344
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.256743848323822
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.4390583038330078
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2504681348800659
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2746850252151489
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.14561350643634796
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3849581778049469
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.15366975963115692
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13955803215503693
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.07640086114406586
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.19442620873451233
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08032708615064621
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3232080042362213
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.06349395960569382
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3448633551597595
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1082451343536377
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.4086223244667053
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.48580679297447205
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2555728256702423
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.4939870834350586
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.6531699895858765
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.04889192804694176
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2084023505449295
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.020534588024020195
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.04137472063302994
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.3028761148452759
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.04503072053194046
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.3072306215763092
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3166397213935852
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03671816736459732
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.5444734692573547
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.035099562257528305
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.009123030118644238
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.21588356792926788
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.05709213390946388
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.06438682228326797
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.019264627248048782
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1275104582309723
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.4557126462459564
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.12203241884708405
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.01764902099967003
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1069059669971466
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.19461379945278168
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.024450672790408134
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.015321114100515842
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11592794954776764
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0609552226960659
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.4285374879837036
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2541251480579376
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.29902684688568115
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.14889295399188995
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.16519370675086975
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.12758786976337433
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09680424630641937
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.11983440071344376
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.012322520837187767
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.015268741175532341
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2535269856452942
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.08884239941835403
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2541840672492981
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.40587618947029114
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.7949815988540649
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.12160193175077438
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.8384311199188232
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.5182263255119324
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.029991254210472107
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2562326490879059
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.04075920209288597
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.44063177704811096
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09513477236032486
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.08665718138217926
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0878363773226738
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3086434602737427
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.4178820252418518
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2805711328983307
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.4431123733520508
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.47757869958877563
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.037667520344257355
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.20298099517822266
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.10565956681966782
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.48582929372787476
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.30483195185661316
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17100350558757782
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.26192978024482727
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.6570664644241333
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.01493859849870205
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.32891884446144104
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.21903888881206512
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.03273003175854683
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03714058920741081
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.13317905366420746
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.04366856813430786
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6494746208190918
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.18751803040504456
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.43429672718048096
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.09062724560499191
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.32488685846328735
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.28956493735313416
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.14054307341575623
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.30101048946380615
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.21845203638076782
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.13027119636535645
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.08616601675748825
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13158434629440308
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0731605738401413
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.08776449412107468
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.22179363667964935
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1812535673379898
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.21206405758857727
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.3191637098789215
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.12315264344215393
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2180020809173584
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3030239939689636
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.023196863010525703
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.26046597957611084
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.12829864025115967
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3355798125267029
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.056741226464509964
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.25236839056015015
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.2834579050540924
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3339966833591461
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.26802048087120056
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1404145210981369
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2577756941318512
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.047067344188690186
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.028652792796492577
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.474299818277359
+    },
+    {
+      "tweak": false,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.03419528901576996
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0797390416264534
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.04998842999339104
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.03048226609826088
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08486663550138474
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3055989742279053
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.008234778419137001
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.21408607065677643
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.25652623176574707
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.33450713753700256
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.025849729776382446
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3055225610733032
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.4345186948776245
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.037274572998285294
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.32934072613716125
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.001858353498391807
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.29059043526649475
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.10642974078655243
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.4503345787525177
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.09230982512235641
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.29810547828674316
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.024516018107533455
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.00017579722043592483
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.041140735149383545
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0003089203091803938
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.044744960963726044
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.008968635462224483
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.02625381387770176
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.004536357242614031
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.017302265390753746
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.04597184807062149
+    },
+    {
+      "tweak": true,
+      "support": "base",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.002250420395284891
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.20772415399551392
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.18505258858203888
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.21941399574279785
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2264767289161682
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.20131626725196838
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05320744588971138
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2317618429660797
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.037933599203825
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.45369797945022583
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.16488531231880188
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2820107638835907
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.38357865810394287
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11434109508991241
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.3151450753211975
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.10615719109773636
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.20749065279960632
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3173291087150574
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.4452163279056549
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.16541509330272675
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3334638774394989
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.19114495813846588
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.0088780103251338
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1702447086572647
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.1788557916879654
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.008973401971161366
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.22416235506534576
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.08524355292320251
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.20152868330478668
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0651177167892456
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.012980995699763298
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3080652356147766
+    },
+    {
+      "tweak": true,
+      "support": "tortoise",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.013433299958705902
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.17297890782356262
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05645395815372467
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17184360325336456
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13300968706607819
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2567713260650635
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.0753425732254982
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.29736295342445374
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.23256419599056244
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.30888631939888
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.20434333384037018
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2410428673028946
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2767101526260376
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2179213911294937
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.23916473984718323
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.14367642998695374
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.26545190811157227
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0610385425388813
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.16980746388435364
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.21761871874332428
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.15448051691055298
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2149198353290558
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.039915841072797775
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.020779583603143692
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.054388441145420074
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.011918565258383751
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1564098596572876
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.9489251971244812
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.12513960897922516
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.23256532847881317
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.18259300291538239
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1618504524230957
+    },
+    {
+      "tweak": true,
+      "support": "capybara",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13570737838745117
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1658678948879242
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.41149425506591797
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.19894921779632568
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.531033456325531
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.15090709924697876
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.5375025868415833
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.17517691850662231
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.20703788101673126
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1471942663192749
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1823856383562088
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2040911763906479
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.20586097240447998
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.12839826941490173
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.21132329106330872
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.39468318223953247
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.17773902416229248
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.08061092346906662
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.27261051535606384
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.18714766204357147
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.25079721212387085
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.009857889264822006
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1513371765613556
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.13147206604480743
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.11020084470510483
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1520611196756363
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.020691031590104103
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.17873243987560272
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.009716774336993694
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.24153882265090942
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.015430670231580734
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.035292740911245346
+    },
+    {
+      "tweak": true,
+      "support": "toucan",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.028048360720276833
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.19245748221874237
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1768171638250351
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.15900267660617828
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.17174723744392395
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.22981055080890656
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.0965055525302887
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.23001058399677277
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.13983771204948425
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.24535439908504486
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.10811064392328262
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2906036078929901
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.33259353041648865
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.06128600239753723
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2013445943593979
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.060347866266965866
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2871466875076294
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.07574181258678436
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.07305260747671127
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.16376136243343353
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.27093705534935
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.12480980157852173
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.012943245470523834
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.13279439508914948
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.11738796532154083
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.012130186893045902
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11869306117296219
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.09561192244291306
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.11210589110851288
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2018023282289505
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.007318543735891581
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.17528770864009857
+    },
+    {
+      "tweak": true,
+      "support": "armadillo",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.006954525597393513
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.01845698244869709
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03625461459159851
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.015225116163492203
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05451678857207298
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.34107285737991333
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.23556993901729584
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2398608773946762
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.10372770577669144
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6105747818946838
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.27875980734825134
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.27745863795280457
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.21612773835659027
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.02970460057258606
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.15132373571395874
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.11060677468776703
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.14026778936386108
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.27359306812286377
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.27132782340049744
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.26545512676239014
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1750410795211792
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.05261989310383797
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.3139236867427826
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.06138283759355545
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.26288488507270813
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.29553818702697754
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.06448753923177719
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5585485696792603
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.06371501833200455
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3553543984889984
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.8213449120521545
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.41185519099235535
+    },
+    {
+      "tweak": true,
+      "support": "dragonfly",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.7962949872016907
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.07032135128974915
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.06864900887012482
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2279064953327179
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.21426808834075928
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.06186369061470032
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.21343690156936646
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.4788019061088562
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3183664381504059
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.1360088437795639
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.04491341859102249
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5162206292152405
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.05954490974545479
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.053982414305210114
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1331464797258377
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.13963989913463593
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.14421142637729645
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.0945705771446228
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.08154746890068054
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.15620757639408112
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.06452370434999466
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.23684586584568024
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.018507162109017372
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.15979212522506714
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.28698691725730896
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.16904082894325256
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.16819432377815247
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2093009054660797
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.1933753341436386
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2038433998823166
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.18724389374256134
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.5584877729415894
+    },
+    {
+      "tweak": true,
+      "support": "ram",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1555541306734085
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.17356476187705994
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.013363778591156006
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.15387141704559326
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.01367088034749031
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.09205076098442078
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.12600958347320557
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.07214467227458954
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1009000763297081
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.09868666529655457
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09860832244157791
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.10330625623464584
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0809224545955658
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.10678140819072723
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.23926854133605957
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.35617703199386597
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2579447031021118
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.31239208579063416
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.4967561364173889
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3127138912677765
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.5351687073707581
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.38906288146972656
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.040442999452352524
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1154487133026123
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.02823127806186676
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.03661581501364708
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.14719441533088684
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.033543720841407776
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.14707596600055695
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13485319912433624
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.17778770625591278
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0970732718706131
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "tortoise",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1756529062986374
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2978609800338745
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.04611678421497345
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.21251830458641052
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.03540828824043274
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.310611367225647
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.053823087364435196
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.12538360059261322
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.18411196768283844
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1616133600473404
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.10636013001203537
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.12509499490261078
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.11721402406692505
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.27335307002067566
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.36407944560050964
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.19100312888622284
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.25542300939559937
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.3156675696372986
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.021255623549222946
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.23238998651504517
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.4779534339904785
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.5437750816345215
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.08695288747549057
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.4496968686580658
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.046922843903303146
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11329884827136993
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1508200615644455
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.161404088139534
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.23606054484844208
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6216930150985718
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1899150013923645
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.3828170597553253
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "capybara",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.17168819904327393
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.2542206346988678
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.23920978605747223
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.1673840880393982
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.14061151444911957
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.5392583012580872
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11530915647745132
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3044183850288391
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1205434799194336
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.46740686893463135
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.30309930443763733
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.2898256480693817
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.38515475392341614
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.20331500470638275
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.05296717956662178
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.29066604375839233
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.48297053575515747
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.2145683914422989
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.36572030186653137
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.2849445343017578
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1604955494403839
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.17328481376171112
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.13239355385303497
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.37616705894470215
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0341181606054306
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2540671229362488
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.0621999055147171
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.024300334975123405
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.09248987585306168
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.4212876558303833
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.033920906484127045
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3451254367828369
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "toucan",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05281853303313255
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.18522551655769348
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.23341715335845947
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.30952295660972595
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.23308566212654114
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.06768392026424408
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.08333026617765427
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.09140655398368835
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05798790231347084
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1895073652267456
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.0952133759856224
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.09400712698698044
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.11335548758506775
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2861860692501068
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05559563636779785
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.14481201767921448
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08543916046619415
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.31305965781211853
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.5399959087371826
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.22512446343898773
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.5455132722854614
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.5476577877998352
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05902450159192085
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.19578243792057037
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.018517842516303062
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.05098919942975044
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.22468799352645874
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.012259569950401783
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.22426706552505493
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.27647897601127625
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05314086750149727
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3721041977405548
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "armadillo",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05245707929134369
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.02344786934554577
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.008000534027814865
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.18226195871829987
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.012483988888561726
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.006796006113290787
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.012791669927537441
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0109931705519557
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.011718892492353916
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.07187670469284058
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.09878794848918915
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0611298531293869
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0906762182712555
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.19258396327495575
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2666712999343872
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.014465783722698689
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.21301688253879547
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.19397412240505219
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.33365049958229065
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.060045886784791946
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.1188247874379158
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.10632301867008209
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.094124436378479
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.12597431242465973
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.10590597242116928
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.02054503932595253
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.2430630475282669
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.10135489702224731
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.2406935840845108
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.21402879059314728
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.6529467701911926
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.3170652687549591
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "dragonfly",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.6063988208770752
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.18171624839305878
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.02693619579076767
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.019243711605668068
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.04195132479071617
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.5303728580474854
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.11173257231712341
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.18149149417877197
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.08895447850227356
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.4525533616542816
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.027757618576288223
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.29235681891441345
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.0395372211933136
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.216535285115242
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.060402724891901016
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "fall",
+      "maxUp": 0.30004069209098816
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.07480470091104507
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.3318541944026947
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.395052433013916
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.03199751675128937
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.3995850384235382
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.4270309507846832
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.047704458236694336
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.16032852232456207
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.22726021707057953
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.022607648745179176
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.03730813413858414
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.03201800957322121
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.037887800484895706
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "fall",
+      "maxUp": 0.6483827829360962
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.1916292905807495
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.16652004420757294
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "ram",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.13327889144420624
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1927328258752823
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.04525591805577278
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.0904332771897316
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upright",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.05973957106471062
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.0467289462685585
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.08201229572296143
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.09529948979616165
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.11041588336229324
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.1967231184244156
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.1213076040148735
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.04104211926460266
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "pitch30",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.29001739621162415
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.11167760193347931
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.33648616075515747
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.28372064232826233
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll15",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.28655317425727844
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2038133293390274
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 1,
+      "outcome": "fall",
+      "maxUp": 0.04066671058535576
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.14435219764709473
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "roll30",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.0554899126291275
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.13192513585090637
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.05012056604027748
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.37795862555503845
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "side",
+      "yaw": 3,
+      "outcome": "fall",
+      "maxUp": 0.03688585385680199
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.06407152861356735
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.18932534754276276
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.3125409781932831
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "nose",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.19112913310527802
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 0,
+      "outcome": "stable",
+      "maxUp": 0.2492056041955948
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 1,
+      "outcome": "stable",
+      "maxUp": 0.015226975083351135
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 2,
+      "outcome": "stable",
+      "maxUp": 0.11124113202095032
+    },
+    {
+      "tweak": true,
+      "support": "skunk",
+      "incoming": "skunk",
+      "pose": "upside",
+      "yaw": 3,
+      "outcome": "stable",
+      "maxUp": 0.014807100407779217
+    }
+  ]
+}

@@ -104,3 +104,7 @@ Before polishing models, test all nine ordered species pairings. Vary placement 
 ## Repository practice
 
 Keep this specification synchronized with material implementation changes. Keep credentials, build output, caches and temporary renders out of Git. Decide on Git LFS or separate storage before committing large source assets. Record asset provenance and generation settings alongside final assets.
+
+### Skunk replacement screening
+
+Skunk replaces zebra in the proposed concept set (not gameplay). `studies/stackability/skunk-sweep.mjs` and `skunk-results.json` record 896 proxy cases. The broad-tail baseline achieved 140/256 incoming stable and 161/224 as upright support; a 25% lower tail achieved 180/256 and 183/224. Explore the lower tail while retaining its width/curl and small head. Geometry and density remain provisional; final models require validation.
