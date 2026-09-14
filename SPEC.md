@@ -116,3 +116,7 @@ Keep this specification synchronized with material implementation changes. Keep 
 ### Skunk replacement screening
 
 Skunk replaces zebra in the proposed concept set (not gameplay). `studies/stackability/skunk-sweep.mjs` and `skunk-results.json` record 896 proxy cases. The broad-tail baseline achieved 140/256 incoming stable and 161/224 as upright support; a 25% lower tail achieved 180/256 and 183/224. Explore the lower tail while retaining its width/curl and small head. Geometry and density remain provisional; final models require validation.
+
+### Reference-led Blender rebuild (review stage)
+
+Following visual review of the seven-animal integration, the four new models are being rebuilt against the approved concept illustrations. `scripts/build_reference_animals.py` authors separate editable Blender sculptures in `assets/source/menagerie-reference-rebuild.blend`; actual geometry renders are in `assets/previews/reference-models/`. This pass separates visual modeling from the provisional physics proxies. It is an art-review artifact, not a runtime replacement: the deployed GLBs, colliders, controls and silent audio state are unchanged. Any eventual game exports need fresh visual/collider alignment and mobile checks.
