@@ -9,6 +9,8 @@ const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
 const gameOver = document.querySelector<HTMLElement>("#game-over")!;
 const playAgainButton = document.querySelector<HTMLButtonElement>("#play-again")!;
+const devParams = import.meta.env.DEV ? new URLSearchParams(location.search) : null;
+const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
 
 await RAPIER.init();
 
@@ -120,6 +122,7 @@ type Animal = {
   counted: boolean;
   fixed: boolean;
   landingPulse: number;
+  resolutionTimer?: number;
 };
 
 const animals: Animal[] = [];
@@ -136,6 +139,9 @@ let score = 0;
 let lost = false;
 let accumulator = 0;
 let lastTime = performance.now() / 1000;
+let lastFrameWallTime = performance.now();
+let engineFault = false;
+let devFaultInjected = false;
 
 let speciesBag: SpeciesId[] = [];
 const rotationMatrix = new THREE.Matrix4();
@@ -201,7 +207,9 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId) {
 }
 
 function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THREE.Quaternion, fixed = false) {
-  const bodyDesc = fixed ? RAPIER.RigidBodyDesc.fixed() : RAPIER.RigidBodyDesc.dynamic().setLinearDamping(0.42).setAngularDamping(1.45);
+  const bodyDesc = fixed
+    ? RAPIER.RigidBodyDesc.fixed()
+    : RAPIER.RigidBodyDesc.dynamic().setLinearDamping(0.42).setAngularDamping(1.45).setCcdEnabled(true);
   bodyDesc.setTranslation(position.x, position.y, position.z).setRotation(rotation);
   const body = world.createRigidBody(bodyDesc);
   addAnimalColliders(body, species);
@@ -237,6 +245,8 @@ function landingTop(x: number, y: number) {
 }
 
 function takeNextSpecies() {
+  const requested = devParams?.get("species") as SpeciesId | null;
+  if (requested && speciesIds.includes(requested)) return requested;
   if (speciesBag.length === 0) {
     speciesBag = [...speciesIds];
     for (let index = speciesBag.length - 1; index > 0; index -= 1) {
@@ -256,7 +266,12 @@ function createHeld() {
   heldHalfExtents.copy(template.halfExtents);
   heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
-  held.quaternion.copy(randomQuaternion());
+  const eulerDegrees = ["rx", "ry", "rz"].map((key) => Number(devParams?.get(key)));
+  if (eulerDegrees.every(Number.isFinite)) {
+    held.quaternion.setFromEuler(new THREE.Euler(...eulerDegrees.map(THREE.MathUtils.degToRad) as [number, number, number]));
+  } else {
+    held.quaternion.copy(randomQuaternion());
+  }
   heldPosition.set(0, -0.25);
   held.position.set(
     heldPosition.x,
@@ -281,6 +296,7 @@ function releaseHeld() {
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
   preview.visible = false;
+  animal.resolutionTimer = window.setTimeout(() => resolveOverdueAnimal(animal), 8500);
 }
 
 function animateRig(rig: Pick<Animal, "eyes" | "head" | "feet">, time: number, intensity: number) {
@@ -356,6 +372,9 @@ function updateHeld(dt: number, time: number) {
 function endGame() {
   if (lost) return;
   lost = true;
+  for (const animal of animals) {
+    if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
+  }
   if (held) scene.remove(held);
   held = null;
   heldModel = null;
@@ -372,6 +391,8 @@ function endGame() {
 }
 
 function countAnimal(animal: Animal) {
+  if (animal.counted || lost) return;
+  if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
   animal.counted = true;
   animal.landingPulse = 1;
   animal.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
@@ -384,6 +405,27 @@ function countAnimal(animal: Animal) {
   tutorial.classList.add("hidden");
   setTimeout(() => scoreElement.classList.remove("bump"), 180);
   createHeld();
+}
+
+function resolveOverdueAnimal(animal: Animal) {
+  if (animal.counted || lost || animal.fixed) return;
+  try {
+    // This timer runs outside requestAnimationFrame. If rendering or physics
+    // stopped after a browser/engine exception, it can still end the turn.
+    const frameStopped = performance.now() - lastFrameWallTime > 1500;
+    if (frameStopped) {
+      engineFault = true;
+      endGame();
+    } else if (touchesStack(animal)) {
+      countAnimal(animal);
+    } else {
+      endGame();
+    }
+  } catch (error) {
+    console.error("Failed to resolve overdue animal", error);
+    engineFault = true;
+    endGame();
+  }
 }
 
 function updatePhysics(dt: number, time: number) {
@@ -416,7 +458,19 @@ function updatePhysics(dt: number, time: number) {
       else animal.quietFor = Math.max(0, animal.quietFor - dt * 0.45);
 
       const age = time - animal.birth;
+      if (!devFaultInjected && devParams?.get("fault") === "frame" && age > 0.4) {
+        devFaultInjected = true;
+        throw new Error("Injected frame failure for recovery testing");
+      }
       const gentlySupported = supported && linearSpeed < 0.85 && angularSpeed < 1.10;
+      if (diagnosticsEnabled) {
+        canvas.dataset.phase = "settling";
+        canvas.dataset.releaseAge = age.toFixed(3);
+        canvas.dataset.linearSpeed = linearSpeed.toFixed(4);
+        canvas.dataset.angularSpeed = angularSpeed.toFixed(4);
+        canvas.dataset.supported = String(supported);
+        canvas.dataset.quietFor = animal.quietFor.toFixed(3);
+      }
       if (age > 0.65 && (animal.quietFor > 0.58 || (age > 3.5 && gentlySupported) || (age > 6 && supported))) {
         countAnimal(animal);
       } else if (age > 8 && !supported) {
@@ -465,6 +519,7 @@ function resize() {
 
 function reset() {
   for (const animal of animals.splice(0)) {
+    if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
     world.removeRigidBody(animal.body);
     scene.remove(animal.group);
   }
@@ -475,6 +530,8 @@ function reset() {
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
   speciesBag = [];
+  engineFault = false;
+  devFaultInjected = false;
   score = 0;
   lost = false;
   pointerId = null;
@@ -517,6 +574,10 @@ canvas.addEventListener("pointercancel", (event) => {
 // gesture takes over. Without this path, the old pointer ID remains latched and
 // all later presses are ignored, leaving the animal suspended indefinitely.
 canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId));
+addEventListener("pointerup", (event) => finishPointer(event.pointerId), { capture: true });
+addEventListener("pointercancel", (event) => finishPointer(event.pointerId), { capture: true });
+addEventListener("touchend", finishInterruptedPointer, { capture: true });
+addEventListener("touchcancel", finishInterruptedPointer, { capture: true });
 
 function finishInterruptedPointer() {
   if (pointerId !== null) finishPointer(pointerId);
@@ -527,22 +588,39 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") finishInterruptedPointer();
 });
 
-restartButton.addEventListener("click", reset);
-playAgainButton.addEventListener("click", reset);
+function restartGame() {
+  // Rebuild the Rapier/WebGL state after an engine fault; ordinary gameplay
+  // losses still use the faster in-memory reset.
+  if (engineFault) location.reload();
+  else reset();
+}
+
+restartButton.addEventListener("click", restartGame);
+playAgainButton.addEventListener("click", restartGame);
 addEventListener("resize", resize);
 
 resize();
 reset();
 
 function frame(nowMilliseconds: number) {
+  // Schedule first so a one-off exception cannot permanently stop the loop.
+  requestAnimationFrame(frame);
+  lastFrameWallTime = performance.now();
   const time = nowMilliseconds / 1000;
   const dt = Math.min(time - lastTime, 0.05);
   lastTime = time;
-  updateHeld(dt, time);
-  updatePhysics(dt, time);
-  updateCamera(dt);
-  renderer.render(scene, camera);
-  requestAnimationFrame(frame);
+  try {
+    if (!engineFault) {
+      updateHeld(dt, time);
+      updatePhysics(dt, time);
+      updateCamera(dt);
+    }
+    renderer.render(scene, camera);
+  } catch (error) {
+    console.error("Menagerie frame failed", error);
+    engineFault = true;
+    endGame();
+  }
 }
 
 requestAnimationFrame(frame);
