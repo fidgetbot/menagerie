@@ -123,6 +123,8 @@ type Animal = {
   fixed: boolean;
   landingPulse: number;
   hadSupport: boolean;
+  lowering: boolean;
+  lastSafeZ: number;
   resolutionTimer?: number;
 };
 
@@ -145,6 +147,10 @@ let engineFault = false;
 let devFaultInjected = false;
 
 let speciesBag: SpeciesId[] = [];
+const devSpeciesSequence = (devParams?.get("sequence") ?? "")
+  .split(",")
+  .filter((species): species is SpeciesId => speciesIds.includes(species as SpeciesId));
+let devSpeciesIndex = 0;
 const rotationMatrix = new THREE.Matrix4();
 const controlAxis = new THREE.Vector3();
 const cameraRight = new THREE.Vector3();
@@ -153,6 +159,7 @@ const controlRotation = new THREE.Quaternion();
 const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
+const loweringSpeed = 4.2;
 
 function randomQuaternion() {
   // Uniform random rotation rather than independent Euler angles, which bias
@@ -228,7 +235,7 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed };
+  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z };
   animals.push(animal);
   return animal;
 }
@@ -254,6 +261,7 @@ function landingTop(x: number, y: number) {
 }
 
 function takeNextSpecies() {
+  if (devSpeciesSequence.length > 0) return devSpeciesSequence[devSpeciesIndex++ % devSpeciesSequence.length];
   const requested = devParams?.get("species") as SpeciesId | null;
   if (requested && speciesIds.includes(requested)) return requested;
   if (speciesBag.length === 0) {
@@ -296,8 +304,15 @@ function createHeld() {
 function releaseHeld() {
   if (!held || lost) return;
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
-  animal.body.setLinvel({ x: 0, y: 0, z: -0.05 }, true);
-  animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  // Preserve the generous rotation clearance without turning it into impact
+  // energy. Descend as a non-colliding sensor to the actual collider surface.
+  animal.lowering = true;
+  animal.body.setBodyType(RAPIER.RigidBodyType.KinematicPositionBased, true);
+  for (let index = 0; index < animal.body.numColliders(); index += 1) {
+    const collider = animal.body.collider(index);
+    collider.setSensor(true);
+    collider.setActiveCollisionTypes(RAPIER.ActiveCollisionTypes.ALL);
+  }
   scene.remove(held);
   held = null;
   heldModel = null;
@@ -342,6 +357,33 @@ function touchesStack(animal: Animal) {
     }
   }
   return false;
+}
+
+function intersectsLandingSurface(animal: Animal) {
+  for (let ownIndex = 0; ownIndex < animal.body.numColliders(); ownIndex += 1) {
+    const ownCollider = animal.body.collider(ownIndex);
+    if (world.intersectionPair(ownCollider, platformCollider)) return true;
+    for (const support of animals) {
+      if (support === animal || !support.counted) continue;
+      for (let supportIndex = 0; supportIndex < support.body.numColliders(); supportIndex += 1) {
+        if (world.intersectionPair(ownCollider, support.body.collider(supportIndex))) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function finishLowering(animal: Animal, time: number) {
+  const position = animal.body.translation();
+  animal.body.setTranslation({ x: position.x, y: position.y, z: animal.lastSafeZ }, true);
+  for (let index = 0; index < animal.body.numColliders(); index += 1) {
+    animal.body.collider(index).setSensor(false);
+  }
+  animal.body.setBodyType(RAPIER.RigidBodyType.Dynamic, true);
+  animal.body.setLinvel({ x: 0, y: 0, z: -0.05 }, true);
+  animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  animal.birth = time;
+  animal.lowering = false;
 }
 
 function updateRotationControl(dt: number) {
@@ -428,6 +470,8 @@ function resolveOverdueAnimal(animal: Animal) {
     if (frameStopped) {
       engineFault = true;
       endGame();
+    } else if (animal.lowering) {
+      endGame();
     } else if (touchesStack(animal)) {
       countAnimal(animal);
     } else {
@@ -443,10 +487,20 @@ function resolveOverdueAnimal(animal: Animal) {
 function updatePhysics(dt: number, time: number) {
   accumulator = Math.min(accumulator + dt, 0.12);
   while (accumulator >= world.timestep) {
+    for (const animal of animals) {
+      if (!animal.lowering) continue;
+      const position = animal.body.translation();
+      animal.lastSafeZ = position.z;
+      animal.body.setNextKinematicTranslation({ x: position.x, y: position.y, z: position.z - loweringSpeed * world.timestep });
+    }
     world.step();
+    for (const animal of animals) {
+      if (animal.lowering && intersectsLandingSurface(animal)) finishLowering(animal, time);
+    }
     accumulator -= world.timestep;
   }
 
+  let maxStackUpwardSpeed = 0;
   for (const animal of animals) {
     const p = animal.body.translation();
     const r = animal.body.rotation();
@@ -454,9 +508,10 @@ function updatePhysics(dt: number, time: number) {
     animal.group.quaternion.set(r.x, r.y, r.z, r.w);
     animateRig(animal, time + animal.birth, animal.fixed ? 0.18 : 0.28);
 
-    if (!animal.fixed && touchesPlatform(animal)) endGame();
+    if (animal.counted && !animal.fixed) maxStackUpwardSpeed = Math.max(maxStackUpwardSpeed, animal.body.linvel().z);
+    if (!animal.fixed && !animal.lowering && touchesPlatform(animal)) endGame();
 
-    if (!lost && !animal.fixed && !animal.counted) {
+    if (!lost && !animal.fixed && !animal.counted && !animal.lowering) {
       const linear = animal.body.linvel();
       const angular = animal.body.angvel();
       const linearSpeed = Math.hypot(linear.x, linear.y, linear.z);
@@ -510,6 +565,7 @@ function updatePhysics(dt: number, time: number) {
       animal.model.scale.set(1 + squash, 1 + squash, 1 - squash * 1.4);
     }
   }
+  if (diagnosticsEnabled) canvas.dataset.maxStackUpwardSpeed = maxStackUpwardSpeed.toFixed(4);
 }
 
 function updateCamera(dt: number) {
