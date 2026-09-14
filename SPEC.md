@@ -4,7 +4,7 @@
 
 First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps.
 
-The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses; it appears in a uniformly randomized three-dimensional orientation, and that same press begins relative one-finger positioning and pronounced three-axis squirming. It includes exact-orientation release, generous rotation clearance above the stack, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, platform-contact fall detection, and restart. Any released tortoise touching the platform ends the run, including one that previously scored and later falls from the stack. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. The animated startup gesture slider has been replaced by four short written instructions, styled after the concept study typography and faded after the first successful landing. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, valid settlement, platform-fall failure, score behavior, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
+The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses and appears in a uniformly randomized three-dimensional orientation. Whole-body autonomous squirming has been replaced by a relative rate control: drag direction chooses a camera-relative rotation axis, distance from the initial press controls angular speed through a nonlinear curve, returning near the press point stops rotation, and release drops the exact visible orientation. Placement is temporarily locked over the stack to isolate whether rotation steering is enjoyable. The prototype also includes generous rotation clearance, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, platform-contact fall detection, and restart. Any released tortoise touching the platform ends the run, including one that previously scored and later falls from the stack. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. Four short written instructions use the concept study typography and fade after the first successful landing. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, rate control, neutral-zone stopping, valid settlement, platform-fall failure, score behavior, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
 
 ## Goal
 
@@ -13,7 +13,7 @@ A small, compelling single-player 3D browser game, optimized for phone touch con
 ## Core loop
 
 1. Present one random animal at a time; no animal-selection menu.
-2. Player holds and positions the animal while it squirms.
+2. Player steers the animal's rotation while it remains centered over the stack.
 3. Releasing drops it in its current orientation.
 4. After settling, award one point and present the next animal.
 5. A released animal falling off the platform ends the run; one tap restarts.
@@ -22,16 +22,16 @@ No timer, combos, multiplayer, inventory, or progression systems for the first d
 
 ## Handling
 
-- One-finger hold, drag, release. No rotation buttons or manipulation modes.
-- Keep the next animal hidden until the player presses; the press summons it and begins handling.
+- One-finger press, drag, return, release. No rotation buttons or manipulation modes.
+- Keep the next animal hidden until the player presses; the press summons it and establishes the rate control's neutral point.
 - Give every summoned animal an independent, uniformly randomized 3D starting orientation.
-- Smooth, pronounced semi-random 3D rotational wandering while held: momentum, brief pauses, strong turns and occasional faster rolls. Upside-down orientations are possible.
-- Temperament varies by species, but useful release windows must occur regularly.
-- Capture the visible orientation exactly on release; stop deliberate squirming. Start by removing most angular momentum, then tune through playtests.
+- Drag direction selects a camera-relative rotation axis; drag distance selects angular speed. A generous dead zone stops rotation near the initial press point, and a nonlinear response supports both precise adjustments and fast turns.
+- Whole-body orientation is player-controlled. Character personality remains in cosmetic, non-load-bearing animation.
+- Capture the visible orientation exactly on release and begin with zero angular momentum.
 - Automatic height keeps the held animal far enough above first contact to rotate freely around any axis without visually intersecting the stack; a landing preview indicates contact, not guaranteed stability.
-- Offset the animal from the finger for visibility, and use relative dragging to avoid jumps.
+- Keep the animal clear of the finger and centered over the stack during this isolated control experiment.
 - Held animals cannot push the tower around. Released animals use physics.
-- Prototype and validate the mapping of screen dragging to horizontal/depth placement; depth clarity remains an interaction risk.
+- Reconsider horizontal/depth placement only after the rotation-control experiment establishes whether lateral positioning can add a meaningful second decision.
 
 ## Camera
 
@@ -75,11 +75,11 @@ Held animals blink, look toward landing spots, move non-supporting parts and squ
 
 ## Shape validation
 
-Before polishing models, test all nine ordered species pairings. Vary placement position, orientation and drop height. Measure settlement success, slipping, tipping and mixed-tower sensitivity. Tune geometry, friction and center of mass while preserving visual/physical agreement. Test squirm release-window frequency and duration. Simulations guide tuning; actual phone playtests determine feel.
+Before polishing models, test all nine ordered species pairings. Vary placement position, orientation and drop height. Measure settlement success, slipping, tipping and mixed-tower sensitivity. Tune geometry, friction and center of mass while preserving visual/physical agreement. Test rate-control precision across useful orientations and screen sizes. Simulations guide tuning; actual phone playtests determine feel.
 
 ## Milestones
 
-1. Playable touch/physics experiment: one finished-study tortoise, squirm/release, fixed tracking camera, score and restart. **Implemented; phone feel still needs human playtesting.**
+1. Playable touch/physics experiment: one finished-study tortoise, rate-controlled rotation/release, fixed tracking camera, score and restart. **Implemented; phone feel still needs human playtesting.**
 2. Shared headless simulation harness and shape tuning; expand from the tortoise to all three colliders.
 3. Three-animal art lineup at gameplay scale plus close-ups; refine the visual direction. **First study complete.**
 4. Optimized generated models, expressive animation, generated audio and polish.

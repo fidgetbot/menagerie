@@ -109,18 +109,19 @@ let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Turtle, "eyes" | "head" | "feet"> | null = null;
 let heldPosition = new THREE.Vector2(0, -0.2);
 let dragOrigin = new THREE.Vector2();
-let positionOrigin = new THREE.Vector2();
+let rotationInput = new THREE.Vector2();
 let pointerId: number | null = null;
 let score = 0;
 let lost = false;
-let squirmVelocity = new THREE.Vector3();
-let squirmTarget = new THREE.Vector3();
-let squirmChangeAt = 0;
 let accumulator = 0;
 let lastTime = performance.now() / 1000;
 
 const halfExtents = new THREE.Vector3(1.06, 1.18, 0.66);
 const rotationMatrix = new THREE.Matrix4();
+const controlAxis = new THREE.Vector3();
+const cameraRight = new THREE.Vector3();
+const cameraUp = new THREE.Vector3();
+const controlRotation = new THREE.Quaternion();
 const heldClearance = 1.15;
 
 function randomQuaternion() {
@@ -211,11 +212,6 @@ function landingTop(x: number, y: number) {
   return top;
 }
 
-function clampPosition(position: THREE.Vector2) {
-  const radius = position.length();
-  if (radius > 2.15) position.multiplyScalar(2.15 / radius);
-}
-
 function createHeld() {
   if (lost) return;
   held = new THREE.Group();
@@ -229,8 +225,7 @@ function createHeld() {
     heldPosition.y,
     landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion) + heldClearance,
   );
-  squirmVelocity.set(0, 0, 0);
-  squirmTarget.set(0, 0, 0);
+  rotationInput.set(0, 0);
   scene.add(held);
   preview.visible = true;
 }
@@ -267,29 +262,29 @@ function touchesPlatform(turtle: Turtle) {
   return false;
 }
 
-function updateSquirm(dt: number, time: number) {
+function updateRotationControl(dt: number) {
   if (!held || pointerId === null) return;
-  if (time >= squirmChangeAt) {
-    const pause = Math.random() < 0.12;
-    const energy = Math.random() < 0.28 ? 3.20 : 1.90;
-    squirmTarget.set(
-      pause ? 0 : THREE.MathUtils.randFloatSpread(energy),
-      pause ? 0 : THREE.MathUtils.randFloatSpread(energy * 0.95),
-      pause ? 0 : THREE.MathUtils.randFloatSpread(energy * 0.82),
-    );
-    squirmChangeAt = time + (pause ? THREE.MathUtils.randFloat(0.12, 0.26) : THREE.MathUtils.randFloat(0.68, 1.28));
-  }
-  squirmVelocity.lerp(squirmTarget, 1 - Math.exp(-dt * 7.0));
-  const speed = squirmVelocity.length();
-  if (speed > 0.0001) {
-    const axis = squirmVelocity.clone().normalize();
-    held.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(axis, speed * dt)).normalize();
-  }
+  const distance = rotationInput.length();
+  const deadZone = Math.max(16, Math.min(innerWidth, innerHeight) * 0.045);
+  if (distance <= deadZone) return;
+
+  const fullSpeedDistance = Math.min(innerWidth, innerHeight) * 0.34;
+  const amount = THREE.MathUtils.clamp((distance - deadZone) / (fullSpeedDistance - deadZone), 0, 1);
+  const speed = 3.2 * Math.pow(amount, 1.45);
+
+  cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+  cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
+  controlAxis
+    .copy(cameraUp).multiplyScalar(rotationInput.x / distance)
+    .addScaledVector(cameraRight, rotationInput.y / distance)
+    .normalize();
+  controlRotation.setFromAxisAngle(controlAxis, speed * dt);
+  held.quaternion.premultiply(controlRotation).normalize();
 }
 
 function updateHeld(dt: number, time: number) {
   if (!held) return;
-  updateSquirm(dt, time);
+  updateRotationControl(dt);
   const extent = verticalExtent(held.quaternion);
   const top = landingTop(heldPosition.x, heldPosition.y);
   held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
@@ -409,30 +404,25 @@ canvas.addEventListener("pointerdown", (event) => {
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   dragOrigin.set(event.clientX, event.clientY);
-  positionOrigin.copy(heldPosition);
-  squirmChangeAt = 0;
+  rotationInput.set(0, 0);
 });
 
 canvas.addEventListener("pointermove", (event) => {
   if (event.pointerId !== pointerId || !held) return;
-  const worldWidth = camera.right - camera.left;
-  const worldHeight = camera.top - camera.bottom;
-  heldPosition.set(
-    positionOrigin.x + (event.clientX - dragOrigin.x) / innerWidth * worldWidth,
-    positionOrigin.y - (event.clientY - dragOrigin.y) / innerHeight * worldHeight * 0.62,
-  );
-  clampPosition(heldPosition);
+  rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
 });
 
 canvas.addEventListener("pointerup", (event) => {
   if (event.pointerId !== pointerId) return;
   pointerId = null;
+  rotationInput.set(0, 0);
   releaseHeld();
 });
 
 canvas.addEventListener("pointercancel", (event) => {
   if (event.pointerId !== pointerId) return;
   pointerId = null;
+  rotationInput.set(0, 0);
   releaseHeld();
 });
 
