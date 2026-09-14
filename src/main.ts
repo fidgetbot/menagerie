@@ -63,13 +63,6 @@ ground.rotation.x = 0;
 ground.receiveShadow = true;
 scene.add(ground);
 
-const preview = new THREE.Mesh(
-  new THREE.RingGeometry(0.72, 0.84, 48),
-  new THREE.MeshBasicMaterial({ color: 0x247f72, transparent: true, opacity: 0.34, side: THREE.DoubleSide, depthWrite: false }),
-);
-preview.position.z = 0.012;
-scene.add(preview);
-
 type SpeciesId = "tortoise" | "capybara" | "toucan";
 type ModelTemplate = { model: THREE.Object3D; halfExtents: THREE.Vector3 };
 
@@ -297,7 +290,6 @@ function createHeld() {
   );
   rotationInput.set(0, 0);
   scene.add(held);
-  preview.visible = true;
   canvas.dataset.heldSpecies = heldSpecies;
 }
 
@@ -319,7 +311,6 @@ function releaseHeld() {
   heldRig = null;
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
-  preview.visible = false;
   animal.resolutionTimer = window.setTimeout(() => resolveOverdueAnimal(animal), 8500);
 }
 
@@ -414,9 +405,6 @@ function updateHeld(dt: number, time: number) {
   held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
   held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
   held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + heldClearance, 14, dt);
-  preview.position.set(held.position.x, held.position.y, top + 0.025);
-  const scale = THREE.MathUtils.clamp(1.15 - top * 0.035, 0.82, 1.15);
-  preview.scale.setScalar(scale);
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
 }
 
@@ -432,7 +420,6 @@ function endGame() {
   heldRig = null;
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
-  preview.visible = false;
   rotationInput.set(0, 0);
   pointerId = null;
   scoreElement.classList.add("lost");
