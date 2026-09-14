@@ -833,7 +833,7 @@ reset();
 
 // A one-time invitation to rotate, using exactly the same catchable inertia as a flick.
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  spinVelocity.set(0.3, 1, 0).normalize().applyQuaternion(camera.quaternion).multiplyScalar(2.2);
+  spinVelocity.set(0.3, 1, 0).normalize().applyQuaternion(camera.quaternion).multiplyScalar(4.4);
 }
 
 function frame(nowMilliseconds: number) {

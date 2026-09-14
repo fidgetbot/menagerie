@@ -145,4 +145,4 @@ Rescaled skunk: all 16 affected pairing/tilt scenarios resolved without upward-a
 
 ### Initial rotation invitation
 
-On page load only, the first incoming animal receives a gentle diagonal flick (2.2 rad/s initial speed, existing exponential damping). Touch or Drop catches it immediately. Subsequent pieces and ordinary restarts stay still; reduced-motion preference skips this decorative cue. No extra instruction text is added.
+On page load only, the first incoming animal receives a pronounced diagonal flick (4.4 rad/s initial speed, existing exponential damping). Touch or Drop catches it immediately. Subsequent pieces and ordinary restarts stay still; reduced-motion preference skips this decorative cue. No extra instruction text is added.
