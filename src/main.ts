@@ -39,6 +39,8 @@ const cameraTarget = new THREE.Vector3(0, 0, 1.9);
 let cameraHeight = 1.9;
 let fallTarget: Animal | null = null;
 let endingElapsed = 0;
+let newestReleased: Animal | null = null;
+let fallingFor = 0;
 
 scene.add(new THREE.HemisphereLight(0xf8fbef, 0x547667, 2.1));
 const key = new THREE.DirectionalLight(0xfff5de, 4.1);
@@ -349,6 +351,8 @@ function releaseHeld() {
   spinVelocity.set(0, 0, 0);
   if (!held || lost) return;
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
+  newestReleased = animal;
+  fallingFor = 0;
   recorder.event("released", { id: animal.id, species: animal.species, position: vector(held.position), rotation: quaternion(held.quaternion) });
   // Preserve the generous rotation clearance without turning it into impact
   // energy. Descend as a non-colliding sensor to the actual collider surface.
@@ -458,7 +462,8 @@ function endGame(reason = "unknown", animal?: Animal) {
   if (lost) return;
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
-  fallTarget ??= animal ?? null;
+  // Never retarget the camera to an older piece during a collapse.
+  fallTarget ??= animal === newestReleased ? animal ?? null : null;
   endingElapsed = 0;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
@@ -636,22 +641,27 @@ function updateCamera(dt: number) {
     const r = animal.body.rotation();
     highest = Math.max(highest, p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w), animal.halfExtents));
   }
-  // Follow only a descending body already below the stack's top and clear of support.
-  if (!lost && !fallTarget) {
-    fallTarget = animals.find(animal => !animal.fixed && !animal.lowering
-      && animal.body.linvel().z < -1 && animal.body.translation().z < highest - 0.6
-      && !touchesStack(animal)) ?? null;
-    if (fallTarget) recorder.event("fall_camera", { id: fallTarget.id });
+  const candidate = newestReleased;
+  const clearlyFalling = candidate && !candidate.lowering
+    && candidate.body.linvel().z < -1
+    && candidate.body.translation().z < highest - 0.6
+    && !touchesStack(candidate);
+  fallingFor = clearlyFalling ? fallingFor + dt : 0;
+  if (!lost && !fallTarget && candidate && fallingFor >= 0.35) {
+    fallTarget = candidate;
+    recorder.event("fall_camera", { id: candidate.id, confirmedFor: fallingFor });
   }
-  if (!lost && fallTarget && touchesStack(fallTarget)) fallTarget = null;
-  let desired = Math.max(1.9, highest + 1.25);
-  if (fallTarget) desired = Math.max(1.9, Math.min(cameraHeight, fallTarget.body.translation().z + 1.0));
+  // Lock the confirmed follow instead of oscillating between follow and tower modes.
+  let desired = Math.max(cameraHeight, 1.9, highest + 1.25);
+  if (fallTarget && !lost) desired = Math.max(1.9, Math.min(cameraHeight, fallTarget.body.translation().z + 1.0));
   if (lost) {
     endingElapsed += dt;
-    desired = 1.9;
+    // Platform contact can happen before the airborne confirmation window ends.
+    // Hold the view briefly before the final descent, even in that case.
+    desired = endingElapsed < 0.35 ? cameraHeight : 1.9;
   }
-  cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, fallTarget ? 4 : 2.7, dt);
-  if (lost && (Math.abs(cameraHeight - 1.9) < 0.06 || endingElapsed > 2.8)) showGameOver();
+  cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, 2.7, dt);
+  if (lost && endingElapsed >= 0.35 && (Math.abs(cameraHeight - 1.9) < 0.06 || endingElapsed > 3.2)) showGameOver();
   if (diagnosticsEnabled) canvas.dataset.cameraHeight = cameraHeight.toFixed(4);
   cameraTarget.set(0, 0.05, cameraHeight);
   camera.position.set(6.9, -12.3, cameraHeight + 6.0);
@@ -724,6 +734,8 @@ function recordTrace(dt: number) {
 function reset() {
   recorder.event("reset", { score, engineFault });
   fallTarget = null;
+  newestReleased = null;
+  fallingFor = 0;
   endingElapsed = 0;
   cameraHeight = 1.9;
   for (const animal of animals.splice(0)) {

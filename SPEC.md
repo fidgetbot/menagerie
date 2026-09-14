@@ -149,4 +149,4 @@ On page load only, the first incoming animal receives a pronounced diagonal flic
 
 ### Falling-animal ending camera
 
-A clearly descending, unsupported body below the stack top invites a downward camera follow; supporting contact cancels a recovered fall. The first target is retained during a collapse. On loss, ease to platform framing at the existing fixed zoom/angle, then reveal Game over (maximum 2.8-second delay). Restart remains available and clears the ending state. Engine faults show recovery immediately. Physics and scoring rules are unchanged.
+Only the newest released animal can trigger fall tracking, after 350 ms continuously descending unsupported below the stack top. A confirmed follow stays locked; it never switches to an older animal or oscillates back to tower tracking. Normal tower tracking only rises. On loss, hold 350 ms before easing to platform framing with the same 2.7 damping and fixed zoom/angle, then reveal Game over (maximum 3.2-second delay). Restart clears all camera state; engine faults show recovery immediately. Physics and scoring rules are unchanged.
