@@ -14,7 +14,7 @@ const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace
 const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
-const bubbleEnabled = runtimeParams.get("bubble") === "1";
+const bubbleEnabled = runtimeParams.get("bubble") !== "0";
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
 shareTraceButton.hidden = !recorder.enabled;
 

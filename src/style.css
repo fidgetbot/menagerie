@@ -142,27 +142,68 @@ html, body, #app {
   position: absolute;
   z-index: 2;
   aspect-ratio: 1;
-  transform: translate(-50%, -50%) scale(.985);
-  border: 1px solid #376f6b35;
+  transform: translate(-50%, -50%) scale(.975);
+  border: 1px solid #386f6b20;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 30% 22%, #ffffff20 0 4%, #ffffff0c 15%, transparent 39%),
-    radial-gradient(circle at 50% 52%, transparent 56%, #8eb7ad0c 78%, #2e696512 100%);
-  box-shadow: inset -8px -10px 24px #346d6810, inset 8px 8px 24px #ffffff10;
+    radial-gradient(ellipse at 29% 19%, #ffffff32 0 2%, #ffffff16 5%, #ffffff08 12%, transparent 24%),
+    radial-gradient(ellipse at 72% 81%, #3d7c740d 0 9%, transparent 31%),
+    radial-gradient(circle at 46% 43%, #ffffff09 0 48%, #8bb8ae0d 72%, #39736d17 100%);
+  box-shadow:
+    inset 18px 20px 38px #ffffff12,
+    inset -24px -20px 42px #336e6814,
+    0 4px 18px #315f5a0a;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 120ms ease-out, transform 140ms ease-out;
+  transition: opacity 110ms ease-out, transform 150ms ease-out;
 }
 #rotation-bubble[hidden] { display: none; }
-#rotation-bubble.active { opacity: .78; transform: translate(-50%, -50%) scale(1); }
+#rotation-bubble.active { opacity: .96; transform: translate(-50%, -50%) scale(1); }
+#rotation-bubble::before {
+  content: "";
+  position: absolute;
+  left: 13%;
+  top: 15%;
+  width: 19%;
+  height: 52%;
+  border-radius: 50%;
+  background: linear-gradient(105deg, #ffffff1f, #ffffff07 44%, transparent 72%);
+  filter: blur(7px);
+  transform: rotate(22deg);
+}
+#rotation-bubble::after {
+  content: "";
+  position: absolute;
+  right: 14%;
+  bottom: 11%;
+  width: 36%;
+  height: 18%;
+  border-bottom: 2px solid #326d671f;
+  border-radius: 50%;
+  filter: blur(.35px);
+  transform: rotate(-12deg);
+}
 #rotation-bubble .bubble-highlight {
   position: absolute;
-  left: 20%;
-  top: 13%;
-  width: 25%;
-  height: 10%;
-  border-top: 2px solid #ffffff42;
+  left: 12%;
+  top: 8%;
+  width: 49%;
+  height: 28%;
+  border-top: 3px solid #ffffff82;
+  border-left: 1px solid #ffffff2e;
   border-radius: 50%;
-  transform: rotate(-24deg);
-  opacity: .7;
+  filter: blur(.2px);
+  transform: rotate(-18deg);
+  opacity: .82;
+}
+#rotation-bubble .bubble-highlight::after {
+  content: "";
+  position: absolute;
+  right: 8%;
+  top: -7%;
+  width: 8px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff78;
+  filter: blur(.5px);
 }

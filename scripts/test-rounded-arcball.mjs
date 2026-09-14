@@ -159,4 +159,22 @@ for (const mobile of [true, false]) {
   console.log(`${mobile ? "Phone" : "Desktop"}: rounded tumble/roll, smooth shoulder, stable pivot, undo, flick, catch, Drop, and bubble A/B passed`);
 }
 
+const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
+await defaultPage.goto(`${root}?diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
+await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');
+await defaultPage.waitForTimeout(200);
+const defaultBubble = defaultPage.locator("#rotation-bubble");
+assert(!(await defaultBubble.evaluate((element) => element.hidden)), "Bare URL did not enable the default bubble");
+const defaultGeometry = await defaultBubble.evaluate((element) => ({
+  x: Number(element.dataset.centerX),
+  y: Number(element.dataset.centerY),
+}));
+await defaultPage.mouse.move(defaultGeometry.x, defaultGeometry.y);
+await defaultPage.mouse.down();
+await defaultPage.waitForTimeout(150);
+assert(Number(await defaultBubble.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Default bubble did not appear during touch");
+await defaultPage.mouse.up();
+await defaultPage.close();
+console.log("Bare URL: bubble defaults on");
+
 await browser.close();

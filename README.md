@@ -70,7 +70,7 @@ The stacking harness checks the 36 ordered species pairings and nine tilted/inve
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
 
-Append `?bubble=1` to show the optional translucent rotation bubble while dragging. The default `?bubble=0` presentation has no rotation graphic; both variants use exactly the same control mapping.
+The translucent rotation bubble is shown by default while dragging. Append `?bubble=0` to hide it for comparison; both variants use exactly the same control mapping.
 
 ### Project layout
 
