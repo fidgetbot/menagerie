@@ -91,36 +91,7 @@ html, body, #app {
   transform: translate(-50%, -8px);
 }
 
-#game-over {
-  position: absolute;
-  z-index: 4;
-  left: 50%;
-  top: 46%;
-  width: min(82vw, 330px);
-  padding: 0;
-  transform: translate(-50%, -50%);
-  color: #294f4b;
-  font-family: "Avenir Next", "Helvetica Neue", "DejaVu Sans", sans-serif;
-  text-align: center;
-  text-shadow: 0 2px 12px #ffffffcc;
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-
-#game-over.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -44%);
-}
-
-#game-over p {
-  margin: 0 0 18px;
-  font-size: clamp(18px, 5vw, 22px);
-  font-weight: 650;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-#play-again, #drop {
+#drop {
   min-width: 150px;
   min-height: 46px;
   padding: 0 24px;
@@ -137,7 +108,7 @@ html, body, #app {
   cursor: pointer;
 }
 
-#play-again:active { transform: scale(.96); }
+
 
 #restart {
   position: absolute;

@@ -10,8 +10,6 @@ const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
-const gameOver = document.querySelector<HTMLElement>("#game-over")!;
-const playAgainButton = document.querySelector<HTMLButtonElement>("#play-again")!;
 const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
 const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
@@ -41,6 +39,8 @@ let fallTarget: Animal | null = null;
 let endingElapsed = 0;
 let newestReleased: Animal | null = null;
 let fallingFor = 0;
+let cameraFallSpeed = 0;
+let finalViewRecorded = false;
 
 scene.add(new THREE.HemisphereLight(0xf8fbef, 0x547667, 2.1));
 const key = new THREE.DirectionalLight(0xfff5de, 4.1);
@@ -480,14 +480,8 @@ function endGame(reason = "unknown", animal?: Animal) {
   pointerId = null;
   scoreElement.classList.add("lost");
   tutorial.classList.add("hidden");
-  if (engineFault || !fallTarget) showGameOver();
-}
-
-function showGameOver() {
-  if (!gameOver.classList.contains("hidden")) return;
-  gameOver.classList.remove("hidden");
-  playAgainButton.focus({ preventScroll: true });
-  recorder.event("final_view", { cameraHeight });
+  dropButton.textContent = "Play again";
+  dropButton.disabled = false;
 }
 
 function countAnimal(animal: Animal) {
@@ -657,11 +651,24 @@ function updateCamera(dt: number) {
   if (lost) {
     endingElapsed += dt;
     // Platform contact can happen before the airborne confirmation window ends.
-    // Hold the view briefly before the final descent, even in that case.
-    desired = endingElapsed < 0.35 ? cameraHeight : 1.9;
+    // Hold briefly only if not already following; never stop an ongoing descent.
+    desired = !fallTarget && endingElapsed < 0.35 ? cameraHeight : 1.9;
   }
-  cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, 2.7, dt);
-  if (lost && endingElapsed >= 0.35 && (Math.abs(cameraHeight - 1.9) < 0.06 || endingElapsed > 3.2)) showGameOver();
+  if (fallTarget || lost) {
+    const remaining = Math.max(0, cameraHeight - desired);
+    // Cap both speed and acceleration: a distant falling target must not cause a catch-up lurch.
+    const targetSpeed = Math.min(2.0, remaining * 2.2);
+    const acceleration = 2.5 * dt;
+    cameraFallSpeed += THREE.MathUtils.clamp(targetSpeed - cameraFallSpeed, -acceleration, acceleration);
+    cameraHeight -= Math.min(remaining, cameraFallSpeed * dt);
+  } else {
+    cameraFallSpeed = 0;
+    cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, 2.7, dt);
+  }
+  if (lost && !finalViewRecorded && endingElapsed >= 0.35 && Math.abs(cameraHeight - 1.9) < 0.06) {
+    finalViewRecorded = true;
+    recorder.event("final_view", { cameraHeight });
+  }
   if (diagnosticsEnabled) canvas.dataset.cameraHeight = cameraHeight.toFixed(4);
   cameraTarget.set(0, 0.05, cameraHeight);
   camera.position.set(6.9, -12.3, cameraHeight + 6.0);
@@ -736,6 +743,8 @@ function reset() {
   fallTarget = null;
   newestReleased = null;
   fallingFor = 0;
+  cameraFallSpeed = 0;
+  finalViewRecorded = false;
   endingElapsed = 0;
   cameraHeight = 1.9;
   for (const animal of animals.splice(0)) {
@@ -759,7 +768,7 @@ function reset() {
   scoreElement.textContent = "0";
   scoreElement.classList.remove("lost", "bump");
   tutorial.classList.remove("hidden");
-  gameOver.classList.add("hidden");
+  dropButton.textContent = "Drop";
   const baseHeight = modelTemplates.get("tortoise")!.halfExtents.z;
   createAnimal("tortoise", new THREE.Vector3(0, 0, baseHeight), new THREE.Quaternion(), true);
   createHeld();
@@ -840,6 +849,7 @@ function restartGame() {
 
 dropButton.addEventListener("pointerdown", () => spinVelocity.set(0, 0, 0));
 dropButton.addEventListener("click", () => {
+  if (lost) { restartGame(); return; }
   if (!held || lost || engineFault) return;
   const captured = pointerId;
   pointerId = null;
@@ -849,7 +859,6 @@ dropButton.addEventListener("click", () => {
   releaseHeld();
 });
 restartButton.addEventListener("click", restartGame);
-playAgainButton.addEventListener("click", restartGame);
 shareTraceButton.addEventListener("click", async () => {
   shareTraceButton.disabled = true;
   const label = shareTraceButton.textContent;

@@ -23,16 +23,16 @@ try{
  if(job.a===job.b&&job.rx===0)await page.screenshot({path:new URL(`new-${job.a}.png`,output).pathname});
  for(let turn=0;turn<(job.rx===0?2:1);turn++){
   await page.mouse.move(200,540);await page.mouse.down();await page.waitForTimeout(40);await page.mouse.up();await page.locator("#drop").click();
-  await page.waitForFunction(()=>!document.querySelector('#game-over').classList.contains('hidden')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});
-  if(await page.locator('#game-over').evaluate(e=>!e.classList.contains('hidden')))break;
+  await page.waitForFunction(()=>document.querySelector('#score').classList.contains('lost')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});
+  if(await page.locator('#score').evaluate(e=>e.classList.contains('lost')))break;
  }
  await page.waitForTimeout(10000);
  await page.evaluate(()=>dispatchEvent(new Event('pagehide')));
  const trace=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('menagerie-flight-recorder-v1')));
  const anomalies=trace.events.filter(e=>e.type==='upward_anomaly');
  if(anomalies.length||process.env.TEST_PAIR)await fs.writeFile(new URL(`trace-${job.a}-${job.b}-${job.rx}.json`,output),JSON.stringify(trace));
- const score=await page.locator('#score').textContent();const lost=await page.locator('#game-over').evaluate(e=>!e.classList.contains('hidden'));
- await page.locator(lost?'#play-again':'#restart').click(); await page.waitForTimeout(100);
+ const score=await page.locator('#score').textContent();const lost=await page.locator('#score').evaluate(e=>e.classList.contains('lost'));
+ await page.locator(lost?'#drop':'#restart').click(); await page.waitForTimeout(100);
  results.push({...job,score,lost,anomalies,errors,reset:await page.locator('#score').textContent()});
  console.log(JSON.stringify(results.at(-1)));
 }catch(e){results.push({...job,error:String(e),errors});console.log(JSON.stringify(results.at(-1)));}finally{await page.close();}}
