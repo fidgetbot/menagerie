@@ -1,50 +1,80 @@
 # Menagerie
 
-**Hold. Wiggle. Stack.**
+**Rotate. Drop. Stack.**
 
-A phone-first 3D browser game about stacking colorful, living animal sculptures.
-Steer each animal into a useful orientation, then release it onto the tower. Build the tallest collection you can without losing an animal.
+A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a towering balancing act—one careful placement at a time.
 
-## Status
+**[Play Menagerie](https://fidgetbot.github.io/menagerie/)**
 
-The playable handling experiment includes tortoise, capybara, toucan, red armadillo, dragonfly, ram, and lower-tail skunk. The next animal waits visibly above the stack in a random three-dimensional orientation. Hold to take control, drag to steer its rotation rate, return toward the starting point to steady it, then release to drop. A shuffled bag presents all seven species before repeating. Placement is temporarily locked over the stack so this experiment isolates rotation control. Each animal has its own compound Rapier collider and balance profile. The build also includes automatic placement height, platform-contact fall detection, an orthographic tracking camera, score, game over, and play again.
+## How to play
 
-The animated startup gesture cue has been replaced by a brief goal and three compact written instructions in the concept study's restrained, letter-spaced typographic style. They fade after the first successful landing, leaving only the score and restart control.
+- **Drag** to rotate the waiting animal directly.
+- **Flick** to spin it; touch again to stop and fine-tune.
+- **Tap Drop** to place it in its current orientation.
+- Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
+- When the run ends, the same button becomes **Play again**.
 
-**Live:** https://fidgetbot.github.io/menagerie/
+Position and height are automatic, leaving you to find the right orientation. There is no timer. The camera follows the growing tower and eases down to a final view when the run ends.
 
-![Character lineup](assets/previews/lineup-v01.png)
+## The animals
 
-- [Editable Blender scene](assets/source/menagerie-lineup-v01.blend)
-- Close-ups: [Tortoise](assets/previews/tortoise-detail-v01.png) · [Capybara](assets/previews/capybara-detail-v01.png) · [Toucan](assets/previews/toucan-detail-v01.png)
-- [Asset notes and regeneration](assets/README.md)
+Six distinct shapes share softened edges, rich ceramic colors, and small animated details:
 
-![Approved expansion models](assets/previews/final-expansion.png)
+- **Tortoise:** a broad, tiled-shell foundation.
+- **Capybara:** a chunky body and sleepy expression.
+- **Toucan:** a compact body with an oversized, asymmetric beak.
+- **Armadillo:** red armor bands and a flattened back.
+- **Ram:** a smooth body and curled horns.
+- **Skunk:** a small head and broad, striped tail.
 
-[Editable expansion scene](assets/source/menagerie-final-expansion.blend)
+Every run starts on a fixed tortoise. Incoming animals arrive in shuffled sets containing all six species, each with a random orientation. Blinks, small limb movements, and a landing pulse add life without moving the supporting collision shapes.
 
-See [SPEC.md](SPEC.md) for the agreed direction, scope, and implementation milestones.
+## Built for the browser
 
-## Technology
+Menagerie runs entirely on your device, with no account or installation required. It supports touch and mouse input and plays without sound.
 
-TypeScript, Vite, Three.js, and Rapier. All seven animals are exported from Blender as GLB. GitHub Actions deploys the static browser build to GitHub Pages; gameplay runs entirely on the client. Generated sound effects, music, and fuller character animation remain planned.
+- **Three.js** renders the scene and Blender-authored GLB models.
+- **Rapier** simulates collisions and stacking at a fixed timestep.
+- **TypeScript and Vite** build the application.
+- **GitHub Actions and GitHub Pages** publish the static game.
 
-## Local development
+## Development
+
+Requires a current Node.js release and npm.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Use `npm run build` to run the TypeScript check and create the Pages artifact in `dist/`.
+Open the local `/menagerie/` URL printed by Vite.
 
-## Expansion regression
+```sh
+npm run build    # Type-check and build into dist/
+npm run preview  # Serve the production build locally
+```
 
-Start the dev server, then run `npx playwright install webkit` once and
-`npm run test:expansion`. The browser harness exercises all 49 ordered upright
-pairings and twelve tilted/inverted releases, waits ten seconds after resolution,
-checks the flight recorder for upward anomalies, and verifies restart. Results
-and phone screenshots go to ignored `tmp/expansion-test/`. Natural falls are
-valid outcomes; unresolved turns, page exceptions, upward anomalies, and broken
-resets fail the run. `TEST_URL` can target a different **development** server;
-production deliberately excludes the deterministic orientation controls.
+### Checks
+
+With the development server running:
+
+```sh
+npx playwright install webkit
+npm run test:expansion
+```
+
+The stacking harness checks the 36 ordered species pairings and nine tilted/inverted placements, observes each result for ten seconds, and checks for unresolved turns, browser errors, physics anomalies, and replay failures. Natural topples are valid outcomes. Results and screenshots are written to ignored `tmp/expansion-test/`.
+
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-trackball.mjs` checks rotation, momentum, touch-to-stop, placement orientation, and input cancellation against development or production builds.
+
+Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
+
+### Project layout
+
+- `src/` — gameplay, rendering, physics, controls, and collision data.
+- `public/models/` — browser-ready animal models.
+- `assets/source/` — editable Blender files.
+- `scripts/` — model generation, export, and browser checks.
+- [SPEC.md](SPEC.md) — current behavior and implementation constraints.
+
+The original trio is authored in [menagerie-lineup-v01.blend](assets/source/menagerie-lineup-v01.blend). Armadillo, ram, and skunk are authored in [menagerie-reference-rebuild.blend](assets/source/menagerie-reference-rebuild.blend).

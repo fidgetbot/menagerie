@@ -9,7 +9,6 @@ const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
-const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
 const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
 const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
@@ -858,7 +857,6 @@ dropButton.addEventListener("click", () => {
   recorder.event("drop_requested", { rotation: quaternion(held.quaternion) });
   releaseHeld();
 });
-restartButton.addEventListener("click", restartGame);
 shareTraceButton.addEventListener("click", async () => {
   shareTraceButton.disabled = true;
   const label = shareTraceButton.textContent;

@@ -32,7 +32,7 @@ try{
  const anomalies=trace.events.filter(e=>e.type==='upward_anomaly');
  if(anomalies.length||process.env.TEST_PAIR)await fs.writeFile(new URL(`trace-${job.a}-${job.b}-${job.rx}.json`,output),JSON.stringify(trace));
  const score=await page.locator('#score').textContent();const lost=await page.locator('#score').evaluate(e=>e.classList.contains('lost'));
- await page.locator(lost?'#drop':'#restart').click(); await page.waitForTimeout(100);
+ if(lost)await page.locator('#drop').click();else await page.reload();await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies); await page.waitForTimeout(100);
  results.push({...job,score,lost,anomalies,errors,reset:await page.locator('#score').textContent()});
  console.log(JSON.stringify(results.at(-1)));
 }catch(e){results.push({...job,error:String(e),errors});console.log(JSON.stringify(results.at(-1)));}finally{await page.close();}}

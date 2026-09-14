@@ -110,27 +110,6 @@ html, body, #app {
 
 
 
-#restart {
-  position: absolute;
-  top: max(16px, env(safe-area-inset-top));
-  right: max(16px, env(safe-area-inset-right));
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #ffffffb8;
-  box-shadow: 0 6px 20px #315b4c22;
-  color: #275b56;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  cursor: pointer;
-}
-
-#restart:active { transform: scale(.92); }
-#restart svg { width: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
 #share-trace {
   position: absolute;
   z-index: 5;
