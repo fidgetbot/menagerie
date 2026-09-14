@@ -11,11 +11,15 @@
       <canvas id="game" aria-label="Animal stacking game"></canvas>
       <output id="score" aria-label="Score">0</output>
       <aside id="tutorial" aria-label="How to play">
-        <p><strong>Press</strong> for an animal.</p>
+        <p><strong>Hold</strong> to take control.</p>
         <p><strong>Drag</strong> to make it turn.</p>
         <p><strong>Return</strong> to steady it.</p>
         <p><strong>Release</strong> to drop.</p>
       </aside>
+      <section id="game-over" class="hidden" role="alert" aria-live="assertive">
+        <p>Game over</p>
+        <button id="play-again" type="button">Play again</button>
+      </section>
       <button id="restart" type="button" aria-label="Restart">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg>
       </button>

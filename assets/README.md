@@ -15,9 +15,10 @@ Set `ROOT` in `scripts/build_lineup.py` to your checkout. Run it through Blender
 ```sh
 blender --background assets/source/menagerie-lineup-v01.blend --python scripts/finalize_lineup.py
 blender --background assets/source/menagerie-lineup-v01.blend --python scripts/render_review.py
+blender --background assets/source/menagerie-lineup-v01.blend --python scripts/export_animals.py
 ```
 
-Finalization saves a normal standalone Blender file. The review script aligns labels in camera space below the plinths and renders the overview plus three isolated close-ups. The source file retains the lineup camera. Scripts preserve other open projects; no scene-clearing operation is used.
+Finalization saves a normal standalone Blender file. The review script aligns labels in camera space below the plinths and renders the overview plus three isolated close-ups. The export script writes browser-ready GLBs for all three animals into `public/models/`. The source file retains the lineup camera. Scripts preserve other open projects; no scene-clearing operation is used.
 
 ## Review boundaries
 

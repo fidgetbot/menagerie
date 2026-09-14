@@ -4,7 +4,7 @@
 
 First character-design study created in Blender: three editable sculptures, a lineup render with camera-aligned labels, and isolated close-ups of all three animals. Models use procedural geometry and simple material colors, not UV texture maps.
 
-The first playable handling experiment is implemented with the exported tortoise, Three.js, and Rapier. The next tortoise remains hidden until the player presses and appears in a uniformly randomized three-dimensional orientation. Whole-body autonomous squirming has been replaced by a relative rate control: drag direction chooses a camera-relative rotation axis, distance from the initial press controls angular speed through a nonlinear curve, returning near the press point stops rotation, and release drops the exact visible orientation. Placement is temporarily locked over the stack to isolate whether rotation steering is enjoyable. The prototype also includes generous rotation clearance, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, platform-contact fall detection, and restart. Any released tortoise touching the platform ends the run, including one that previously scored and later falls from the stack. The tortoise collider uses broad load-bearing surfaces and a low, dense belly; decorative feet remain animation-only. Four short written instructions use the concept study typography and fade after the first successful landing. Pointer cancellation, lost capture, page hiding, and window blur all finish an active release so mobile browser chrome cannot leave a stale pointer latched with an animal suspended. A production Vite build passes locally and the mobile interaction check verifies press-to-spawn, rate control, neutral-zone stopping, interrupted-pointer recovery, valid settlement, platform-fall failure, score behavior, and reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
+The playable handling experiment now uses all three exported animals—tortoise, capybara, and toucan—with Three.js and Rapier. A shuffled bag presents each species once per three animals. The next animal is always visible above the stack in a uniformly randomized three-dimensional orientation; pressing takes control rather than spawning it. Drag direction chooses a camera-relative rotation axis, distance from the initial press controls angular speed through a nonlinear curve, returning near the press point stops rotation, and release drops the exact visible orientation. Placement remains temporarily locked over the stack to isolate whether rotation steering is enjoyable. Each species has its own compound collider and mass distribution: a forgiving low tortoise, a longer capybara bridge, and an asymmetric toucan with a deliberately light beak. The prototype also includes generous rotation clearance, automatic hover height, contact preview, fixed orthographic tower tracking, settlement scoring, platform-contact fall detection, restart, and a game-over overlay with a Play again action. Any released animal touching the platform ends the run, including one that previously scored and later falls from the stack. Decorative parts remain animation-only. Four short written instructions use the concept study typography and fade after the first successful landing. Pointer cancellation, lost capture, page hiding, and window blur all finish an active release so mobile browser chrome cannot leave a stale pointer latched with an animal suspended. A production Vite build passes locally and mobile checks cover all three visible species, rate control, interrupted-pointer recovery, failure presentation, and play-again reset without browser errors. The playable GitHub Pages build is checked over HTTPS after deployment, including its custom HTTP 404 response.
 
 ## Goal
 
@@ -16,14 +16,14 @@ A small, compelling single-player 3D browser game, optimized for phone touch con
 2. Player steers the animal's rotation while it remains centered over the stack.
 3. Releasing drops it in its current orientation.
 4. After settling, award one point and present the next animal.
-5. A released animal falling off the platform ends the run; one tap restarts.
+5. A released animal falling off the platform ends the run; show Game over and a Play again action.
 
 No timer, combos, multiplayer, inventory, or progression systems for the first demo. Local best score is sufficient. Exact settling and fall thresholds will be tuned in the prototype.
 
 ## Handling
 
 - One-finger press, drag, return, release. No rotation buttons or manipulation modes.
-- Keep the next animal hidden until the player presses; the press summons it and establishes the rate control's neutral point.
+- Keep the next animal visible above the stack while awaiting input; pressing establishes the rate control's neutral point.
 - Give every summoned animal an independent, uniformly randomized 3D starting orientation.
 - Drag direction selects a camera-relative rotation axis; drag distance selects angular speed. A generous dead zone stops rotation near the initial press point, and a nonlinear response supports both precise adjustments and fast turns.
 - Whole-body orientation is player-controlled. Character personality remains in cosmetic, non-load-bearing animation.
@@ -79,8 +79,8 @@ Before polishing models, test all nine ordered species pairings. Vary placement 
 
 ## Milestones
 
-1. Playable touch/physics experiment: one finished-study tortoise, rate-controlled rotation/release, fixed tracking camera, score and restart. **Implemented; phone feel still needs human playtesting.**
-2. Shared headless simulation harness and shape tuning; expand from the tortoise to all three colliders.
+1. Playable touch/physics experiment: three study animals, rate-controlled rotation/release, fixed tracking camera, score, game over and restart. **Implemented; phone feel still needs human playtesting.**
+2. Shared headless simulation harness and further shape tuning across all three colliders.
 3. Three-animal art lineup at gameplay scale plus close-ups; refine the visual direction. **First study complete.**
 4. Optimized generated models, expressive animation, generated audio and polish.
 5. Phone testing and GitHub Pages deployment; verify the live playable build.

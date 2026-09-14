@@ -7,6 +7,8 @@ const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
+const gameOver = document.querySelector<HTMLElement>("#game-over")!;
+const playAgainButton = document.querySelector<HTMLButtonElement>("#play-again")!;
 
 await RAPIER.init();
 
@@ -66,18 +68,33 @@ const preview = new THREE.Mesh(
 preview.position.z = 0.012;
 scene.add(preview);
 
-const gltf = await new GLTFLoader().loadAsync(`${import.meta.env.BASE_URL}models/tortoise.glb`);
-const modelTemplate = gltf.scene;
-// glTF is Y-up; the game and Rapier world deliberately use Blender-style Z-up.
-modelTemplate.rotation.x = Math.PI / 2;
-modelTemplate.position.z = -0.65;
-modelTemplate.updateMatrixWorld(true);
-modelTemplate.traverse((object) => {
-  if (object instanceof THREE.Mesh) {
-    object.castShadow = true;
-    object.receiveShadow = true;
-  }
-});
+type SpeciesId = "tortoise" | "capybara" | "toucan";
+type ModelTemplate = { model: THREE.Object3D; halfExtents: THREE.Vector3 };
+
+const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan"];
+const loader = new GLTFLoader();
+const loadedModels = await Promise.all(
+  speciesIds.map(async (species) => [species, (await loader.loadAsync(`${import.meta.env.BASE_URL}models/${species}.glb`)).scene] as const),
+);
+const modelTemplates = new Map<SpeciesId, ModelTemplate>();
+
+for (const [species, model] of loadedModels) {
+  // glTF is Y-up; the game and Rapier world deliberately use Blender-style Z-up.
+  model.rotation.x = Math.PI / 2;
+  model.updateMatrixWorld(true);
+  const bounds = new THREE.Box3().setFromObject(model);
+  const center = bounds.getCenter(new THREE.Vector3());
+  const size = bounds.getSize(new THREE.Vector3());
+  model.position.sub(center);
+  model.updateMatrixWorld(true);
+  model.traverse((object) => {
+    if (object instanceof THREE.Mesh) {
+      object.castShadow = true;
+      object.receiveShadow = true;
+    }
+  });
+  modelTemplates.set(species, { model, halfExtents: size.multiplyScalar(0.5) });
+}
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
 world.timestep = 1 / 60;
@@ -89,7 +106,9 @@ const platformCollider = world.createCollider(
   platformBody,
 );
 
-type Turtle = {
+type Animal = {
+  species: SpeciesId;
+  halfExtents: THREE.Vector3;
   body: RAPIER.RigidBody;
   group: THREE.Group;
   model: THREE.Object3D;
@@ -103,10 +122,12 @@ type Turtle = {
   landingPulse: number;
 };
 
-const turtles: Turtle[] = [];
+const animals: Animal[] = [];
 let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
-let heldRig: Pick<Turtle, "eyes" | "head" | "feet"> | null = null;
+let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
+let heldSpecies: SpeciesId | null = null;
+let heldHalfExtents = new THREE.Vector3();
 let heldPosition = new THREE.Vector2(0, -0.2);
 let dragOrigin = new THREE.Vector2();
 let rotationInput = new THREE.Vector2();
@@ -116,7 +137,7 @@ let lost = false;
 let accumulator = 0;
 let lastTime = performance.now() / 1000;
 
-const halfExtents = new THREE.Vector3(1.06, 1.18, 0.66);
+let speciesBag: SpeciesId[] = [];
 const rotationMatrix = new THREE.Matrix4();
 const controlAxis = new THREE.Vector3();
 const cameraRight = new THREE.Vector3();
@@ -140,59 +161,62 @@ function randomQuaternion() {
   );
 }
 
-function makeRig(model: THREE.Object3D) {
+function makeRig(model: THREE.Object3D, species: SpeciesId) {
   const feet: THREE.Object3D[] = [];
   const eyes: THREE.Object3D[] = [];
   let head: THREE.Object3D | undefined;
   model.traverse((object) => {
-    if (object.name.startsWith("Paddling jade foot")) feet.push(object);
-    if (object.name.startsWith("Tortoise eye") && !object.name.includes("sparkle")) eyes.push(object);
-    if (object.name === "Curious head") head = object;
+    if (["Paddling jade foot", "Tucked foot", "Broad resting foot"].some((name) => object.name.startsWith(name))) feet.push(object);
+    if (["Tortoise eye", "Sleepy eye", "Toucan eye"].some((name) => object.name.startsWith(name))
+      && !object.name.toLowerCase().includes("sparkle") && !object.name.toLowerCase().includes("glimmer")) eyes.push(object);
+    if ((species === "tortoise" && object.name.startsWith("Curious head"))
+      || (species === "capybara" && object.name.startsWith("Squared head"))
+      || (species === "toucan" && object.name === "Head")) head = object;
   });
   return { feet, eyes, head };
 }
 
-function addTurtleColliders(body: RAPIER.RigidBody) {
+function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId) {
   const material = (desc: RAPIER.ColliderDesc, density: number) =>
     desc.setFriction(1.08).setRestitution(0.01).setDensity(density);
 
-  // Broad, nearly flat support surfaces make the tortoise the forgiving first
-  // animal. Most of its mass lives in the low belly, while the visible feet
-  // remain animation-only so they cannot snag and flip a sensible placement.
-  world.createCollider(
-    material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.26, 0.10).setTranslation(0, 0, -0.05), 0.55),
-    body,
-  );
-  world.createCollider(
-    material(RAPIER.ColliderDesc.roundCuboid(0.72, 0.82, 0.06, 0.04).setTranslation(0, 0, -0.50), 3.2),
-    body,
-  );
-  world.createCollider(
-    material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.06, 0.02).setTranslation(0, 0, 0.54), 0.18),
-    body,
-  );
-  world.createCollider(
-    material(RAPIER.ColliderDesc.roundCuboid(0.31, 0.30, 0.18, 0.05).setTranslation(0, -1.10, -0.12), 0.20),
-    body,
-  );
+  if (species === "tortoise") {
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.26, 0.10).setTranslation(0, 0, -0.05), 0.55), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.72, 0.82, 0.06, 0.04).setTranslation(0, 0, -0.50), 3.2), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.06, 0.02).setTranslation(0, 0, 0.54), 0.18), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.31, 0.30, 0.18, 0.05).setTranslation(0, -1.10, -0.12), 0.20), body);
+  } else if (species === "capybara") {
+    // A long, useful bridge with its center of mass biased into the lower body.
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.67, 0.88, 0.48, 0.15).setTranslation(0, 0.34, -0.13), 0.95), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.62, 0.57, 0.46, 0.14).setTranslation(0, -0.65, 0.12), 0.42), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.50, 0.22, 0.23, 0.10).setTranslation(0, -1.12, -0.09), 0.20), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.58, 0.74, 0.07, 0.035).setTranslation(0, 0.22, -0.84), 2.4), body);
+  } else {
+    // The beak changes the silhouette and contacts, but stays deliberately light.
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.56, 0.55, 0.54, 0.16).setTranslation(0, 0.53, -0.18), 1.0), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.51, 0.47, 0.39, 0.14).setTranslation(0, 0.38, 0.57), 0.55), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.34, 0.76, 0.19, 0.06).setTranslation(0, -0.68, 0.52), 0.10), body);
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.45, 0.34, 0.07, 0.03).setTranslation(0, 0.31, -0.91), 2.6), body);
+  }
 }
 
-function createTurtle(position: THREE.Vector3, rotation: THREE.Quaternion, fixed = false) {
+function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THREE.Quaternion, fixed = false) {
   const bodyDesc = fixed ? RAPIER.RigidBodyDesc.fixed() : RAPIER.RigidBodyDesc.dynamic().setLinearDamping(0.42).setAngularDamping(1.45);
   bodyDesc.setTranslation(position.x, position.y, position.z).setRotation(rotation);
   const body = world.createRigidBody(bodyDesc);
-  addTurtleColliders(body);
+  addAnimalColliders(body, species);
+  const template = modelTemplates.get(species)!;
   const group = new THREE.Group();
-  const model = modelTemplate.clone(true);
+  const model = template.model.clone(true);
   group.add(model);
   scene.add(group);
-  const rig = makeRig(model);
-  const turtle: Turtle = { body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0 };
-  turtles.push(turtle);
-  return turtle;
+  const rig = makeRig(model, species);
+  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0 };
+  animals.push(animal);
+  return animal;
 }
 
-function verticalExtent(quaternion: THREE.Quaternion) {
+function verticalExtent(quaternion: THREE.Quaternion, halfExtents: THREE.Vector3) {
   rotationMatrix.makeRotationFromQuaternion(quaternion);
   const e = rotationMatrix.elements;
   return Math.abs(e[2]) * halfExtents.x + Math.abs(e[6]) * halfExtents.y + Math.abs(e[10]) * halfExtents.z;
@@ -200,49 +224,66 @@ function verticalExtent(quaternion: THREE.Quaternion) {
 
 function landingTop(x: number, y: number) {
   let top = 0;
-  for (const turtle of turtles) {
-    const p = turtle.body.translation();
+  for (const animal of animals) {
+    const p = animal.body.translation();
     const distance = Math.hypot(x - p.x, y - p.y);
     if (distance < 1.62) {
-      const r = turtle.body.rotation();
+      const r = animal.body.rotation();
       const q = new THREE.Quaternion(r.x, r.y, r.z, r.w);
-      top = Math.max(top, p.z + verticalExtent(q));
+      top = Math.max(top, p.z + verticalExtent(q, animal.halfExtents));
     }
   }
   return top;
 }
 
+function takeNextSpecies() {
+  if (speciesBag.length === 0) {
+    speciesBag = [...speciesIds];
+    for (let index = speciesBag.length - 1; index > 0; index -= 1) {
+      const swap = Math.floor(Math.random() * (index + 1));
+      [speciesBag[index], speciesBag[swap]] = [speciesBag[swap], speciesBag[index]];
+    }
+  }
+  return speciesBag.pop()!;
+}
+
 function createHeld() {
   if (lost) return;
+  heldSpecies = takeNextSpecies();
+  const template = modelTemplates.get(heldSpecies)!;
   held = new THREE.Group();
-  heldModel = modelTemplate.clone(true);
-  heldRig = makeRig(heldModel);
+  heldModel = template.model.clone(true);
+  heldHalfExtents.copy(template.halfExtents);
+  heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
   held.quaternion.copy(randomQuaternion());
   heldPosition.set(0, -0.25);
   held.position.set(
     heldPosition.x,
     heldPosition.y,
-    landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion) + heldClearance,
+    landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion, heldHalfExtents) + heldClearance,
   );
   rotationInput.set(0, 0);
   scene.add(held);
   preview.visible = true;
+  canvas.dataset.heldSpecies = heldSpecies;
 }
 
 function releaseHeld() {
   if (!held || lost) return;
-  const turtle = createTurtle(held.position.clone(), held.quaternion.clone());
-  turtle.body.setLinvel({ x: 0, y: 0, z: -0.05 }, true);
-  turtle.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
+  animal.body.setLinvel({ x: 0, y: 0, z: -0.05 }, true);
+  animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
   scene.remove(held);
   held = null;
   heldModel = null;
   heldRig = null;
+  heldSpecies = null;
+  delete canvas.dataset.heldSpecies;
   preview.visible = false;
 }
 
-function animateRig(rig: Pick<Turtle, "eyes" | "head" | "feet">, time: number, intensity: number) {
+function animateRig(rig: Pick<Animal, "eyes" | "head" | "feet">, time: number, intensity: number) {
   if (rig.head) rig.head.rotation.x = Math.sin(time * 2.1) * 0.045 * intensity;
   rig.feet.forEach((foot, index) => {
     foot.rotation.x = Math.sin(time * 4.2 + index * 1.7) * 0.10 * intensity;
@@ -251,10 +292,10 @@ function animateRig(rig: Pick<Turtle, "eyes" | "head" | "feet">, time: number, i
   rig.eyes.forEach((eye) => { eye.scale.z = blink; });
 }
 
-function touchesPlatform(turtle: Turtle) {
-  for (let index = 0; index < turtle.body.numColliders(); index += 1) {
+function touchesPlatform(animal: Animal) {
+  for (let index = 0; index < animal.body.numColliders(); index += 1) {
     let touching = false;
-    world.contactPair(turtle.body.collider(index), platformCollider, (manifold) => {
+    world.contactPair(animal.body.collider(index), platformCollider, (manifold) => {
       if (manifold.numSolverContacts() > 0) touching = true;
     });
     if (touching) return true;
@@ -285,7 +326,7 @@ function updateRotationControl(dt: number) {
 function updateHeld(dt: number, time: number) {
   if (!held) return;
   updateRotationControl(dt);
-  const extent = verticalExtent(held.quaternion);
+  const extent = verticalExtent(held.quaternion, heldHalfExtents);
   const top = landingTop(heldPosition.x, heldPosition.y);
   held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
   held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
@@ -296,6 +337,24 @@ function updateHeld(dt: number, time: number) {
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
 }
 
+function endGame() {
+  if (lost) return;
+  lost = true;
+  if (held) scene.remove(held);
+  held = null;
+  heldModel = null;
+  heldRig = null;
+  heldSpecies = null;
+  delete canvas.dataset.heldSpecies;
+  preview.visible = false;
+  rotationInput.set(0, 0);
+  pointerId = null;
+  scoreElement.classList.add("lost");
+  tutorial.classList.add("hidden");
+  gameOver.classList.remove("hidden");
+  playAgainButton.focus({ preventScroll: true });
+}
+
 function updatePhysics(dt: number, time: number) {
   accumulator = Math.min(accumulator + dt, 0.12);
   while (accumulator >= world.timestep) {
@@ -303,58 +362,50 @@ function updatePhysics(dt: number, time: number) {
     accumulator -= world.timestep;
   }
 
-  for (const turtle of turtles) {
-    const p = turtle.body.translation();
-    const r = turtle.body.rotation();
-    turtle.group.position.set(p.x, p.y, p.z);
-    turtle.group.quaternion.set(r.x, r.y, r.z, r.w);
-    animateRig(turtle, time + turtle.birth, turtle.fixed ? 0.18 : 0.28);
+  for (const animal of animals) {
+    const p = animal.body.translation();
+    const r = animal.body.rotation();
+    animal.group.position.set(p.x, p.y, p.z);
+    animal.group.quaternion.set(r.x, r.y, r.z, r.w);
+    animateRig(animal, time + animal.birth, animal.fixed ? 0.18 : 0.28);
 
-    if (!turtle.fixed && touchesPlatform(turtle)) lost = true;
+    if (!animal.fixed && touchesPlatform(animal)) endGame();
 
-    if (!lost && !turtle.fixed && !turtle.counted) {
-      const linear = turtle.body.linvel();
-      const angular = turtle.body.angvel();
-      const quiet = turtle.body.isSleeping()
+    if (!lost && !animal.fixed && !animal.counted) {
+      const linear = animal.body.linvel();
+      const angular = animal.body.angvel();
+      const quiet = animal.body.isSleeping()
         || (Math.hypot(linear.x, linear.y, linear.z) < 0.24 && Math.hypot(angular.x, angular.y, angular.z) < 0.30);
-      turtle.quietFor = quiet ? turtle.quietFor + dt : 0;
-      if (time - turtle.birth > 0.65 && turtle.quietFor > 0.58) {
-        turtle.counted = true;
-        turtle.landingPulse = 1;
+      animal.quietFor = quiet ? animal.quietFor + dt : 0;
+      if (time - animal.birth > 0.65 && animal.quietFor > 0.58) {
+        animal.counted = true;
+        animal.landingPulse = 1;
         score += 1;
         scoreElement.value = String(score);
         scoreElement.textContent = String(score);
         scoreElement.classList.add("bump");
         tutorial.classList.add("hidden");
         setTimeout(() => scoreElement.classList.remove("bump"), 180);
+        createHeld();
       }
     }
 
-    if (!turtle.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) lost = true;
-    if (turtle.landingPulse > 0) {
-      turtle.landingPulse = Math.max(0, turtle.landingPulse - dt * 4.5);
-      const squash = Math.sin(turtle.landingPulse * Math.PI) * 0.035;
-      turtle.model.scale.set(1 + squash, 1 + squash, 1 - squash * 1.4);
+    if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame();
+    if (animal.landingPulse > 0) {
+      animal.landingPulse = Math.max(0, animal.landingPulse - dt * 4.5);
+      const squash = Math.sin(animal.landingPulse * Math.PI) * 0.035;
+      animal.model.scale.set(1 + squash, 1 + squash, 1 - squash * 1.4);
     }
-  }
-
-  if (lost) {
-    if (held) scene.remove(held);
-    held = null;
-    heldModel = null;
-    heldRig = null;
-    preview.visible = false;
-    scoreElement.classList.add("lost");
   }
 }
 
 function updateCamera(dt: number) {
   let highest = 1.25;
-  for (const turtle of turtles) {
-    if (!turtle.counted) continue;
-    const p = turtle.body.translation();
-    const r = turtle.body.rotation();
-    highest = Math.max(highest, p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w)));
+  for (const animal of animals) {
+    if (!animal.counted) continue;
+    const p = animal.body.translation();
+    const r = animal.body.rotation();
+    highest = Math.max(highest, p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w), animal.halfExtents));
   }
   const desired = Math.max(1.9, highest + 1.25);
   cameraHeight = THREE.MathUtils.damp(cameraHeight, desired, 2.7, dt);
@@ -377,29 +428,32 @@ function resize() {
 }
 
 function reset() {
-  for (const turtle of turtles.splice(0)) {
-    world.removeRigidBody(turtle.body);
-    scene.remove(turtle.group);
+  for (const animal of animals.splice(0)) {
+    world.removeRigidBody(animal.body);
+    scene.remove(animal.group);
   }
   if (held) scene.remove(held);
   held = null;
   heldModel = null;
   heldRig = null;
+  heldSpecies = null;
+  delete canvas.dataset.heldSpecies;
+  speciesBag = [];
   score = 0;
   lost = false;
   pointerId = null;
   scoreElement.value = "0";
   scoreElement.textContent = "0";
   scoreElement.classList.remove("lost", "bump");
-  createTurtle(new THREE.Vector3(0, 0, 0.65), new THREE.Quaternion(), true);
+  tutorial.classList.remove("hidden");
+  gameOver.classList.add("hidden");
+  const baseHeight = modelTemplates.get("tortoise")!.halfExtents.z;
+  createAnimal("tortoise", new THREE.Vector3(0, 0, baseHeight), new THREE.Quaternion(), true);
+  createHeld();
 }
 
 canvas.addEventListener("pointerdown", (event) => {
   if (lost || pointerId !== null) return;
-  if (!held) {
-    if (turtles.some((turtle) => !turtle.counted)) return;
-    createHeld();
-  }
   if (!held) return;
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
@@ -438,6 +492,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 restartButton.addEventListener("click", reset);
+playAgainButton.addEventListener("click", reset);
 addEventListener("resize", resize);
 
 resize();

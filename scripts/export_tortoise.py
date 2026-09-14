@@ -1,4 +1,4 @@
-"""Export the tortoise study as a self-contained GLB for the browser prototype."""
+"""Legacy single-animal export; prefer export_animals.py for the playable cast."""
 
 import bpy
 from pathlib import Path
