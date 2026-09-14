@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { FlightRecorder } from "./trace";
+import { PlacementShadow } from "./placement-shadow";
 import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
@@ -106,6 +107,10 @@ for (const [species, model] of loadedModels) {
     : size.multiplyScalar(0.5);
   modelTemplates.set(species, { model, halfExtents });
 }
+
+const placementShadow = new PlacementShadow();
+placementShadow.receive(scene);
+for (const template of modelTemplates.values()) placementShadow.receive(template.model);
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
 world.timestep = 1 / 60;
@@ -319,6 +324,7 @@ function createHeld() {
   const template = modelTemplates.get(heldSpecies)!;
   held = new THREE.Group();
   heldModel = template.model.clone(true);
+  heldModel.traverse(object => { if (object instanceof THREE.Mesh) object.castShadow = false; });
   heldHalfExtents.copy(template.halfExtents);
   heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
@@ -896,6 +902,7 @@ function frame(nowMilliseconds: number) {
       updatePhysics(dt, time);
       updateCamera(dt);
     }
+    placementShadow.render(renderer, held);
     renderer.render(scene, camera);
     recordTrace(dt);
   } catch (error) {

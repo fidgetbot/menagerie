@@ -28,6 +28,10 @@ Use a fixed timestep and continuous collision detection. Landing friction and fi
 
 Broad softened planes, rich ceramic colors, glossy dark eyes, restrained sculpted detail, warm lighting, and readable shadows. Cosmetic blinking, limb animation, and a landing pulse do not alter load-bearing colliders. Original trio: `assets/source/menagerie-lineup-v01.blend`. Armadillo, ram, and skunk: `assets/source/menagerie-reference-rebuild.blend`. Runtime models: `public/models/`.
 
+## Placement hint
+
+While an animal is held, its animated silhouette is rendered to a 512-pixel top-down mask and softly projected onto the stack and platform. This replaces only that held animal’s angled cast shadow; the existing lighting and placed-animal shadows remain unchanged. The hint shows the footprint, not a guarantee of balance. Drop removes the hint and the released model casts its ordinary shadow. Physics is unchanged.
+
 ## Validation and delivery
 
 Build with `npm run build`. Browser checks cover all 36 ordered active-species pairs plus tilted placements, ten-second post-resolution observation, input gestures, replay, and failure recovery. Natural falls are valid outcomes; unresolved turns, exceptions, and upward anomalies fail regression checks. Phone feel still requires human playtesting.
