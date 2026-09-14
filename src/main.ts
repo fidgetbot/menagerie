@@ -122,6 +122,7 @@ type Animal = {
   counted: boolean;
   fixed: boolean;
   landingPulse: number;
+  hadSupport: boolean;
   resolutionTimer?: number;
 };
 
@@ -150,6 +151,8 @@ const cameraRight = new THREE.Vector3();
 const cameraUp = new THREE.Vector3();
 const controlRotation = new THREE.Quaternion();
 const heldClearance = 1.15;
+const landingFriction = 0.25;
+const stackedFriction = 1.08;
 
 function randomQuaternion() {
   // Uniform random rotation rather than independent Euler angles, which bias
@@ -182,9 +185,15 @@ function makeRig(model: THREE.Object3D, species: SpeciesId) {
   return { feet, eyes, head };
 }
 
-function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId) {
+function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: boolean) {
+  const friction = fixed ? stackedFriction : landingFriction;
   const material = (desc: RAPIER.ColliderDesc, density: number) =>
-    desc.setFriction(1.08).setRestitution(0.01).setDensity(density);
+    desc
+      .setFriction(friction)
+      .setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min)
+      .setRestitution(0)
+      .setRestitutionCombineRule(RAPIER.CoefficientCombineRule.Min)
+      .setDensity(density);
 
   if (species === "tortoise") {
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.26, 0.10).setTranslation(0, 0, -0.05), 0.55), body);
@@ -212,14 +221,14 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
     : RAPIER.RigidBodyDesc.dynamic().setLinearDamping(0.42).setAngularDamping(1.45).setCcdEnabled(true);
   bodyDesc.setTranslation(position.x, position.y, position.z).setRotation(rotation);
   const body = world.createRigidBody(bodyDesc);
-  addAnimalColliders(body, species);
+  addAnimalColliders(body, species, fixed);
   const template = modelTemplates.get(species)!;
   const group = new THREE.Group();
   const model = template.model.clone(true);
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0 };
+  const animal: Animal = { species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed };
   animals.push(animal);
   return animal;
 }
@@ -397,6 +406,9 @@ function countAnimal(animal: Animal) {
   animal.landingPulse = 1;
   animal.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
   animal.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  for (let index = 0; index < animal.body.numColliders(); index += 1) {
+    animal.body.collider(index).setFriction(stackedFriction);
+  }
   animal.body.sleep();
   score += 1;
   scoreElement.value = String(score);
@@ -450,6 +462,14 @@ function updatePhysics(dt: number, time: number) {
       const linearSpeed = Math.hypot(linear.x, linear.y, linear.z);
       const angularSpeed = Math.hypot(angular.x, angular.y, angular.z);
       const supported = touchesStack(animal);
+      if (supported && !animal.hadSupport) {
+        // Low landing friction prevents a corner from pole-vaulting the body.
+        // Absorb the first impact like a soft toy, then restore strong static
+        // stacking friction once the placement has been counted.
+        animal.hadSupport = true;
+        animal.body.setLinvel({ x: linear.x * 0.45, y: linear.y * 0.45, z: Math.min(linear.z, 0) }, true);
+        animal.body.setAngvel({ x: angular.x * 0.55, y: angular.y * 0.55, z: angular.z * 0.55 }, true);
+      }
       const calm = animal.body.isSleeping() || (linearSpeed < 0.30 && angularSpeed < 0.42);
       // Solver corrections at compound-collider corners can produce tiny speed
       // spikes forever. Accumulate evidence of supported calm instead of
@@ -466,9 +486,12 @@ function updatePhysics(dt: number, time: number) {
       if (diagnosticsEnabled) {
         canvas.dataset.phase = "settling";
         canvas.dataset.releaseAge = age.toFixed(3);
+        canvas.dataset.bodyZ = p.z.toFixed(4);
+        canvas.dataset.verticalSpeed = linear.z.toFixed(4);
         canvas.dataset.linearSpeed = linearSpeed.toFixed(4);
         canvas.dataset.angularSpeed = angularSpeed.toFixed(4);
         canvas.dataset.supported = String(supported);
+        canvas.dataset.hadSupport = String(animal.hadSupport);
         canvas.dataset.quietFor = animal.quietFor.toFixed(3);
       }
       if (age > 0.65 && (animal.quietFor > 0.58 || (age > 3.5 && gentlySupported) || (age > 6 && supported))) {
