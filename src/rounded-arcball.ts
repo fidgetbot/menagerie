@@ -31,7 +31,7 @@ export class RoundedArcball {
     document.querySelector("#app")!.append(this.bubble);
   }
 
-  update(held: THREE.Object3D | null, camera: THREE.Camera) {
+  update(held: THREE.Object3D | null, camera: THREE.Camera, worldCenter?: THREE.Vector3, worldRadius?: number) {
     if (!held) {
       this.active = false;
       this.bubble.classList.remove("active");
@@ -41,8 +41,12 @@ export class RoundedArcball {
 
     // Keep the control large enough for reliable roll on a phone, and centre
     // it on the actual rotation pivot. Do not clamp it away from that pivot.
-    this.radius = Math.min(190, Math.max(132, Math.min(innerWidth, innerHeight) * 0.45));
-    this.screen.copy(held.position).project(camera);
+    const projectedRadius = worldRadius && camera instanceof THREE.OrthographicCamera
+      ? worldRadius * innerHeight / (camera.top - camera.bottom)
+      : 0;
+    const availableRadius = Math.min(190, innerWidth * 0.45, innerHeight * 0.28);
+    this.radius = Math.min(availableRadius, Math.max(132, projectedRadius * 1.03, Math.min(innerWidth, innerHeight) * 0.42));
+    this.screen.copy(worldCenter ?? held.position).project(camera);
     this.center.set(
       innerWidth * (this.screen.x + 1) / 2,
       innerHeight * (1 - this.screen.y) / 2,

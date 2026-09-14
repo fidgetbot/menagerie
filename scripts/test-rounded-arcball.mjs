@@ -33,6 +33,7 @@ async function runVariant(mobile, bubble) {
     await page.waitForTimeout(35);
     return page.locator("#game").evaluate((canvas) => ({
       p: canvas.dataset.heldPosition.split(",").map(Number),
+      v: canvas.dataset.heldAnchorPosition.split(",").map(Number),
       q: canvas.dataset.heldQuaternion.split(",").map(Number),
     }));
   };
@@ -51,11 +52,11 @@ async function runVariant(mobile, bubble) {
 
   // Outside the rounded shoulder, a quarter-circle gesture is a pure 90°
   // twist around the camera view direction.
-  const rollRadius = center.r * 1.16;
+  const rollRadius = center.r * 1.10;
   await move(center.x + rollRadius, center.y);
   await page.mouse.down();
   const rollStart = await held();
-  const frozenPosition = rollStart.p;
+  const frozenAnchor = rollStart.v;
   if (bubble) {
     await page.waitForTimeout(160);
     const activeBubble = await geometry();
@@ -67,7 +68,8 @@ async function runVariant(mobile, bubble) {
     await move(center.x + rollRadius * Math.cos(angle), center.y + rollRadius * Math.sin(angle));
   }
   const rollEnd = await held();
-  assert(vectorDistance(frozenPosition, rollEnd.p) < 0.001, "Held pivot drifted during rotation");
+  assert(vectorDistance(frozenAnchor, rollEnd.v) < 0.001, "Held anchor drifted during rotation");
+  assert(vectorDistance(rollStart.p, rollEnd.p) < 0.001, "Body origin drifted during rotation");
   const delta = new Quaternion(...rollEnd.q).multiply(new Quaternion(...rollStart.q).invert());
   const axis = new Vector3(delta.x, delta.y, delta.z).normalize();
   const view = new Vector3(6.9, -12.35, 6).normalize();
@@ -113,7 +115,10 @@ async function runVariant(mobile, bubble) {
   await page.mouse.up();
   const flick = await held();
   await page.waitForTimeout(120);
-  assert(quaternionDistance(flick.q, (await held()).q) > 0.0005, "No gentle flick");
+  const afterFlick = await held();
+  assert(quaternionDistance(flick.q, afterFlick.q) > 0.0005, "No gentle flick");
+  assert(vectorDistance(flick.v, afterFlick.v) < 0.001, "Held anchor moved during momentum");
+  assert(vectorDistance(flick.p, afterFlick.p) < 0.001, "Body origin moved during momentum");
   if (mobile) await page.touchscreen.tap(current.x, current.y);
   else { await page.mouse.down(); await page.mouse.up(); }
   const caught = await held();

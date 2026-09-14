@@ -76,7 +76,11 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 type SpeciesId = "tortoise" | "capybara" | "toucan" | keyof typeof expansionColliders;
-type ModelTemplate = { model: THREE.Object3D; halfExtents: THREE.Vector3 };
+type ModelTemplate = {
+  model: THREE.Object3D;
+  halfExtents: THREE.Vector3;
+  rotationRadius: number;
+};
 
 const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan", "armadillo", "ram", "skunk"];
 const loader = new GLTFLoader();
@@ -106,7 +110,16 @@ for (const [species, model] of loadedModels) {
   const halfExtents = expansion
     ? new THREE.Vector3(Math.max(Math.abs(bounds.min.x), Math.abs(bounds.max.x)), Math.max(Math.abs(bounds.min.y), Math.abs(bounds.max.y)), Math.max(Math.abs(bounds.min.z), Math.abs(bounds.max.z)))
     : size.multiplyScalar(0.5);
-  modelTemplates.set(species, { model, halfExtents });
+  const visualBounds = new THREE.Box3().setFromObject(model);
+  let rotationRadius = 0;
+  for (const x of [visualBounds.min.x, visualBounds.max.x]) {
+    for (const y of [visualBounds.min.y, visualBounds.max.y]) {
+      for (const z of [visualBounds.min.z, visualBounds.max.z]) {
+        rotationRadius = Math.max(rotationRadius, Math.hypot(x, y, z));
+      }
+    }
+  }
+  modelTemplates.set(species, { model, halfExtents, rotationRadius });
 }
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
@@ -146,8 +159,9 @@ let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
 let heldSpecies: SpeciesId | null = null;
-let heldHalfExtents = new THREE.Vector3();
 let heldPosition = new THREE.Vector2(0, -0.2);
+const heldAnchorPosition = new THREE.Vector3();
+let heldRotationRadius = 0;
 let dragOrigin = new THREE.Vector2();
 let rotationInput = new THREE.Vector2();
 const spinVelocity = new THREE.Vector3();
@@ -179,7 +193,6 @@ const controlRotation = new THREE.Quaternion();
 const rotationControl = new RoundedArcball(bubbleEnabled);
 const priorDragRotation = new THREE.Quaternion();
 const dragDelta = new THREE.Quaternion();
-const heldGesturePosition = new THREE.Vector3();
 const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
@@ -317,13 +330,18 @@ function takeNextSpecies() {
   return speciesBag.pop()!;
 }
 
+function positionHeldAtAnchor() {
+  if (!held) return;
+  held.position.copy(heldAnchorPosition);
+}
+
 function createHeld() {
   if (lost) return;
   heldSpecies = takeNextSpecies();
   const template = modelTemplates.get(heldSpecies)!;
   held = new THREE.Group();
   heldModel = template.model.clone(true);
-  heldHalfExtents.copy(template.halfExtents);
+  heldRotationRadius = template.rotationRadius;
   heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
   const devRotation = devRotations[devRotationIndex++ % devRotations.length];
@@ -336,11 +354,12 @@ function createHeld() {
     held.quaternion.copy(randomQuaternion());
   }
   heldPosition.set(0, -0.25);
-  held.position.set(
+  heldAnchorPosition.set(
     heldPosition.x,
     heldPosition.y,
-    landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion, heldHalfExtents) + heldClearance,
+    landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion, template.halfExtents) + heldClearance,
   );
+  positionHeldAtAnchor();
   rotationInput.set(0, 0);
   spinVelocity.set(0, 0, 0);
   dropButton.disabled = false;
@@ -455,21 +474,14 @@ function updateRotationControl(dt: number) {
 function updateHeld(dt: number, time: number) {
   if (!held) return;
   updateRotationControl(dt);
-  if (pointerId !== null) {
-    // Rotation changes the clearance required by asymmetric pieces. Freezing
-    // the pivot during a gesture prevents those corrections from making the
-    // animal drift away from the finger or out of the optional bubble.
-    held.position.copy(heldGesturePosition);
-  } else {
-    const extent = verticalExtent(held.quaternion, heldHalfExtents);
-    const top = landingTop(heldPosition.x, heldPosition.y);
-    held.position.x = THREE.MathUtils.damp(held.position.x, heldPosition.x, 18, dt);
-    held.position.y = THREE.MathUtils.damp(held.position.y, heldPosition.y, 18, dt);
-    held.position.z = THREE.MathUtils.damp(held.position.z, top + extent + heldClearance, 14, dt);
-  }
+  // The initial pose establishes one physical/control pivot for the entire
+  // held phase, including inertial spin. Actual contact is resolved only after
+  // Drop by the sensor-lowering path, so rotation needs no height correction.
+  positionHeldAtAnchor();
   if (heldRig) animateRig(heldRig, time, pointerId === null ? 0.22 : 1);
   if (diagnosticsEnabled) {
     canvas.dataset.heldPosition = held.position.toArray().join(",");
+    canvas.dataset.heldAnchorPosition = heldAnchorPosition.toArray().join(",");
     canvas.dataset.heldQuaternion = held.quaternion.toArray().join(",");
   }
 }
@@ -799,10 +811,9 @@ canvas.addEventListener("pointerdown", (event) => {
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   spinVelocity.set(0, 0, 0);
-  heldGesturePosition.copy(held.position);
   lastDragTime = performance.now();
   dragOrigin.set(event.clientX, event.clientY);
-  rotationControl.update(held, camera);
+  rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
   rotationControl.begin(event.clientX, event.clientY, held.quaternion, camera);
   rotationInput.set(0, 0);
   recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
@@ -919,7 +930,7 @@ function frame(nowMilliseconds: number) {
       updatePhysics(dt, time);
       updateCamera(dt);
     }
-    rotationControl.update(held, camera);
+    rotationControl.update(held, camera, held ? heldAnchorPosition : undefined, held ? heldRotationRadius : undefined);
     renderer.render(scene, camera);
     recordTrace(dt);
   } catch (error) {
