@@ -69,6 +69,15 @@ html, body, #app {
 
 #tutorial p { margin: 0; }
 
+#tutorial .goal {
+  margin-bottom: 12px;
+  color: #294f4b;
+  font-size: clamp(13px, 3.5vw, 15px);
+  font-weight: 500;
+  letter-spacing: .025em;
+  line-height: 1.4;
+}
+
 #tutorial strong {
   color: #1f5550;
   font-size: .92em;
