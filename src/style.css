@@ -120,7 +120,7 @@ html, body, #app {
   text-transform: uppercase;
 }
 
-#play-again {
+#play-again, #drop {
   min-width: 150px;
   min-height: 46px;
   padding: 0 24px;
@@ -181,3 +181,8 @@ html, body, #app {
 @media (prefers-reduced-motion: reduce) {
   #tutorial { transition: none; }
 }
+
+#drop { position: absolute; z-index: 4; left: 50%; bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px)); transform: translateX(-50%); min-width: 160px; min-height: 52px; }
+#drop:disabled { opacity: .30; cursor: default; }
+#drop:not(:disabled):active { transform: translateX(-50%) scale(.96); }
+#share-trace { bottom: max(86px, calc(env(safe-area-inset-bottom) + 78px)); }

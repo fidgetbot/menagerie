@@ -22,7 +22,7 @@ try{
  await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies);
  if(job.a===job.b&&job.rx===0)await page.screenshot({path:new URL(`new-${job.a}.png`,output).pathname});
  for(let turn=0;turn<(job.rx===0?2:1);turn++){
-  await page.mouse.move(200,540);await page.mouse.down();await page.waitForTimeout(40);await page.mouse.up();
+  await page.mouse.move(200,540);await page.mouse.down();await page.waitForTimeout(40);await page.mouse.up();await page.locator("#drop").click();
   await page.waitForFunction(()=>!document.querySelector('#game-over').classList.contains('hidden')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});
   if(await page.locator('#game-over').evaluate(e=>!e.classList.contains('hidden')))break;
  }

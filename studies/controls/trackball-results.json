@@ -1,0 +1,9 @@
+{
+  "directRotation": true,
+  "stationaryFinger": true,
+  "flick": true,
+  "catch": true,
+  "dropOrientation": true,
+  "cancellation": true,
+  "errors": []
+}

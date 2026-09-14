@@ -132,3 +132,7 @@ Validation outcome: 69 baseline browser scenarios completed; one reproducible up
 The playable roster is tortoise, capybara, toucan, rebuilt armadillo, rebuilt ram and rebuilt lower-tail skunk. Dragonfly is excluded from loading and random selection while its collision issue is deferred; source/export assets are retained for future work. The blocked dragonfly/toucan interaction is therefore not reachable in gameplay.
 
 Six-species release deployed to GitHub Pages at `ad0c70e`. The rebuilt armadillo, ram and skunk replace the earlier approximations; dragonfly remains excluded from model loading and random selection. The six-species production smoke passed locally, and the deployed JS and three replacement GLBs match the tested artifacts.
+
+### Inertial roller control experiment
+
+Drag displacement now rotates the animal directly in camera-relative axes. Release keeps it held, with bounded flick momentum decaying exponentially; touch catches it immediately. A dedicated bottom-center Drop button commits the visible orientation and clears rotational momentum. It is disabled during settling. Cancellation, blur and hidden-page events stop motion without dropping. Camera, placement, six-species roster and physics remain unchanged. No double-tap action or autonomous held-body rotation.

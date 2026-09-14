@@ -6,7 +6,7 @@ const results=[];
 for(const target of ['armadillo','ram','skunk']){
  for(let i=0;i<80&&(await page.locator('#game').getAttribute('data-held-species'))!==target;i++)await page.locator('#restart').click();
  if((await page.locator('#game').getAttribute('data-held-species'))!==target)throw Error(`Missing ${target}`);
- await page.mouse.move(200,600);await page.mouse.down();await page.mouse.move(245,620,{steps:8});await page.waitForTimeout(100);await page.mouse.up();
+ await page.mouse.move(200,600);await page.mouse.down();await page.mouse.move(245,620,{steps:8});await page.waitForTimeout(100);await page.mouse.up();await page.locator("#drop").click();
  await page.waitForFunction(()=>!document.querySelector('#game-over').classList.contains('hidden')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});await page.waitForTimeout(10000);
  await page.evaluate(()=>dispatchEvent(new Event('pagehide')));const trace=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('menagerie-flight-recorder-v1')));
  const lost=await page.locator('#game-over').evaluate(e=>!e.classList.contains('hidden'));const score=await page.locator('#score').textContent();

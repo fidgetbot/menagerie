@@ -8,6 +8,7 @@ import expansionColliders from "./expansion-colliders.json";
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
+const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
 const restartButton = document.querySelector<HTMLButtonElement>("#restart")!;
 const gameOver = document.querySelector<HTMLElement>("#game-over")!;
 const playAgainButton = document.querySelector<HTMLButtonElement>("#play-again")!;
@@ -144,6 +145,8 @@ let heldHalfExtents = new THREE.Vector3();
 let heldPosition = new THREE.Vector2(0, -0.2);
 let dragOrigin = new THREE.Vector2();
 let rotationInput = new THREE.Vector2();
+const spinVelocity = new THREE.Vector3();
+let lastDragTime = 0;
 let pointerId: number | null = null;
 let score = 0;
 let lost = false;
@@ -332,12 +335,16 @@ function createHeld() {
     landingTop(heldPosition.x, heldPosition.y) + verticalExtent(held.quaternion, heldHalfExtents) + heldClearance,
   );
   rotationInput.set(0, 0);
+  spinVelocity.set(0, 0, 0);
+  dropButton.disabled = false;
   scene.add(held);
   canvas.dataset.heldSpecies = heldSpecies;
   recorder.event("held_ready", { species: heldSpecies, position: vector(held.position), rotation: quaternion(held.quaternion) });
 }
 
 function releaseHeld() {
+  dropButton.disabled = true;
+  spinVelocity.set(0, 0, 0);
   if (!held || lost) return;
   const animal = createAnimal(heldSpecies!, held.position.clone(), held.quaternion.clone());
   recorder.event("released", { id: animal.id, species: animal.species, position: vector(held.position), rotation: quaternion(held.quaternion) });
@@ -424,23 +431,14 @@ function finishLowering(animal: Animal, time: number) {
 }
 
 function updateRotationControl(dt: number) {
-  if (!held || pointerId === null) return;
-  const distance = rotationInput.length();
-  const deadZone = Math.max(16, Math.min(innerWidth, innerHeight) * 0.045);
-  if (distance <= deadZone) return;
-
-  const fullSpeedDistance = Math.min(innerWidth, innerHeight) * 0.34;
-  const amount = THREE.MathUtils.clamp((distance - deadZone) / (fullSpeedDistance - deadZone), 0, 1);
-  const speed = 3.2 * Math.pow(amount, 1.45);
-
-  cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
-  cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
-  controlAxis
-    .copy(cameraUp).multiplyScalar(rotationInput.x / distance)
-    .addScaledVector(cameraRight, rotationInput.y / distance)
-    .normalize();
-  controlRotation.setFromAxisAngle(controlAxis, speed * dt);
+  if (!held || pointerId !== null) return;
+  const speed = spinVelocity.length();
+  if (speed < 0.025) { spinVelocity.set(0, 0, 0); return; }
+  // Exact exponential decay keeps the flick consistent across frame rates.
+  const decay = Math.exp(-3.2 * dt);
+  controlRotation.setFromAxisAngle(controlAxis.copy(spinVelocity).normalize(), speed * (1 - decay) / 3.2);
   held.quaternion.premultiply(controlRotation).normalize();
+  spinVelocity.multiplyScalar(decay);
 }
 
 function updateHeld(dt: number, time: number) {
@@ -458,6 +456,8 @@ function endGame(reason = "unknown") {
   if (lost) return;
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
+  dropButton.disabled = true;
+  spinVelocity.set(0, 0, 0);
   for (const animal of animals) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
   }
@@ -730,6 +730,8 @@ canvas.addEventListener("pointerdown", (event) => {
   if (!held) return;
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
+  spinVelocity.set(0, 0, 0);
+  lastDragTime = performance.now();
   dragOrigin.set(event.clientX, event.clientY);
   rotationInput.set(0, 0);
   recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
@@ -737,7 +739,21 @@ canvas.addEventListener("pointerdown", (event) => {
 
 canvas.addEventListener("pointermove", (event) => {
   if (event.pointerId !== pointerId || !held) return;
+  const now = performance.now();
   rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
+  dragOrigin.set(event.clientX, event.clientY);
+  const distance = rotationInput.length();
+  if (distance === 0) return;
+  const radius = Math.max(100, Math.min(innerWidth, innerHeight) * 0.43);
+  cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+  cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
+  controlAxis.copy(cameraUp).multiplyScalar(rotationInput.x).addScaledVector(cameraRight, rotationInput.y).normalize();
+  const angle = distance / radius;
+  controlRotation.setFromAxisAngle(controlAxis, angle);
+  held.quaternion.premultiply(controlRotation).normalize();
+  const speed = Math.min(5, angle / Math.max(0.008, (now - lastDragTime) / 1000));
+  spinVelocity.lerp(controlAxis.multiplyScalar(speed), 0.65);
+  lastDragTime = now;
 });
 
 function finishPointer(pointer: number, reason: string) {
@@ -745,7 +761,7 @@ function finishPointer(pointer: number, reason: string) {
   recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
   rotationInput.set(0, 0);
-  releaseHeld();
+  if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) spinVelocity.set(0, 0, 0);
 }
 
 canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId, "canvas_pointerup"));
@@ -758,10 +774,10 @@ canvas.addEventListener("pointercancel", (event) => {
 canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId, "lost_pointer_capture"));
 addEventListener("pointerup", (event) => finishPointer(event.pointerId, "window_pointerup"), { capture: true });
 addEventListener("pointercancel", (event) => finishPointer(event.pointerId, "window_pointercancel"), { capture: true });
-addEventListener("touchend", finishInterruptedPointer, { capture: true });
 addEventListener("touchcancel", finishInterruptedPointer, { capture: true });
 
 function finishInterruptedPointer() {
+  spinVelocity.set(0, 0, 0);
   if (pointerId !== null) finishPointer(pointerId, "touch_or_page_interruption");
 }
 
@@ -782,6 +798,16 @@ function restartGame() {
   else reset();
 }
 
+dropButton.addEventListener("pointerdown", () => spinVelocity.set(0, 0, 0));
+dropButton.addEventListener("click", () => {
+  if (!held || lost || engineFault) return;
+  const captured = pointerId;
+  pointerId = null;
+  if (captured !== null && canvas.hasPointerCapture(captured)) canvas.releasePointerCapture(captured);
+  rotationInput.set(0, 0);
+  recorder.event("drop_requested", { rotation: quaternion(held.quaternion) });
+  releaseHeld();
+});
 restartButton.addEventListener("click", restartGame);
 playAgainButton.addEventListener("click", restartGame);
 shareTraceButton.addEventListener("click", async () => {
