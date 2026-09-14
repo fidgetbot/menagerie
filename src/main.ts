@@ -831,6 +831,11 @@ addEventListener("resize", resize);
 resize();
 reset();
 
+// A one-time invitation to rotate, using exactly the same catchable inertia as a flick.
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  spinVelocity.set(0.3, 1, 0).normalize().applyQuaternion(camera.quaternion).multiplyScalar(2.2);
+}
+
 function frame(nowMilliseconds: number) {
   // Schedule first so a one-off exception cannot permanently stop the loop.
   requestAnimationFrame(frame);

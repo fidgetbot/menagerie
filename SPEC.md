@@ -135,10 +135,14 @@ Six-species release deployed to GitHub Pages at `ad0c70e`. The rebuilt armadillo
 
 ### Inertial roller control experiment
 
-Drag displacement now rotates the animal directly in camera-relative axes. Release keeps it held, with bounded flick momentum decaying exponentially; touch catches it immediately. A dedicated bottom-center Drop button commits the visible orientation and clears rotational momentum. It is disabled during settling. Cancellation, blur and hidden-page events stop motion without dropping. Camera, placement, six-species roster and physics remain unchanged. No double-tap action or autonomous held-body rotation.
+Drag displacement now rotates the animal directly in camera-relative axes. Release keeps it held, with bounded flick momentum decaying exponentially; touch catches it immediately. A dedicated bottom-center Drop button commits the visible orientation and clears rotational momentum. It is disabled during settling. Cancellation, blur and hidden-page events stop motion without dropping. Camera, placement, six-species roster and physics remain unchanged. No double-tap action or continuous autonomous held-body rotation.
 
 ### UI simplification and skunk sizing
 
 Removed gesture tutorial copy; retained the two-line stacking objective and functional Drop button. Skunk uniform export/collider scale increased from 0.72 to 0.9, matching armadillo and ram, without changing its proportions. The objective retains its existing first-score fade behavior.
 
 Rescaled skunk: all 16 affected pairing/tilt scenarios resolved without upward-anomaly markers or page errors; all restarts reset. Checked portrait framing at 390 × 714.
+
+### Initial rotation invitation
+
+On page load only, the first incoming animal receives a gentle diagonal flick (2.2 rad/s initial speed, existing exponential damping). Touch or Drop catches it immediately. Subsequent pieces and ordinary restarts stay still; reduced-motion preference skips this decorative cue. No extra instruction text is added.
