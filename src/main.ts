@@ -412,18 +412,29 @@ canvas.addEventListener("pointermove", (event) => {
   rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
 });
 
-canvas.addEventListener("pointerup", (event) => {
-  if (event.pointerId !== pointerId) return;
+function finishPointer(pointer: number) {
+  if (pointer !== pointerId) return;
   pointerId = null;
   rotationInput.set(0, 0);
   releaseHeld();
-});
+}
 
+canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId));
 canvas.addEventListener("pointercancel", (event) => {
-  if (event.pointerId !== pointerId) return;
-  pointerId = null;
-  rotationInput.set(0, 0);
-  releaseHeld();
+  finishPointer(event.pointerId);
+});
+// Mobile browsers can revoke pointer capture when their own chrome or a system
+// gesture takes over. Without this path, the old pointer ID remains latched and
+// all later presses are ignored, leaving the animal suspended indefinitely.
+canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId));
+
+function finishInterruptedPointer() {
+  if (pointerId !== null) finishPointer(pointerId);
+}
+
+addEventListener("blur", finishInterruptedPointer);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") finishInterruptedPointer();
 });
 
 restartButton.addEventListener("click", reset);
