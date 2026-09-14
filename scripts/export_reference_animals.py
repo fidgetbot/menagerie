@@ -5,7 +5,7 @@ from mathutils import Vector
 ROOT=Path(__file__).resolve().parents[1]
 bpy.ops.wm.open_mainfile(filepath=str(ROOT/'assets/source/menagerie-reference-rebuild.blend'))
 (ROOT/'tmp').mkdir(exist_ok=True)
-SCALES={"armadillo":.9,"dragonfly":.72,"ram":.9,"skunk":.72}
+SCALES={"armadillo":.9,"dragonfly":.72,"ram":.9,"skunk":.9}
 OFFSET=Vector((0,0,.72))
 roots={s:next(o for o in bpy.data.objects if o.type=='EMPTY' and o.name.startswith(s.upper())) for s in ['armadillo','dragonfly','ram','skunk']}
 result={};report={}
