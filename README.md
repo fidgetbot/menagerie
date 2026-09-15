@@ -69,11 +69,13 @@ The stacking harness checks the 36 ordered species pairings and nine tilted/inve
 
 The tower benchmark runs twelve reproducible upright ten-piece sequences with a short aiming interval between placements. It reports median score, eight-piece and ten-piece reach, anomalies, and browser errors to ignored `tmp/tower-test.json`; natural collapses remain valid outcomes. Set `TEST_FORGIVING=0` to compare the fixed-position/landing-friction baseline in development, and `TEST_STRICT_ANOMALIES=1` when upward markers should fail the command.
 
-`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, and bubble/no-bubble parity on phone and desktop layouts.
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, bubble/no-bubble parity, and the opt-in surface-loop study on phone and desktop layouts.
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
 
 The translucent soap bubble remains around each waiting animal until it is popped. Append `?bubble=0` to hide it for diagnostic comparison; both variants use exactly the same control mapping and tap-to-place gesture.
+
+Append `?loops=1` to try an experimental orientation aid. While the bubble is touched, three translucent great circles fade in on its surface and turn with the animal. The experiment is visual only and is disabled on the ordinary URL.
 
 ### Sound development
 

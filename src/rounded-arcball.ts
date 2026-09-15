@@ -14,6 +14,9 @@ export class RoundedArcball {
   active = false;
 
   private readonly bubbleEnabled: boolean;
+  private readonly loopsEnabled: boolean;
+  private readonly loopPaths: SVGPathElement[] = [];
+  private loopsReady = false;
   private readonly start = new THREE.Vector3();
   private readonly point = new THREE.Vector3();
   private readonly screen = new THREE.Vector3();
@@ -21,23 +24,41 @@ export class RoundedArcball {
   private readonly view = new THREE.Quaternion();
   private readonly inverseView = new THREE.Quaternion();
   private readonly delta = new THREE.Quaternion();
+  private readonly loopOrientation = new THREE.Quaternion();
+  private readonly loopView = new THREE.Quaternion();
+  private readonly loopPoint = new THREE.Vector3();
 
-  constructor(bubbleEnabled: boolean) {
+  constructor(bubbleEnabled: boolean, loopsEnabled = false) {
     this.bubbleEnabled = bubbleEnabled;
+    this.loopsEnabled = bubbleEnabled && loopsEnabled;
     this.bubble.id = "rotation-bubble";
     this.bubble.hidden = !bubbleEnabled;
     this.bubble.setAttribute("aria-hidden", "true");
-    this.bubble.innerHTML = '<span class="bubble-highlight"></span>';
+    this.bubble.innerHTML = `
+      <svg class="bubble-loops" viewBox="0 0 200 200" aria-hidden="true">
+        <path class="bubble-loop loop-a loop-back"></path>
+        <path class="bubble-loop loop-b loop-back"></path>
+        <path class="bubble-loop loop-c loop-back"></path>
+        <path class="bubble-loop loop-a loop-front"></path>
+        <path class="bubble-loop loop-b loop-front"></path>
+        <path class="bubble-loop loop-c loop-front"></path>
+      </svg>
+      <span class="bubble-highlight"></span>
+    `;
+    this.bubble.dataset.loopsEnabled = String(this.loopsEnabled);
+    this.loopPaths.push(...this.bubble.querySelectorAll<SVGPathElement>(".bubble-loop"));
     document.querySelector("#app")!.append(this.bubble);
   }
 
   update(held: THREE.Object3D | null, camera: THREE.Camera, worldCenter?: THREE.Vector3, worldRadius?: number) {
     if (!held) {
       this.active = false;
+      this.loopsReady = false;
       this.bubble.classList.remove("held", "active", "popping");
       delete this.bubble.dataset.active;
       return;
     }
+    if (this.loopsEnabled && (!this.loopsReady || this.active)) this.updateLoops(held, camera);
     if (this.active) return;
 
     // Keep the control large enough for reliable roll on a phone, and centre
@@ -91,6 +112,52 @@ export class RoundedArcball {
     delete this.bubble.dataset.active;
     this.bubble.classList.remove("active");
     if (this.bubbleEnabled) this.bubble.classList.add("popping");
+  }
+
+  private updateLoops(held: THREE.Object3D, camera: THREE.Camera) {
+    if (!this.loopsEnabled) return;
+
+    held.getWorldQuaternion(this.loopOrientation);
+    this.loopView.copy(camera.quaternion).invert();
+    const circles = [
+      (angle: number) => this.loopPoint.set(Math.cos(angle), Math.sin(angle), 0),
+      (angle: number) => this.loopPoint.set(Math.cos(angle), 0, Math.sin(angle)),
+      (angle: number) => this.loopPoint.set(0, Math.cos(angle), Math.sin(angle)),
+    ];
+
+    circles.forEach((circle, circleIndex) => {
+      let front = "";
+      let back = "";
+      let previousFront: boolean | undefined;
+      for (let index = 0; index <= 72; index += 1) {
+        const angle = index / 72 * Math.PI * 2;
+        const point = circle(angle).applyQuaternion(this.loopOrientation).applyQuaternion(this.loopView);
+        const x = 100 + point.x * 98.3;
+        const y = 100 - point.y * 98.3;
+        const isFront = point.z >= 0;
+        const command = `${x.toFixed(2)} ${y.toFixed(2)}`;
+
+        if (previousFront === undefined) {
+          if (isFront) front = `M${command}`;
+          else back = `M${command}`;
+        } else if (isFront === previousFront) {
+          if (isFront) front += `L${command}`;
+          else back += `L${command}`;
+        } else {
+          // Share the transition sample between the two paths so the near and
+          // far arcs meet cleanly on the bubble silhouette.
+          if (previousFront) front += `L${command}`;
+          else back += `L${command}`;
+          if (isFront) front += `M${command}`;
+          else back += `M${command}`;
+        }
+        previousFront = isFront;
+      }
+
+      this.loopPaths[circleIndex].setAttribute("d", back);
+      this.loopPaths[circleIndex + 3].setAttribute("d", front);
+    });
+    this.loopsReady = true;
   }
 
   private project(x: number, y: number, target: THREE.Vector3) {

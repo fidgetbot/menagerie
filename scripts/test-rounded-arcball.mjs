@@ -176,6 +176,56 @@ for (const mobile of [true, false]) {
   console.log(`${mobile ? "Phone" : "Desktop"}: rounded tumble/roll, smooth shoulder, stable pivot, undo, flick, hold-to-catch, tap-to-pop, and bubble A/B passed`);
 }
 
+async function verifySurfaceLoops(mobile) {
+  const page = await browser.newPage({
+    viewport: mobile ? { width: 390, height: 714 } : { width: 1000, height: 800 },
+    isMobile: mobile,
+    hasTouch: mobile,
+    reducedMotion: "reduce",
+  });
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(`${root}?diagnostics=1&species=skunk&rx=0&ry=0&rz=0&loops=1`);
+  await page.waitForSelector('canvas[data-held-species="skunk"]');
+  await page.waitForTimeout(200);
+
+  const bubble = page.locator("#rotation-bubble");
+  const loops = bubble.locator(".bubble-loops");
+  const geometry = await bubble.evaluate((element) => ({
+    x: Number(element.dataset.centerX),
+    y: Number(element.dataset.centerY),
+    r: Number(element.dataset.radius),
+    enabled: element.dataset.loopsEnabled === "true",
+  }));
+  assert(geometry.enabled, "Loop study URL did not enable the surface overlay");
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Surface loops were visible before touch");
+
+  const pathsBefore = await bubble.locator(".bubble-loop").evaluateAll((paths) => paths.map((path) => path.getAttribute("d")));
+  assert(pathsBefore.length === 6 && pathsBefore.every(Boolean), "Surface loops were not projected into near/far arcs");
+  const radii = pathsBefore.flatMap((path) => [...path.matchAll(/(-?\d+\.\d+) (-?\d+\.\d+)/g)]
+    .map((match) => Math.hypot(Number(match[1]) - 100, Number(match[2]) - 100)));
+  assert(Math.max(...radii) <= 98.4, "A loop escaped the bubble surface");
+  assert(Math.max(...radii) >= 98.1, "Projected great circles did not meet the bubble silhouette");
+
+  await page.mouse.move(geometry.x, geometry.y);
+  await page.mouse.down();
+  await page.waitForTimeout(30);
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Surface loops did not appear on touch");
+  await page.mouse.move(geometry.x + geometry.r * 0.38, geometry.y - geometry.r * 0.22);
+  await page.waitForTimeout(50);
+  const pathsAfter = await bubble.locator(".bubble-loop").evaluateAll((paths) => paths.map((path) => path.getAttribute("d")));
+  assert(pathsAfter.some((path, index) => path !== pathsBefore[index]), "Surface loops did not follow the animal orientation");
+  await page.screenshot({ path: `tmp/rounded-arcball-loops-${mobile ? "phone" : "desktop"}.png` });
+  await page.mouse.up();
+  await page.waitForTimeout(30);
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Surface loops did not disappear after touch");
+  assert(!errors.length, errors.join(", "));
+  await page.close();
+  console.log(`${mobile ? "Phone" : "Desktop"}: URL-gated great-circle surface loops passed`);
+}
+
+for (const mobile of [true, false]) await verifySurfaceLoops(mobile);
+
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
 await defaultPage.goto(`${root}?diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
 await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');
@@ -187,6 +237,7 @@ const defaultGeometry = await defaultBubble.evaluate((element) => ({
   y: Number(element.dataset.centerY),
 }));
 assert(Number(await defaultBubble.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Default bubble was not visible before touch");
+assert(await defaultBubble.evaluate((element) => element.dataset.loopsEnabled === "false"), "Bare URL unexpectedly enabled experimental loops");
 await defaultPage.close();
 console.log("Bare URL: bubble defaults on and remains visible until popped");
 
