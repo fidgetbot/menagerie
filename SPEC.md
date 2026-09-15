@@ -28,6 +28,10 @@ Use a fixed timestep and continuous collision detection. Landing friction and fi
 
 Broad softened planes, rich ceramic colors, glossy dark eyes, restrained sculpted detail, warm lighting, and readable shadows. Cosmetic blinking, limb animation, and a landing pulse do not alter load-bearing colliders. Original trio: `assets/source/menagerie-lineup-v01.blend`. Armadillo, ram, and skunk: `assets/source/menagerie-reference-rebuild.blend`. Runtime models: `public/models/`.
 
+## Audio development
+
+The shipped game remains silent while a generated contact bank is auditioned. `audio/sfx-bank.json` defines reproducible Stable Audio 3 Small SFX prompts and seeds for settling ticks, ordinary body contacts, heavy knocks, and platform impacts. `npm run audio:generate` preserves raw stereo generations outside the repository, creates trimmed mono 44.1 kHz PCM audition copies normalized to −3 dB peak, validates their technical properties, and records model, prompt, seed, processing, and licensing provenance. Generated files are exploratory until explicitly selected by ear against gameplay. Runtime integration must use measured Rapier contact strength to select and modulate approved samples; it must not encode a canned settling sequence.
+
 ## Validation and delivery
 
 Build with `npm run build`. Browser checks cover all 36 ordered active-species pairs plus tilted placements, ten-second post-resolution observation, input gestures, replay, and failure recovery. Rotation checks exercise the rounded tumble-to-roll transition, pivot stability, drag-back undo, momentum catching, and identical results with and without the optional bubble on phone and desktop. Natural falls are valid outcomes; unresolved turns, exceptions, and upward anomalies fail regression checks. Phone feel still requires human playtesting.

@@ -5,6 +5,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "audio:generate": "node scripts/audio/generate-bank.mjs",
+    "audio:plan": "node scripts/audio/generate-bank.mjs --dry-run",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "bankId": "ceramic-contacts-v1",
+  "status": "exploratory",
+  "model": {
+    "name": "Stable Audio 3 Small SFX",
+    "id": "stabilityai/stable-audio-3-small-sfx",
+    "runtime": "stable-audio-3 optimized MLX",
+    "dit": "sm-sfx",
+    "decoder": "same-s",
+    "steps": 8,
+    "cfg": 3.0,
+    "durationSeconds": 2.5,
+    "negativePrompt": "breaking, shattering, cracked pottery, glass, metal, wood, footsteps, speech, music, melody, ambience, room noise, reverb, multiple impacts"
+  },
+  "processing": {
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "silenceThresholdDb": -50,
+    "trailingSilenceSeconds": 0.15,
+    "maximumDurationSeconds": 1.8,
+    "targetPeakDb": -3.0
+  },
+  "licensing": {
+    "modelTerms": "https://stability.ai/community-license-agreement",
+    "gemmaTerms": "https://ai.google.dev/gemma/terms",
+    "distributionCategory": "Generated WAV outputs only; model weights and runtime are not distributed with Menagerie.",
+    "projectLicense": "MIT"
+  },
+  "events": [
+    {
+      "id": "settling_tick",
+      "role": "Very small repeated contacts while a piece settles",
+      "prompt": "One tiny delicate contact between two small hollow glazed ceramic animal figurines, a pleasing high porcelain tick with a subtle musical resonance, very soft, extremely short isolated transient, close-miked and dry, intact ceramics, silence before and after",
+      "seeds": [140901, 140902, 140903]
+    },
+    {
+      "id": "body_contact",
+      "role": "Ordinary animal-to-animal collision",
+      "prompt": "One gentle collision between two small hollow glazed ceramic animal figurines, a pleasing rounded ceramic clack with a warm musical hollow body, medium-soft isolated impact, close-miked and dry, intact ceramics, silence before and after",
+      "seeds": [141001, 141002, 141003]
+    },
+    {
+      "id": "heavy_knock",
+      "role": "Strong collision or stack movement",
+      "prompt": "One firm collision between two chunky hollow glazed ceramic animal figurines, a weighty low ceramic knock with a brief warm porcelain ring, substantial but charming, single isolated impact, close-miked and dry, intact ceramics, silence before and after",
+      "seeds": [141101, 141102, 141103]
+    },
+    {
+      "id": "platform_impact",
+      "role": "A fallen animal striking the stone-like base",
+      "prompt": "One small hollow glazed ceramic animal figurine landing firmly on a solid pale stone plinth, a deep rounded ceramic thump followed by a short musical porcelain resonance, weighty but unbroken, single isolated impact, close-miked and dry, silence before and after",
+      "seeds": [141201, 141202, 141203]
+    }
+  ]
+}

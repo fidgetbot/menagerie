@@ -72,6 +72,10 @@ Append `?trace=1` to enable the diagnostic flight recorder and Share trace actio
 
 The translucent rotation bubble is shown by default while dragging. Append `?bubble=0` to hide it for comparison; both variants use exactly the same control mapping.
 
+### Sound development
+
+The playable game remains silent while its generated ceramic contact bank is developed and auditioned. `npm run audio:generate` creates reproducible seeded candidates with Stable Audio 3 Small SFX, preserves untouched raw generations, produces technically normalized audition copies, and records full provenance outside the repository. See [audio/README.md](audio/README.md).
+
 ### Project layout
 
 - `src/` — gameplay, rendering, physics, controls, and collision data.
