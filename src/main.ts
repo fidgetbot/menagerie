@@ -919,6 +919,7 @@ canvas.addEventListener("pointermove", (event) => {
   pointerTravel = Math.max(pointerTravel, pointerStart.distanceTo(pointerPosition));
   if (pointerTravel > tapMaxTravel) {
     tapCandidate = false;
+    rotationControl.engageLoops();
   }
   dragOrigin.set(event.clientX, event.clientY);
   const distance = rotationInput.length();

@@ -209,16 +209,26 @@ async function verifySurfaceLoops(mobile) {
 
   await page.mouse.move(geometry.x, geometry.y);
   await page.mouse.down();
+  await page.waitForTimeout(320);
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Stationary hold revealed rotation loops");
+  await page.mouse.move(geometry.x + 8, geometry.y);
   await page.waitForTimeout(30);
-  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Surface loops did not appear on touch");
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Sub-threshold tap movement revealed rotation loops");
   await page.mouse.move(geometry.x + geometry.r * 0.38, geometry.y - geometry.r * 0.22);
   await page.waitForTimeout(50);
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Surface loops did not appear after rotation intent");
   const pathsAfter = await bubble.locator(".bubble-loop").evaluateAll((paths) => paths.map((path) => path.getAttribute("d")));
   assert(pathsAfter.some((path, index) => path !== pathsBefore[index]), "Surface loops did not follow the animal orientation");
   await page.screenshot({ path: `tmp/rounded-arcball-loops-${mobile ? "phone" : "desktop"}.png` });
   await page.mouse.up();
   await page.waitForTimeout(30);
   assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Surface loops did not disappear after touch");
+
+  await page.mouse.move(geometry.x, geometry.y);
+  await page.mouse.down();
+  await page.waitForTimeout(60);
+  assert(Number(await loops.evaluate((element) => getComputedStyle(element).opacity)) === 0, "Quick tap flashed rotation loops before pop");
+  await page.mouse.up();
   assert(!errors.length, errors.join(", "));
   await page.close();
   console.log(`${mobile ? "Phone" : "Desktop"}: URL-gated great-circle surface loops passed`);

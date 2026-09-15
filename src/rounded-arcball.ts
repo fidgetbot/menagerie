@@ -54,7 +54,7 @@ export class RoundedArcball {
     if (!held) {
       this.active = false;
       this.loopsReady = false;
-      this.bubble.classList.remove("held", "active", "popping");
+      this.bubble.classList.remove("held", "active", "looping", "popping");
       delete this.bubble.dataset.active;
       return;
     }
@@ -84,12 +84,17 @@ export class RoundedArcball {
 
   begin(x: number, y: number, orientation: THREE.Quaternion, camera: THREE.Camera) {
     this.active = true;
+    this.bubble.classList.remove("looping");
     this.bubble.dataset.active = "true";
     this.initial.copy(orientation);
     this.view.copy(camera.quaternion);
     this.inverseView.copy(camera.quaternion).invert();
     this.project(x, y, this.start);
     if (this.bubbleEnabled) this.bubble.classList.add("active");
+  }
+
+  engageLoops() {
+    if (this.active && this.loopsEnabled) this.bubble.classList.add("looping");
   }
 
   move(x: number, y: number, orientation: THREE.Quaternion) {
@@ -104,13 +109,13 @@ export class RoundedArcball {
   end() {
     this.active = false;
     delete this.bubble.dataset.active;
-    this.bubble.classList.remove("active");
+    this.bubble.classList.remove("active", "looping");
   }
 
   pop() {
     this.active = false;
     delete this.bubble.dataset.active;
-    this.bubble.classList.remove("active");
+    this.bubble.classList.remove("active", "looping");
     if (this.bubbleEnabled) this.bubble.classList.add("popping");
   }
 

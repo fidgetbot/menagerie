@@ -75,7 +75,7 @@ Append `?trace=1` to enable the diagnostic flight recorder and Share trace actio
 
 The translucent soap bubble remains around each waiting animal until it is popped. Append `?bubble=0` to hide it for diagnostic comparison; both variants use exactly the same control mapping and tap-to-place gesture.
 
-Append `?loops=1` to try an experimental orientation aid. While the bubble is touched, three translucent great circles fade in on its surface and turn with the animal. The experiment is visual only and is disabled on the ordinary URL.
+Append `?loops=1` to try an experimental orientation aid. Once a touch moves beyond the tap threshold, three translucent great circles fade in on the bubble surface and turn with the animal. Quick taps and stationary holds never reveal them. The experiment is visual only and is disabled on the ordinary URL.
 
 ### Sound development
 

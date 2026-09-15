@@ -131,9 +131,13 @@ html, body, #app {
   height: 100%;
   overflow: visible;
   opacity: 0;
-  transition: opacity 190ms ease-out;
+  transition: opacity 90ms ease-out;
 }
-#rotation-bubble[data-loops-enabled="true"].active .bubble-loops { opacity: .86; }
+#rotation-bubble[data-loops-enabled="true"].active.looping .bubble-loops {
+  opacity: .86;
+  transition-duration: 170ms;
+  transition-delay: 55ms;
+}
 #rotation-bubble .bubble-loop {
   fill: none;
   stroke-width: 1.15;
