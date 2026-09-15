@@ -44,22 +44,9 @@ export class RoundedArcball {
         <path class="bubble-loop loop-c loop-front"></path>
       </svg>
       <span class="bubble-highlight"></span>
-      <span class="bubble-pop-sweep"></span>
-      <span class="bubble-pop-fragments">
-        <i class="bubble-fragment fragment-a"></i>
-        <i class="bubble-fragment fragment-b"></i>
-        <i class="bubble-fragment fragment-c"></i>
-        <i class="bubble-fragment fragment-d"></i>
-        <i class="bubble-droplet droplet-a"></i>
-        <i class="bubble-droplet droplet-b"></i>
-        <i class="bubble-droplet droplet-c"></i>
-      </span>
     `;
     this.bubble.dataset.loopsEnabled = String(this.loopsEnabled);
     this.loopPaths.push(...this.bubble.querySelectorAll<SVGPathElement>(".bubble-loop"));
-    this.bubble.addEventListener("animationend", (event) => {
-      if (event.animationName === "bubble-pop" || event.animationName === "bubble-pop-reduced") this.finishPop();
-    });
     document.querySelector("#app")!.append(this.bubble);
   }
 
@@ -67,10 +54,7 @@ export class RoundedArcball {
     if (!held) {
       this.active = false;
       this.loopsReady = false;
-      this.bubble.classList.remove("active", "looping");
-      // The physics handoff happens at the rupture frame, before the last
-      // film fragments have faded. Let the pop finish independently.
-      if (!this.bubble.classList.contains("popping")) this.bubble.classList.remove("held");
+      this.bubble.classList.remove("held", "active", "looping", "popping");
       delete this.bubble.dataset.active;
       return;
     }
@@ -133,14 +117,6 @@ export class RoundedArcball {
     delete this.bubble.dataset.active;
     this.bubble.classList.remove("active", "looping");
     if (this.bubbleEnabled) this.bubble.classList.add("popping");
-  }
-
-  cancelPop() {
-    this.finishPop();
-  }
-
-  private finishPop() {
-    this.bubble.classList.remove("held", "popping");
   }
 
   private updateLoops(held: THREE.Object3D, camera: THREE.Camera) {

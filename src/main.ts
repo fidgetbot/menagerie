@@ -214,7 +214,6 @@ const crownFollowLimit = 0.65;
 const loweringSpeed = 4.2;
 const tapMaxDuration = 280;
 const tapMaxTravel = 10;
-const bubbleRuptureDelay = 72;
 
 function number(value: number) {
   return Math.round(value * 10000) / 10000;
@@ -463,7 +462,7 @@ function popHeldBubble() {
     bubblePopTimer = undefined;
     if (held && !lost && !engineFault) releaseHeld();
     else bubblePopping = false;
-  }, reducedMotion || !bubbleEnabled ? 24 : bubbleRuptureDelay);
+  }, reducedMotion ? 24 : 145);
 }
 
 function animateRig(rig: Pick<Animal, "eyes" | "head" | "feet">, time: number, intensity: number) {
@@ -562,7 +561,6 @@ function endGame(reason = "unknown", animal?: Animal) {
   bubblePopTimer = undefined;
   bubblePopping = false;
   rotationControl.end();
-  rotationControl.cancelPop();
   rotationControl.update(null, camera);
   recorder.event("game_over", { reason, score, engineFault });
   lost = true;
@@ -860,7 +858,6 @@ function reset() {
   bubblePopTimer = undefined;
   bubblePopping = false;
   rotationControl.end();
-  rotationControl.cancelPop();
   recorder.event("reset", { score, engineFault });
   fallTarget = null;
   newestReleased = null;

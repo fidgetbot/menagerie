@@ -236,41 +236,6 @@ async function verifySurfaceLoops(mobile) {
 
 for (const mobile of [true, false]) await verifySurfaceLoops(mobile);
 
-async function verifyPopRupture() {
-  const page = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true });
-  const errors = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto(`${root}?diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
-  await page.waitForSelector('canvas[data-held-species="armadillo"]');
-  await page.waitForTimeout(180);
-  const bubble = page.locator("#rotation-bubble");
-  const geometry = await bubble.evaluate((element) => ({
-    x: Number(element.dataset.centerX),
-    y: Number(element.dataset.centerY),
-  }));
-  assert(await bubble.locator(".bubble-pop-sweep").count() === 1, "Bubble rupture sweep is missing");
-  assert(await bubble.locator(".bubble-fragment").count() === 4, "Bubble film fragments are missing");
-  assert(await bubble.locator(".bubble-droplet").count() === 3, "Bubble droplets are missing");
-
-  await page.touchscreen.tap(geometry.x, geometry.y);
-  await page.waitForTimeout(35);
-  assert(await bubble.evaluate((element) => element.classList.contains("popping")), "Tap did not start the rupture animation");
-  assert(await page.locator('#game[data-held-species="armadillo"]').count() === 1, "Animal released before the film tightened");
-  await page.screenshot({ path: "tmp/bubble-pop-tighten-phone.png" });
-
-  await page.waitForFunction(() => !document.querySelector("#game").dataset.heldSpecies);
-  assert(await bubble.evaluate((element) => element.classList.contains("popping")), "Pop visual ended at the physics handoff");
-  await page.waitForTimeout(32);
-  await page.screenshot({ path: "tmp/bubble-pop-rupture-phone.png" });
-  await page.waitForFunction(() => !document.querySelector("#rotation-bubble").classList.contains("popping"));
-  assert(!(await bubble.evaluate((element) => element.classList.contains("held"))), "Bubble remained visible after its fragments faded");
-  assert(!errors.length, errors.join(", "));
-  await page.close();
-  console.log("Phone: bubble tension, rupture handoff, and independent fragment fade passed");
-}
-
-await verifyPopRupture();
-
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
 await defaultPage.goto(`${root}?diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
 await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');
