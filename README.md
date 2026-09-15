@@ -81,3 +81,7 @@ The translucent rotation bubble is shown by default while dragging. Append `?bub
 - [SPEC.md](SPEC.md) — current behavior and implementation constraints.
 
 The original trio is authored in [menagerie-lineup-v01.blend](assets/source/menagerie-lineup-v01.blend). Armadillo, ram, and skunk are authored in [menagerie-reference-rebuild.blend](assets/source/menagerie-reference-rebuild.blend).
+
+## License
+
+Menagerie's original code and project-owned assets are available under the [MIT License](LICENSE). Third-party libraries, tools, and their assets remain subject to their respective licenses.
