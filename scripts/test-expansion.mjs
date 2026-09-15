@@ -16,13 +16,13 @@ if(process.env.TEST_CROSS_AXIS){
 if(process.env.TEST_SPECIES){for(let i=jobs.length-1;i>=0;i--)if(jobs[i].a!==process.env.TEST_SPECIES&&jobs[i].b!==process.env.TEST_SPECIES)jobs.splice(i,1);}
 if(process.env.TEST_PAIR){const [a,b]=process.env.TEST_PAIR.split(',');for(let i=jobs.length-1;i>=0;i--)if(jobs[i].a!==a||jobs[i].b!==b||jobs[i].rx!==0)jobs.splice(i,1);}
 const results=[];
-async function worker(){while(jobs.length){const job=jobs.shift();const page=await browser.newPage({viewport:{width:402,height:714},isMobile:true,hasTouch:true}); const errors=[];page.on('pageerror',e=>errors.push(e.message));
+async function worker(){while(jobs.length){const job=jobs.shift();const page=await browser.newPage({viewport:{width:402,height:714},isMobile:true,hasTouch:true,reducedMotion:'reduce'}); const errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto(`${process.env.TEST_URL ?? "http://127.0.0.1:5173/menagerie/"}?trace&diagnostics&sequence=${job.a},${job.b}&rx=${job.rx}${job.rotation ? `&rotations=${job.rotation.join(",")}` : ""}`,{waitUntil:'networkidle'});
  await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies);
  if(job.a===job.b&&job.rx===0)await page.screenshot({path:new URL(`new-${job.a}.png`,output).pathname});
  for(let turn=0;turn<(job.rx===0?2:1);turn++){
-  await page.mouse.move(200,540);await page.mouse.down();await page.waitForTimeout(40);await page.mouse.up();await page.locator("#drop").click();
+  const bubble=await page.locator('#rotation-bubble').evaluate(e=>({x:Number(e.dataset.centerX),y:Number(e.dataset.centerY)}));await page.mouse.click(bubble.x,bubble.y);
   await page.waitForFunction(()=>document.querySelector('#score').classList.contains('lost')||document.querySelector('#game').dataset.heldSpecies,{},{timeout:11000});
   if(await page.locator('#score').evaluate(e=>e.classList.contains('lost')))break;
  }

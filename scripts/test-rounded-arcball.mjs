@@ -44,11 +44,16 @@ async function runVariant(mobile, bubble) {
     active: element.dataset.active === "true",
     hidden: element.hidden,
     opacity: Number(getComputedStyle(element).opacity),
+    held: element.classList.contains("held"),
+    popping: element.classList.contains("popping"),
   }));
   const move = (x, y) => page.mouse.move(x, y);
   const center = await geometry();
   assert(center.hidden === !bubble, "Bubble parameter did not control availability");
   assert(center.active === false, "Bubble started active");
+  if (bubble) {
+    assert(center.held && center.opacity > 0.5, "Bubble was not visible around the waiting animal");
+  }
 
   // Outside the rounded shoulder, a quarter-circle gesture is a pure 90°
   // twist around the camera view direction.
@@ -78,7 +83,7 @@ async function runVariant(mobile, bubble) {
   assert(Math.abs(angle - Math.PI / 2) < 0.025, `Outer sweep was not 1:1: ${angle}`);
   await page.mouse.up();
   await page.waitForTimeout(170);
-  if (bubble) assert((await geometry()).opacity < 0.05, "Bubble did not fade out after release");
+  if (bubble) assert((await geometry()).opacity > 0.5, "Bubble disappeared before it was popped");
 
   // A central gesture tumbles, and returning to its origin exactly undoes it.
   const current = await geometry();
@@ -119,11 +124,14 @@ async function runVariant(mobile, bubble) {
   assert(quaternionDistance(flick.q, afterFlick.q) > 0.0005, "No gentle flick");
   assert(vectorDistance(flick.v, afterFlick.v) < 0.001, "Held anchor moved during momentum");
   assert(vectorDistance(flick.p, afterFlick.p) < 0.001, "Body origin moved during momentum");
-  if (mobile) await page.touchscreen.tap(current.x, current.y);
-  else { await page.mouse.down(); await page.mouse.up(); }
+  await move(current.x, current.y);
+  await page.mouse.down();
+  await page.waitForTimeout(320);
+  await page.mouse.up();
   const caught = await held();
   await page.waitForTimeout(140);
-  assert(quaternionDistance(caught.q, (await held()).q) < 0.001, "Touch did not catch momentum");
+  assert(quaternionDistance(caught.q, (await held()).q) < 0.001, "Hold did not catch momentum");
+  assert(!(await trace()).events.some((event) => event.type === "released"), "A deliberate hold popped the bubble");
 
   // Interruptions cancel both the visual feedback and residual motion without
   // placing the held animal.
@@ -140,11 +148,20 @@ async function runVariant(mobile, bubble) {
 
   await page.screenshot({ path: `tmp/rounded-arcball-${mobile ? "phone" : "desktop"}-${bubble ? "bubble" : "plain"}.png` });
   const beforeDrop = await held();
-  await page.locator("#drop").click();
-  assert(!(await geometry()).active, "Bubble remained active after Drop");
+  assert(await page.locator("#drop").isHidden(), "Play-again button was visible during play");
+  if (mobile) await page.touchscreen.tap(current.x, current.y);
+  else {
+    await move(current.x, current.y);
+    await page.mouse.down();
+    await page.mouse.up();
+  }
+  if (bubble) assert((await geometry()).popping || !(await geometry()).held, "Quick tap did not start the pop transition");
+  await page.waitForFunction(() => !document.querySelector("#game").dataset.heldSpecies);
+  assert(!(await geometry()).active, "Bubble remained active after popping");
   const finalTrace = await trace();
   const released = finalTrace.events.filter((event) => event.type === "released").at(-1);
-  assert(quaternionDistance(beforeDrop.q, released.rotation) < 0.0002, "Drop changed orientation");
+  assert(finalTrace.events.some((event) => event.type === "bubble_popped"), "Pop event was not recorded");
+  assert(quaternionDistance(beforeDrop.q, released.rotation) < 0.0002, "Popping changed orientation");
   assert(!errors.length, errors.join(", "));
   await page.close();
   return rollEnd.q;
@@ -156,7 +173,7 @@ for (const mobile of [true, false]) {
   // Browser pointer coordinates are quantized to device pixels; allow a
   // sub-degree difference while still proving the overlay has no control path.
   assert(quaternionDistance(plain, bubble) < 0.004, `Bubble changed the rotation mapping: ${quaternionDistance(plain, bubble)} plain=${plain} bubble=${bubble}`);
-  console.log(`${mobile ? "Phone" : "Desktop"}: rounded tumble/roll, smooth shoulder, stable pivot, undo, flick, catch, Drop, and bubble A/B passed`);
+  console.log(`${mobile ? "Phone" : "Desktop"}: rounded tumble/roll, smooth shoulder, stable pivot, undo, flick, hold-to-catch, tap-to-pop, and bubble A/B passed`);
 }
 
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
@@ -169,12 +186,8 @@ const defaultGeometry = await defaultBubble.evaluate((element) => ({
   x: Number(element.dataset.centerX),
   y: Number(element.dataset.centerY),
 }));
-await defaultPage.mouse.move(defaultGeometry.x, defaultGeometry.y);
-await defaultPage.mouse.down();
-await defaultPage.waitForTimeout(150);
-assert(Number(await defaultBubble.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Default bubble did not appear during touch");
-await defaultPage.mouse.up();
+assert(Number(await defaultBubble.evaluate((element) => getComputedStyle(element).opacity)) > 0.5, "Default bubble was not visible before touch");
 await defaultPage.close();
-console.log("Bare URL: bubble defaults on");
+console.log("Bare URL: bubble defaults on and remains visible until popped");
 
 await browser.close();

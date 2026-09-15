@@ -131,9 +131,13 @@ html, body, #app {
 @media (prefers-reduced-motion: reduce) {
   #tutorial { transition: none; }
   #rotation-bubble { transition: none; }
+  #rotation-bubble.held { animation: none; }
+  #rotation-bubble::before,
+  #rotation-bubble .bubble-highlight { animation: none; }
 }
 
 #drop { position: absolute; z-index: 4; left: 50%; bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px)); transform: translateX(-50%); min-width: 160px; min-height: 52px; }
+#drop[hidden] { display: none; }
 #drop:disabled { opacity: .30; cursor: default; }
 #drop:not(:disabled):active { transform: translateX(-50%) scale(.96); }
 #share-trace { bottom: max(86px, calc(env(safe-area-inset-bottom) + 78px)); }
@@ -158,7 +162,15 @@ html, body, #app {
   transition: opacity 110ms ease-out, transform 150ms ease-out;
 }
 #rotation-bubble[hidden] { display: none; }
-#rotation-bubble.active { opacity: .96; transform: translate(-50%, -50%) scale(1); }
+#rotation-bubble.held {
+  opacity: .88;
+  transform: translate(-50%, -50%) scale(1);
+  animation: bubble-breathe 4.8s ease-in-out infinite;
+}
+#rotation-bubble.active { opacity: 1; }
+#rotation-bubble.popping {
+  animation: bubble-pop 145ms cubic-bezier(.2, .7, .35, 1) forwards;
+}
 #rotation-bubble::before {
   content: "";
   position: absolute;
@@ -170,6 +182,7 @@ html, body, #app {
   background: linear-gradient(105deg, #ffffff1f, #ffffff07 44%, transparent 72%);
   filter: blur(7px);
   transform: rotate(22deg);
+  animation: bubble-shimmer 5.6s ease-in-out infinite;
 }
 #rotation-bubble::after {
   content: "";
@@ -195,6 +208,28 @@ html, body, #app {
   filter: blur(.2px);
   transform: rotate(-18deg);
   opacity: .82;
+  animation: bubble-glint 4.4s ease-in-out infinite;
+}
+
+@keyframes bubble-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(.994); }
+  50% { transform: translate(-50%, -50%) scale(1.008); }
+}
+
+@keyframes bubble-shimmer {
+  0%, 100% { opacity: .68; transform: translate(-1%, 1%) rotate(22deg); }
+  50% { opacity: 1; transform: translate(3%, -2%) rotate(18deg); }
+}
+
+@keyframes bubble-glint {
+  0%, 100% { opacity: .64; transform: translate(-1%, 1%) rotate(-18deg); }
+  50% { opacity: .92; transform: translate(2%, -2%) rotate(-15deg); }
+}
+
+@keyframes bubble-pop {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: saturate(1); }
+  45% { opacity: .9; transform: translate(-50%, -50%) scale(1.035); filter: saturate(1.3) brightness(1.08); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.105); filter: saturate(1.1) brightness(1.16); }
 }
 #rotation-bubble .bubble-highlight::after {
   content: "";

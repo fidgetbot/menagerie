@@ -34,7 +34,8 @@ export class RoundedArcball {
   update(held: THREE.Object3D | null, camera: THREE.Camera, worldCenter?: THREE.Vector3, worldRadius?: number) {
     if (!held) {
       this.active = false;
-      this.bubble.classList.remove("active");
+      this.bubble.classList.remove("held", "active", "popping");
+      delete this.bubble.dataset.active;
       return;
     }
     if (this.active) return;
@@ -57,6 +58,7 @@ export class RoundedArcball {
     this.bubble.dataset.centerX = String(this.center.x);
     this.bubble.dataset.centerY = String(this.center.y);
     this.bubble.dataset.radius = String(this.radius);
+    if (this.bubbleEnabled) this.bubble.classList.add("held");
   }
 
   begin(x: number, y: number, orientation: THREE.Quaternion, camera: THREE.Camera) {
@@ -82,6 +84,13 @@ export class RoundedArcball {
     this.active = false;
     delete this.bubble.dataset.active;
     this.bubble.classList.remove("active");
+  }
+
+  pop() {
+    this.active = false;
+    delete this.bubble.dataset.active;
+    this.bubble.classList.remove("active");
+    if (this.bubbleEnabled) this.bubble.classList.add("popping");
   }
 
   private project(x: number, y: number, target: THREE.Vector3) {

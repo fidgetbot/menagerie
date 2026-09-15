@@ -15,6 +15,7 @@ const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
 shareTraceButton.hidden = !recorder.enabled;
 
@@ -163,10 +164,17 @@ let heldPosition = new THREE.Vector2(0, -0.2);
 const heldAnchorPosition = new THREE.Vector3();
 let heldRotationRadius = 0;
 let dragOrigin = new THREE.Vector2();
+const pointerStart = new THREE.Vector2();
+const pointerPosition = new THREE.Vector2();
 let rotationInput = new THREE.Vector2();
 const spinVelocity = new THREE.Vector3();
 let lastDragTime = 0;
+let pointerStartedAt = 0;
+let pointerTravel = 0;
+let tapCandidate = false;
 let pointerId: number | null = null;
+let bubblePopping = false;
+let bubblePopTimer: number | undefined;
 let score = 0;
 let lost = false;
 let accumulator = 0;
@@ -197,6 +205,8 @@ const heldClearance = 1.15;
 const landingFriction = 0.25;
 const stackedFriction = 1.08;
 const loweringSpeed = 4.2;
+const tapMaxDuration = 280;
+const tapMaxTravel = 10;
 
 function number(value: number) {
   return Math.round(value * 10000) / 10000;
@@ -362,13 +372,16 @@ function createHeld() {
   positionHeldAtAnchor();
   rotationInput.set(0, 0);
   spinVelocity.set(0, 0, 0);
-  dropButton.disabled = false;
+  dropButton.hidden = true;
+  dropButton.disabled = true;
   scene.add(held);
   canvas.dataset.heldSpecies = heldSpecies;
   recorder.event("held_ready", { species: heldSpecies, position: vector(held.position), rotation: quaternion(held.quaternion) });
 }
 
 function releaseHeld() {
+  bubblePopping = false;
+  bubblePopTimer = undefined;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
   if (!held || lost) return;
@@ -394,6 +407,19 @@ function releaseHeld() {
   heldSpecies = null;
   delete canvas.dataset.heldSpecies;
   animal.resolutionTimer = window.setTimeout(() => resolveOverdueAnimal(animal), 8500);
+}
+
+function popHeldBubble() {
+  if (!held || lost || engineFault || bubblePopping) return;
+  bubblePopping = true;
+  spinVelocity.set(0, 0, 0);
+  rotationControl.pop();
+  recorder.event("bubble_popped", { species: heldSpecies, rotation: quaternion(held.quaternion) });
+  bubblePopTimer = window.setTimeout(() => {
+    bubblePopTimer = undefined;
+    if (held && !lost && !engineFault) releaseHeld();
+    else bubblePopping = false;
+  }, reducedMotion ? 24 : 145);
 }
 
 function animateRig(rig: Pick<Animal, "eyes" | "head" | "feet">, time: number, intensity: number) {
@@ -488,6 +514,9 @@ function updateHeld(dt: number, time: number) {
 
 function endGame(reason = "unknown", animal?: Animal) {
   if (lost) return;
+  if (bubblePopTimer !== undefined) clearTimeout(bubblePopTimer);
+  bubblePopTimer = undefined;
+  bubblePopping = false;
   rotationControl.end();
   rotationControl.update(null, camera);
   recorder.event("game_over", { reason, score, engineFault });
@@ -511,6 +540,7 @@ function endGame(reason = "unknown", animal?: Animal) {
   scoreElement.classList.add("lost");
   tutorial.classList.add("hidden");
   dropButton.textContent = "Play again";
+  dropButton.hidden = false;
   dropButton.disabled = false;
 }
 
@@ -769,6 +799,9 @@ function recordTrace(dt: number) {
 }
 
 function reset() {
+  if (bubblePopTimer !== undefined) clearTimeout(bubblePopTimer);
+  bubblePopTimer = undefined;
+  bubblePopping = false;
   rotationControl.end();
   recorder.event("reset", { score, engineFault });
   fallTarget = null;
@@ -799,21 +832,27 @@ function reset() {
   scoreElement.textContent = "0";
   scoreElement.classList.remove("lost", "bump");
   tutorial.classList.remove("hidden");
-  dropButton.textContent = "Drop";
+  dropButton.textContent = "Play again";
+  dropButton.hidden = true;
+  dropButton.disabled = true;
   const baseHeight = modelTemplates.get("tortoise")!.halfExtents.z;
   createAnimal("tortoise", new THREE.Vector3(0, 0, baseHeight), new THREE.Quaternion(), true);
   createHeld();
 }
 
 canvas.addEventListener("pointerdown", (event) => {
-  if (lost || pointerId !== null) return;
+  if (lost || pointerId !== null || bubblePopping) return;
   if (!held) return;
+  rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   spinVelocity.set(0, 0, 0);
-  lastDragTime = performance.now();
+  pointerStartedAt = performance.now();
+  lastDragTime = pointerStartedAt;
+  pointerStart.set(event.clientX, event.clientY);
+  pointerTravel = 0;
+  tapCandidate = pointerStart.distanceTo(rotationControl.center) <= rotationControl.radius * 1.08;
   dragOrigin.set(event.clientX, event.clientY);
-  rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
   rotationControl.begin(event.clientX, event.clientY, held.quaternion, camera);
   rotationInput.set(0, 0);
   recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
@@ -823,6 +862,11 @@ canvas.addEventListener("pointermove", (event) => {
   if (event.pointerId !== pointerId || !held) return;
   const now = performance.now();
   rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
+  pointerPosition.set(event.clientX, event.clientY);
+  pointerTravel = Math.max(pointerTravel, pointerStart.distanceTo(pointerPosition));
+  if (pointerTravel > tapMaxTravel) {
+    tapCandidate = false;
+  }
   dragOrigin.set(event.clientX, event.clientY);
   const distance = rotationInput.length();
   if (distance === 0) return;
@@ -839,11 +883,20 @@ canvas.addEventListener("pointermove", (event) => {
 
 function finishPointer(pointer: number, reason: string) {
   if (pointer !== pointerId) return;
+  const shouldPop = reason.endsWith("pointerup")
+    && tapCandidate
+    && pointerTravel <= tapMaxTravel
+    && performance.now() - pointerStartedAt <= tapMaxDuration;
   recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
   rotationControl.end();
   rotationInput.set(0, 0);
-  if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) spinVelocity.set(0, 0, 0);
+  tapCandidate = false;
+  if (shouldPop) {
+    popHeldBubble();
+  } else if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) {
+    spinVelocity.set(0, 0, 0);
+  }
 }
 
 canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId, "canvas_pointerup"));
@@ -880,16 +933,8 @@ function restartGame() {
   else reset();
 }
 
-dropButton.addEventListener("pointerdown", () => spinVelocity.set(0, 0, 0));
 dropButton.addEventListener("click", () => {
   if (lost) { restartGame(); return; }
-  if (!held || lost || engineFault) return;
-  const captured = pointerId;
-  pointerId = null;
-  if (captured !== null && canvas.hasPointerCapture(captured)) canvas.releasePointerCapture(captured);
-  rotationInput.set(0, 0);
-  recorder.event("drop_requested", { rotation: quaternion(held.quaternion) });
-  releaseHeld();
 });
 shareTraceButton.addEventListener("click", async () => {
   shareTraceButton.disabled = true;
@@ -913,7 +958,7 @@ resize();
 reset();
 
 // A one-time invitation to rotate, using exactly the same catchable inertia as a flick.
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+if (!reducedMotion) {
   spinVelocity.set(0.3, 1, 0).normalize().applyQuaternion(camera.quaternion).multiplyScalar(4.4);
 }
 

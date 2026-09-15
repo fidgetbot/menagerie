@@ -1,6 +1,6 @@
 # Menagerie
 
-**Rotate. Drop. Stack.**
+**Rotate. Pop. Stack.**
 
 A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a towering balancing act—one careful placement at a time.
 
@@ -10,10 +10,10 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 
 - **Drag across the animal** to tumble it.
 - **Sweep around it** to twist it clockwise or anticlockwise.
-- **Flick** to spin it; touch again to stop and fine-tune.
-- **Tap Drop** to place it in its current orientation.
+- **Flick** to spin it; begin another drag to stop and fine-tune.
+- **Tap the bubble** to pop it and place the animal in its current orientation.
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
-- When the run ends, the same button becomes **Play again**.
+- When the run ends, a **Play again** button appears.
 
 Position and height are automatic, leaving you to find the right orientation. The waiting animal keeps a fixed manipulation pivot, including during a flick, so changing orientation does not make the piece bob above the stack. There is no timer. The camera follows the growing tower and eases down to a final view when the run ends.
 
@@ -66,11 +66,11 @@ npm run test:expansion
 
 The stacking harness checks the 36 ordered species pairings and nine tilted/inverted placements, observes each result for ten seconds, and checks for unresolved turns, browser errors, physics anomalies, and replay failures. Natural topples are valid outcomes. Results and screenshots are written to ignored `tmp/expansion-test/`.
 
-`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, touch-to-stop, placement orientation, and bubble/no-bubble parity on phone and desktop layouts.
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, and bubble/no-bubble parity on phone and desktop layouts.
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
 
-The translucent rotation bubble is shown by default while dragging. Append `?bubble=0` to hide it for comparison; both variants use exactly the same control mapping.
+The translucent soap bubble remains around each waiting animal until it is popped. Append `?bubble=0` to hide it for diagnostic comparison; both variants use exactly the same control mapping and tap-to-place gesture.
 
 ### Sound development
 
