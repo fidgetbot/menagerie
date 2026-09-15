@@ -62,9 +62,12 @@ With the development server running:
 ```sh
 npx playwright install webkit
 npm run test:expansion
+npm run test:towers
 ```
 
 The stacking harness checks the 36 ordered species pairings and nine tilted/inverted placements, observes each result for ten seconds, and checks for unresolved turns, browser errors, physics anomalies, and replay failures. Natural topples are valid outcomes. Results and screenshots are written to ignored `tmp/expansion-test/`.
+
+The tower benchmark runs twelve reproducible upright ten-piece sequences with a short aiming interval between placements. It reports median score, eight-piece and ten-piece reach, anomalies, and browser errors to ignored `tmp/tower-test.json`; natural collapses remain valid outcomes. Set `TEST_FORGIVING=0` to compare the fixed-position/landing-friction baseline in development, and `TEST_STRICT_ANOMALIES=1` when upward markers should fail the command.
 
 `TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, and bubble/no-bubble parity on phone and desktop layouts.
 

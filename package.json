@@ -11,6 +11,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test:expansion": "node scripts/test-expansion.mjs",
+    "test:towers": "node scripts/test-towers.mjs",
     "test:rotation": "node scripts/test-rounded-arcball.mjs"
   },
   "dependencies": {

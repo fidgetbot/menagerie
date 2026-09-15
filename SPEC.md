@@ -20,9 +20,9 @@ Fixed orthographic zoom and viewing angle. Normal camera tracking rises with the
 
 ## Physics
 
-Held pieces do not affect the stack. Placement lowers the sensor-only body to contact before enabling dynamics, preserving the selected orientation. Compound colliders share the visible model's local transform. Rebuilt armadillo, ram, and skunk use geometry-derived convex sections; the skunk's model and colliders share uniform scale 0.9.
+Held pieces do not affect the stack. The first held animal uses the fixed presentation position; subsequent bubbles follow the horizontal center of the highest scored animal, capped to 0.65 world units from that default so ordinary tower drift does not become an invisible placement penalty. Placement lowers the sensor-only body to contact before enabling dynamics, preserving the selected orientation. Compound colliders share the visible model's local transform. Rebuilt armadillo, ram, and skunk use geometry-derived convex sections; the skunk's model and colliders share uniform scale 0.9.
 
-Use a fixed timestep and continuous collision detection. Landing friction and first-contact damping limit rebounds. Scoring is bookkeeping-only: never force sleep or zero velocities on scoring. Restore stacking friction only after natural Rapier sleep. Settlement accumulates evidence of calm supported contact. Release deadlines and watchdogs prevent unresolved turns; caught engine faults enable replay through a reload.
+Use a fixed timestep and continuous collision detection. Initial landing friction remains low and first-contact damping limits rebounds. After 0.22 seconds of sustained support, the incoming piece advances to moderate settling friction; full stacking friction is still restored only after natural Rapier sleep. Scoring is bookkeeping-only: never force sleep, zero velocities, or change friction on scoring. Settlement accumulates evidence of calm supported contact. Release deadlines and watchdogs prevent unresolved turns; caught engine faults enable replay through a reload.
 
 ## Visuals and assets
 

@@ -13,6 +13,7 @@ const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace
 const runtimeParams = new URLSearchParams(location.search);
 const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
+const forgivingPlacementEnabled = devParams?.get("forgiving") !== "0";
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
@@ -148,8 +149,10 @@ type Animal = {
   fixed: boolean;
   landingPulse: number;
   hadSupport: boolean;
+  supportedFor: number;
   lowering: boolean;
   lastSafeZ: number;
+  settlingGripRaised: boolean;
   stackFrictionRestored: boolean;
   resolutionTimer?: number;
 };
@@ -159,7 +162,8 @@ let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
 let heldSpecies: SpeciesId | null = null;
-let heldPosition = new THREE.Vector2(0, -0.2);
+const defaultHeldPosition = new THREE.Vector2(0, -0.25);
+let heldPosition = defaultHeldPosition.clone();
 const heldAnchorPosition = new THREE.Vector3();
 let heldRotationRadius = 0;
 let dragOrigin = new THREE.Vector2();
@@ -202,7 +206,10 @@ const priorDragRotation = new THREE.Quaternion();
 const dragDelta = new THREE.Quaternion();
 const heldClearance = 1.15;
 const landingFriction = 0.25;
+const settlingFriction = 0.58;
 const stackedFriction = 1.08;
+const settlingGripDelay = 0.22;
+const crownFollowLimit = 0.65;
 const loweringSpeed = 4.2;
 const tapMaxDuration = 280;
 const tapMaxTravel = 10;
@@ -299,7 +306,7 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, lowering: false, lastSafeZ: position.z, stackFrictionRestored: fixed };
+  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, supportedFor: 0, lowering: false, lastSafeZ: position.z, settlingGripRaised: fixed, stackFrictionRestored: fixed };
   animals.push(animal);
   recorder.event("animal_created", { id: animal.id, species, fixed, position: vector(position), rotation: quaternion(rotation) });
   return animal;
@@ -339,6 +346,30 @@ function takeNextSpecies() {
   return speciesBag.pop()!;
 }
 
+function crownLandingAnchor() {
+  let crown: Animal | null = null;
+  let crownTop = -Infinity;
+  for (const animal of animals) {
+    if (!animal.counted || animal.fixed) continue;
+    const p = animal.body.translation();
+    const r = animal.body.rotation();
+    const top = p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w), animal.halfExtents);
+    if (top > crownTop) {
+      crown = animal;
+      crownTop = top;
+    }
+  }
+
+  const position = defaultHeldPosition.clone();
+  if (crown && forgivingPlacementEnabled) {
+    const p = crown.body.translation();
+    const offset = new THREE.Vector2(p.x, p.y).sub(defaultHeldPosition);
+    if (offset.length() > crownFollowLimit) offset.setLength(crownFollowLimit);
+    position.add(offset);
+  }
+  return { position, crown };
+}
+
 function positionHeldAtAnchor() {
   if (!held) return;
   held.position.copy(heldAnchorPosition);
@@ -362,7 +393,8 @@ function createHeld() {
   } else {
     held.quaternion.copy(randomQuaternion());
   }
-  heldPosition.set(0, -0.25);
+  const landingAnchor = crownLandingAnchor();
+  heldPosition.copy(landingAnchor.position);
   heldAnchorPosition.set(
     heldPosition.x,
     heldPosition.y,
@@ -375,7 +407,18 @@ function createHeld() {
   dropButton.disabled = true;
   scene.add(held);
   canvas.dataset.heldSpecies = heldSpecies;
-  recorder.event("held_ready", { species: heldSpecies, position: vector(held.position), rotation: quaternion(held.quaternion) });
+  if (diagnosticsEnabled) {
+    canvas.dataset.heldPosition = held.position.toArray().join(",");
+    if (landingAnchor.crown) canvas.dataset.crownPosition = vector(landingAnchor.crown.body.translation()).join(",");
+    else delete canvas.dataset.crownPosition;
+  }
+  recorder.event("held_ready", {
+    species: heldSpecies,
+    position: vector(held.position),
+    rotation: quaternion(held.quaternion),
+    crownId: landingAnchor.crown?.id ?? null,
+    crownPosition: landingAnchor.crown ? vector(landingAnchor.crown.body.translation()) : null,
+  });
 }
 
 function releaseHeld() {
@@ -625,6 +668,7 @@ function updatePhysics(dt: number, time: number) {
       const linearSpeed = Math.hypot(linear.x, linear.y, linear.z);
       const angularSpeed = Math.hypot(angular.x, angular.y, angular.z);
       const supported = touchesStack(animal);
+      animal.supportedFor = supported ? animal.supportedFor + dt : Math.max(0, animal.supportedFor - dt * 2);
       if (supported && !animal.hadSupport) {
         // Low landing friction prevents a corner from pole-vaulting the body.
         // Absorb the first impact like a soft toy, then restore strong static
@@ -639,6 +683,18 @@ function updatePhysics(dt: number, time: number) {
         });
         animal.body.setLinvel({ x: linear.x * 0.45, y: linear.y * 0.45, z: Math.min(linear.z, 0) }, true);
         animal.body.setAngvel({ x: angular.x * 0.55, y: angular.y * 0.55, z: angular.z * 0.55 }, true);
+      }
+      if (forgivingPlacementEnabled && animal.hadSupport && !animal.settlingGripRaised && animal.supportedFor >= settlingGripDelay) {
+        for (let index = 0; index < animal.body.numColliders(); index += 1) {
+          animal.body.collider(index).setFriction(settlingFriction);
+        }
+        animal.settlingGripRaised = true;
+        recorder.event("settling_grip", {
+          id: animal.id,
+          species: animal.species,
+          supportedFor: number(animal.supportedFor),
+          friction: settlingFriction,
+        });
       }
       const calm = animal.body.isSleeping() || (linearSpeed < 0.30 && angularSpeed < 0.42);
       // Solver corrections at compound-collider corners can produce tiny speed
@@ -662,6 +718,8 @@ function updatePhysics(dt: number, time: number) {
         canvas.dataset.angularSpeed = angularSpeed.toFixed(4);
         canvas.dataset.supported = String(supported);
         canvas.dataset.hadSupport = String(animal.hadSupport);
+        canvas.dataset.supportedFor = animal.supportedFor.toFixed(3);
+        canvas.dataset.frictionStage = animal.stackFrictionRestored ? "stacked" : animal.settlingGripRaised ? "settling" : "landing";
         canvas.dataset.quietFor = animal.quietFor.toFixed(3);
       }
       if (age > 0.65 && (animal.quietFor > 0.58 || (age > 3.5 && gentlySupported) || (age > 6 && supported))) {
