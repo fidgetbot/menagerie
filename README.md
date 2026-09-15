@@ -13,7 +13,7 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 - **Flick** to spin it; begin another drag to stop and fine-tune.
 - **Tap the bubble** to pop it and place the animal in its current orientation.
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
-- When the run ends, a **Play again** button appears.
+- When the run ends, a circular replay button appears.
 
 Position and height are automatic, leaving you to find the right orientation. The waiting animal keeps a fixed manipulation pivot, including during a flick, so changing orientation does not make the piece bob above the stack. There is no timer. The camera follows the growing tower and eases down to a final view when the run ends.
 

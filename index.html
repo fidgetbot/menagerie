@@ -10,10 +10,11 @@
     <main id="app">
       <canvas id="game" aria-label="Animal stacking game"></canvas>
       <output id="score" aria-label="Score">0</output>
-      <aside id="tutorial" aria-label="How to play">
-        <p class="goal">Stack the animals as high as you can.<br>Don’t let any fall.</p>
-      </aside>
-      <button id="drop" type="button" hidden disabled>Play again</button>
+      <button id="drop" type="button" hidden disabled aria-label="Play again" title="Play again">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.4 7.2A8 8 0 1 0 20 14h-2.2a5.8 5.8 0 1 1-.6-4.9L14 12.3h7V5.2l-1.6 2Z"/>
+        </svg>
+      </button>
       <button id="share-trace" type="button" hidden>Share trace</button>
     </main>
     <script type="module" src="/src/main.ts"></script>

@@ -48,64 +48,26 @@ html, body, #app {
 #score.bump { transform: translateX(-50%) scale(1.2); }
 #score.lost { color: #b94c42; }
 
-#tutorial {
-  position: absolute;
-  z-index: 2;
-  top: max(76px, calc(env(safe-area-inset-top) + 64px));
-  left: 50%;
-  width: min(82vw, 330px);
-  transform: translateX(-50%);
-  color: #426762;
-  font-family: "Avenir Next", "Helvetica Neue", "DejaVu Sans", sans-serif;
-  font-size: clamp(11px, 3.1vw, 13px);
-  font-weight: 400;
-  letter-spacing: .045em;
-  line-height: 1.55;
-  text-align: center;
-  text-shadow: 0 2px 12px #ffffffcc;
-  pointer-events: none;
-  transition: opacity 380ms ease, transform 380ms ease;
-}
-
-#tutorial p { margin: 0; }
-
-#tutorial .goal {
-  margin-bottom: 12px;
-  color: #294f4b;
-  font-size: clamp(13px, 3.5vw, 15px);
-  font-weight: 500;
-  letter-spacing: .025em;
-  line-height: 1.4;
-}
-
-#tutorial strong {
-  color: #1f5550;
-  font-size: .92em;
-  font-weight: 650;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-#tutorial.hidden {
-  opacity: 0;
-  transform: translate(-50%, -8px);
-}
-
 #drop {
-  min-width: 150px;
-  min-height: 46px;
-  padding: 0 24px;
+  width: 54px;
+  height: 54px;
+  padding: 0;
   border: 1.5px solid #2b625d;
-  border-radius: 999px;
-  background: #ffffff80;
+  border-radius: 50%;
+  background: #f8fff6b8;
   box-shadow: 0 5px 16px #315b4c18;
   color: #1f5550;
-  font: 650 12px/1 "Avenir Next", "Helvetica Neue", sans-serif;
-  letter-spacing: .14em;
-  text-transform: uppercase;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
+}
+
+#drop svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: auto;
+  fill: currentColor;
 }
 
 
@@ -129,14 +91,13 @@ html, body, #app {
 #share-trace[hidden] { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  #tutorial { transition: none; }
   #rotation-bubble { transition: none; }
   #rotation-bubble.held { animation: none; }
   #rotation-bubble::before,
   #rotation-bubble .bubble-highlight { animation: none; }
 }
 
-#drop { position: absolute; z-index: 4; left: 50%; bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px)); transform: translateX(-50%); min-width: 160px; min-height: 52px; }
+#drop { position: absolute; z-index: 4; left: 50%; bottom: max(24px, calc(env(safe-area-inset-bottom) + 16px)); transform: translateX(-50%); }
 #drop[hidden] { display: none; }
 #drop:disabled { opacity: .30; cursor: default; }
 #drop:not(:disabled):active { transform: translateX(-50%) scale(.96); }
@@ -147,23 +108,25 @@ html, body, #app {
   z-index: 2;
   aspect-ratio: 1;
   transform: translate(-50%, -50%) scale(.975);
-  border: 1px solid #386f6b20;
+  border: 1px solid #3a817942;
   border-radius: 50%;
   background:
-    radial-gradient(ellipse at 29% 19%, #ffffff32 0 2%, #ffffff16 5%, #ffffff08 12%, transparent 24%),
-    radial-gradient(ellipse at 72% 81%, #3d7c740d 0 9%, transparent 31%),
-    radial-gradient(circle at 46% 43%, #ffffff09 0 48%, #8bb8ae0d 72%, #39736d17 100%);
+    radial-gradient(ellipse at 28% 18%, #ffffff70 0 2%, #ffffff30 6%, #ffffff10 15%, transparent 28%),
+    radial-gradient(ellipse at 76% 20%, #9dcaff22 0 7%, transparent 29%),
+    radial-gradient(ellipse at 25% 79%, #ffd2db20 0 8%, transparent 31%),
+    radial-gradient(ellipse at 72% 82%, #29796f18 0 10%, transparent 33%),
+    radial-gradient(circle at 46% 43%, #d9fff012 0 38%, #77bcb11c 70%, #2672692b 100%);
   box-shadow:
-    inset 18px 20px 38px #ffffff12,
-    inset -24px -20px 42px #336e6814,
-    0 4px 18px #315f5a0a;
+    inset 18px 20px 40px #ffffff25,
+    inset -25px -22px 44px #286f681f,
+    0 5px 22px #315f5a12;
   opacity: 0;
   pointer-events: none;
   transition: opacity 110ms ease-out, transform 150ms ease-out;
 }
 #rotation-bubble[hidden] { display: none; }
 #rotation-bubble.held {
-  opacity: .88;
+  opacity: .96;
   transform: translate(-50%, -50%) scale(1);
   animation: bubble-breathe 4.8s ease-in-out infinite;
 }
@@ -179,7 +142,7 @@ html, body, #app {
   width: 19%;
   height: 52%;
   border-radius: 50%;
-  background: linear-gradient(105deg, #ffffff1f, #ffffff07 44%, transparent 72%);
+  background: linear-gradient(105deg, #ffffff3d, #d8fff015 44%, transparent 72%);
   filter: blur(7px);
   transform: rotate(22deg);
   animation: bubble-shimmer 5.6s ease-in-out infinite;
@@ -191,7 +154,7 @@ html, body, #app {
   bottom: 11%;
   width: 36%;
   height: 18%;
-  border-bottom: 2px solid #326d671f;
+  border-bottom: 2px solid #2c746c38;
   border-radius: 50%;
   filter: blur(.35px);
   transform: rotate(-12deg);
@@ -202,8 +165,8 @@ html, body, #app {
   top: 8%;
   width: 49%;
   height: 28%;
-  border-top: 3px solid #ffffff82;
-  border-left: 1px solid #ffffff2e;
+  border-top: 3px solid #ffffffb5;
+  border-left: 1px solid #d8fff057;
   border-radius: 50%;
   filter: blur(.2px);
   transform: rotate(-18deg);

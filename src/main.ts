@@ -8,7 +8,6 @@ import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
-const tutorial = document.querySelector<HTMLElement>("#tutorial")!;
 const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
 const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
 const runtimeParams = new URLSearchParams(location.search);
@@ -538,8 +537,6 @@ function endGame(reason = "unknown", animal?: Animal) {
   rotationInput.set(0, 0);
   pointerId = null;
   scoreElement.classList.add("lost");
-  tutorial.classList.add("hidden");
-  dropButton.textContent = "Play again";
   dropButton.hidden = false;
   dropButton.disabled = false;
 }
@@ -558,7 +555,6 @@ function countAnimal(animal: Animal) {
   scoreElement.value = String(score);
   scoreElement.textContent = String(score);
   scoreElement.classList.add("bump");
-  tutorial.classList.add("hidden");
   setTimeout(() => scoreElement.classList.remove("bump"), 180);
   createHeld();
 }
@@ -831,8 +827,6 @@ function reset() {
   scoreElement.value = "0";
   scoreElement.textContent = "0";
   scoreElement.classList.remove("lost", "bump");
-  tutorial.classList.remove("hidden");
-  dropButton.textContent = "Play again";
   dropButton.hidden = true;
   dropButton.disabled = true;
   const baseHeight = modelTemplates.get("tortoise")!.halfExtents.z;
