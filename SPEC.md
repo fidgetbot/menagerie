@@ -30,7 +30,7 @@ Broad softened planes, rich ceramic colors, glossy dark eyes, restrained sculpte
 
 ## Audio development
 
-The shipped game remains silent while a generated contact bank is auditioned. `audio/sfx-bank.json` defines reproducible Stable Audio 3 Small SFX prompts and seeds for settling ticks, ordinary body contacts, heavy knocks, and platform impacts. `npm run audio:generate` preserves raw stereo generations outside the repository, creates trimmed mono 44.1 kHz PCM audition copies normalized to −3 dB peak, validates their technical properties, and records model, prompt, seed, processing, and licensing provenance. Generated files are exploratory until explicitly selected by ear against gameplay. Runtime integration must use measured Rapier contact strength to select and modulate approved samples; it must not encode a canned settling sequence.
+The shipped game remains silent while a generated contact bank is auditioned. `audio/sfx-bank.json` currently defines a focused Stable Audio 3 Small SFX material prototype: short bright settling ticks and clear hollow body clinks. Stronger collisions and platform impacts will be generated only after that core ceramic character is approved. `npm run audio:generate` preserves raw stereo generations outside the repository, creates short mono 44.1 kHz PCM audition copies at a consistent peak level, validates their technical properties, and records model, prompt, seed, processing, and licensing provenance. Generated files are exploratory until explicitly selected by ear against gameplay. Runtime integration must use measured Rapier contact strength to select and modulate approved samples; it must not encode a canned settling sequence.
 
 ## Validation and delivery
 

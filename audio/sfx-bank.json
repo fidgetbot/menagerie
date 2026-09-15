@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bankId": "ceramic-contacts-v1",
-  "status": "exploratory",
+  "status": "material-prototype-v2",
   "model": {
     "name": "Stable Audio 3 Small SFX",
     "id": "stabilityai/stable-audio-3-small-sfx",
@@ -9,18 +9,18 @@
     "dit": "sm-sfx",
     "decoder": "same-s",
     "steps": 8,
-    "cfg": 3.0,
-    "durationSeconds": 2.5,
-    "negativePrompt": "breaking, shattering, cracked pottery, glass, metal, wood, footsteps, speech, music, melody, ambience, room noise, reverb, multiple impacts"
+    "cfg": 4.0,
+    "durationSeconds": 0.6,
+    "negativePrompt": "low pitch, low frequency, bass, rumble, thud, boom, paving stone, flagstone, rock, concrete, heavy object, dragging, scraping, sliding, rolling, rattling, handling noise, multiple impacts, repeated impacts, long decay, sustained resonance, drone, reverb, ambience, glass, metal, bell, xylophone, breaking, cracking, shattering, speech, music"
   },
   "processing": {
     "sampleRate": 44100,
     "channels": 1,
     "codec": "pcm_s16le",
     "silenceThresholdDb": -50,
-    "trailingSilenceSeconds": 0.15,
-    "maximumDurationSeconds": 1.8,
-    "targetPeakDb": -3.0
+    "trailingSilenceSeconds": 0.06,
+    "maximumDurationSeconds": 0.55,
+    "targetPeakDb": -4.5
   },
   "licensing": {
     "modelTerms": "https://stability.ai/community-license-agreement",
@@ -31,27 +31,15 @@
   "events": [
     {
       "id": "settling_tick",
-      "role": "Very small repeated contacts while a piece settles",
-      "prompt": "One tiny delicate contact between two small hollow glazed ceramic animal figurines, a pleasing high porcelain tick with a subtle musical resonance, very soft, extremely short isolated transient, close-miked and dry, intact ceramics, silence before and after",
-      "seeds": [140901, 140902, 140903]
+      "role": "Tiny bright porcelain contacts for quiet settling",
+      "prompt": "One single tiny bright click from two miniature thin-walled glazed porcelain ornaments touching very lightly. Crisp high-pitched ceramic tick, clear delicate attack, subtle hollow porcelain body, resonance ends within 200 milliseconds. An isolated close dry studio recording, completely still and silent before and after the one contact.",
+      "seeds": [142001, 142002, 142003, 142004]
     },
     {
       "id": "body_contact",
-      "role": "Ordinary animal-to-animal collision",
-      "prompt": "One gentle collision between two small hollow glazed ceramic animal figurines, a pleasing rounded ceramic clack with a warm musical hollow body, medium-soft isolated impact, close-miked and dry, intact ceramics, silence before and after",
-      "seeds": [141001, 141002, 141003]
-    },
-    {
-      "id": "heavy_knock",
-      "role": "Strong collision or stack movement",
-      "prompt": "One firm collision between two chunky hollow glazed ceramic animal figurines, a weighty low ceramic knock with a brief warm porcelain ring, substantial but charming, single isolated impact, close-miked and dry, intact ceramics, silence before and after",
-      "seeds": [141101, 141102, 141103]
-    },
-    {
-      "id": "platform_impact",
-      "role": "A fallen animal striking the stone-like base",
-      "prompt": "One small hollow glazed ceramic animal figurine landing firmly on a solid pale stone plinth, a deep rounded ceramic thump followed by a short musical porcelain resonance, weighty but unbroken, single isolated impact, close-miked and dry, silence before and after",
-      "seeds": [141201, 141202, 141203]
+      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
+      "prompt": "One single clear clink as two miniature hollow glazed porcelain figurines touch gently. Bright mid-high ceramic tone, crisp clean attack, pleasing warm hollow body, delicate resonance ends within 350 milliseconds. An isolated close dry studio recording, completely still and silent before and after the one contact.",
+      "seeds": [142101, 142102, 142103, 142104]
     }
   ]
 }

@@ -1,6 +1,6 @@
 # Menagerie sound-bank development
 
-Menagerie is currently silent. This directory defines the reproducible source prompts for an exploratory physics-driven ceramic contact bank; it does not contain approved or shipped audio.
+Menagerie is currently silent. This directory defines reproducible source prompts for an exploratory physics-driven ceramic contact bank; it does not contain approved or shipped audio. The current pass deliberately tests only the core material: four tiny porcelain ticks and four clear hollow clinks. Stronger impacts will be generated only after this material character is approved.
 
 ## Generate the candidate bank
 
