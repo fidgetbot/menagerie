@@ -292,7 +292,7 @@ async function verifyTowerExploration(mobile) {
   // Below the moat, a diagonal drag orbits and raises the view without
   // touching the animal. Releasing it leaves a short, damped glide.
   current = await geometry();
-  await page.mouse.move(current.x, current.y + current.r + 32);
+  await page.mouse.move(current.x, current.y + current.r + 13);
   await page.mouse.down();
   const beforeExplore = await state();
   await page.mouse.move(current.x + 80, current.y + current.r + 102, { steps: 3 });
@@ -340,7 +340,7 @@ async function verifyTowerExploration(mobile) {
   // With no interruption, momentum settles, pauses briefly, and returns only
   // the temporary height while preserving the chosen working orbit.
   current = await geometry();
-  await page.mouse.move(current.x, current.y + current.r + 32);
+  await page.mouse.move(current.x, current.y + current.r + 13);
   await page.mouse.down();
   await page.mouse.move(current.x + 70, current.y + current.r + 78, { steps: 3 });
   await page.mouse.up();

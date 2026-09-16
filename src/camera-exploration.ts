@@ -21,7 +21,7 @@ export class CameraExploration {
   private dragged = false;
 
   readonly yawLimit = 75 * Math.PI / 180;
-  readonly safetyMargin = 22;
+  readonly safetyMargin = 11;
 
   get active() {
     return this.phase !== "idle" || this.heightDisplaced();
