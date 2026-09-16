@@ -2,6 +2,7 @@ type ContactKind = "settling" | "body";
 
 type AudioBank = Record<ContactKind, string[]>;
 type EncodedSound = { kind: ContactKind; data: ArrayBuffer; filename: string };
+const runtimeBankVersion = "pitch-minus-1st-v1";
 
 const bank: AudioBank = {
   settling: [
@@ -20,6 +21,10 @@ const bank: AudioBank = {
 
 const AudioContextConstructor = window.AudioContext
   ?? (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+type NavigatorWithAudioSession = Navigator & {
+  audioSession?: { type: string };
+};
 
 export class CeramicAudio {
   private context: AudioContext | null = null;
@@ -43,6 +48,7 @@ export class CeramicAudio {
 
   unlock() {
     if (!this.enabled || !AudioContextConstructor) return;
+    this.configureAudioSession();
     if (!this.context) {
       this.context = new AudioContextConstructor();
       this.master = this.context.createGain();
@@ -50,7 +56,13 @@ export class CeramicAudio {
       this.master.connect(this.context.destination);
       void this.load();
     }
-    if (this.context.state === "suspended") void this.context.resume();
+    this.resumeContext();
+  }
+
+  recoverAfterForeground() {
+    if (!this.enabled || document.visibilityState !== "visible") return;
+    this.configureAudioSession();
+    this.resumeContext();
   }
 
   play(kind: ContactKind, strength: number, pan: number) {
@@ -87,6 +99,24 @@ export class CeramicAudio {
     this.lastPlayedAt = -Infinity;
   }
 
+  private configureAudioSession() {
+    const audioSession = (navigator as NavigatorWithAudioSession).audioSession;
+    if (!audioSession) return;
+    try {
+      audioSession.type = "playback";
+    } catch (error) {
+      console.warn("Ceramic audio session could not use playback mode", error);
+    }
+  }
+
+  private resumeContext() {
+    const context = this.context;
+    if (!context || context.state === "running" || context.state === "closed") return;
+    void context.resume().catch((error) => {
+      console.warn("Ceramic audio could not resume", error);
+    });
+  }
+
   private async load() {
     const context = this.context;
     if (!context) return;
@@ -105,7 +135,7 @@ export class CeramicAudio {
   private async fetchSources() {
     return Promise.all(
       (Object.keys(bank) as ContactKind[]).flatMap((kind) => bank[kind].map(async (filename) => {
-        const response = await fetch(`${this.baseUrl}${filename}`);
+        const response = await fetch(`${this.baseUrl}${filename}?v=${runtimeBankVersion}`);
         if (!response.ok) throw new Error(`Could not load ${filename}: ${response.status}`);
         return { kind, data: await response.arrayBuffer(), filename };
       })),

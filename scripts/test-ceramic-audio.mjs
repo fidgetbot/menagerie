@@ -12,14 +12,21 @@ page.on("response", (response) => {
 });
 await page.addInitScript(() => {
   window.__menagerieAudioStarts = 0;
+  window.__menagerieAudioResumes = 0;
+  window.__menagerieAudioContexts = [];
+  Object.defineProperty(navigator, "audioSession", {
+    value: { type: "ambient" },
+    configurable: true,
+  });
   class FakeNode {
     connect() { return this; }
   }
   class FakeAudioContext {
     constructor() {
       this.destination = {};
-      this.state = "running";
+      this.state = "interrupted";
       this.startedAt = performance.now();
+      window.__menagerieAudioContexts.push(this);
     }
     get currentTime() { return (performance.now() - this.startedAt) / 1000; }
     createGain() {
@@ -39,7 +46,10 @@ await page.addInitScript(() => {
       return node;
     }
     async decodeAudioData() { return {}; }
-    async resume() { this.state = "running"; }
+    async resume() {
+      window.__menagerieAudioResumes += 1;
+      this.state = "running";
+    }
   }
   Object.defineProperty(window, "AudioContext", { value: FakeAudioContext, configurable: true });
 });
@@ -55,6 +65,17 @@ await page.mouse.click(bubble.x, bubble.y);
 await page.waitForFunction(() => window.__menagerieAudioStarts === 1);
 await page.waitForTimeout(2500);
 
+const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
+if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
+const sessionType = await page.evaluate(() => navigator.audioSession.type);
+if (sessionType !== "playback") throw new Error(`Unexpected audio session type: ${sessionType}`);
+
+await page.evaluate(() => {
+  window.__menagerieAudioContexts[0].state = "interrupted";
+  document.dispatchEvent(new Event("visibilitychange"));
+});
+await page.waitForFunction((before) => window.__menagerieAudioResumes > before, initialResumeCount);
+
 const starts = await page.evaluate(() => window.__menagerieAudioStarts);
 const contact = await page.locator("#game").evaluate((canvas) => canvas.dataset.audioContact);
 if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
@@ -69,4 +90,4 @@ if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true")))
 }
 
 await browser.close();
-console.log("Ceramic runtime bank: 8 assets loaded, contact played once, resting chatter suppressed");
+console.log("Ceramic runtime bank: 8 assets loaded, iOS session recovered, contact played once, resting chatter suppressed");

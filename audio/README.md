@@ -2,6 +2,8 @@
 
 This directory defines the reproducible source prompts for Menagerie's physics-driven ceramic contact bank. The approved runtime set contains settling seeds `142001`, `142002`, `142004`, and `142005`, plus body-contact seeds `142103`, `142111`, `142114`, and `142116`. Their processed WAVs ship from `public/audio/ceramic/`; untouched raw generations and the complete run manifest remain in the playground and audition bundle. Stronger impacts and platform contacts still need their own approved family.
 
+The approved runtime copies are pitch-shifted down one semitone by changing their effective sample rate from 44.1 kHz to 41.616 kHz and resampling back to mono 44.1 kHz PCM16. This preserves the generated source bank while giving shipped contacts a slightly lower tone and a natural 5.9% longer decay. Runtime files remain named for their source seeds.
+
 ## Generate the candidate bank
 
 ```sh

@@ -1075,7 +1075,9 @@ addEventListener("blur", () => {
 document.addEventListener("visibilitychange", () => {
   recorder.event("visibility_changed", { state: document.visibilityState, pointer: pointerId });
   if (document.visibilityState === "hidden") finishInterruptedPointer();
+  else ceramicAudio.recoverAfterForeground();
 });
+addEventListener("pageshow", () => ceramicAudio.recoverAfterForeground());
 
 function restartGame() {
   recorder.event("restart_requested", { score, engineFault });
