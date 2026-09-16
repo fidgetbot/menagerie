@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { CeramicAudio } from "./ceramic-audio";
+import { observeContactAudio, type ContactAudioState } from "./contact-audio-detector";
 import { FlightRecorder } from "./trace";
 import { RoundedArcball } from "./rounded-arcball";
 import expansionColliders from "./expansion-colliders.json";
@@ -162,13 +163,9 @@ type Animal = {
   resolutionTimer?: number;
 };
 
-type ContactState = {
-  lastSeenStep: number;
-};
-
 const animals: Animal[] = [];
 const colliderOwners = new Map<number, Animal>();
-const contactStates = new Map<string, ContactState>();
+const contactStates = new Map<string, ContactAudioState>();
 let physicsStep = 0;
 let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
@@ -558,18 +555,40 @@ function emitContactAudio() {
     if (!peak || force > peak.force) peaks.set(key, { first, second, force });
   });
 
-  let strongest: { key: string; first: Animal; second: Animal; force: number; ratio: number } | null = null;
+  let strongest: {
+    key: string;
+    first: Animal;
+    second: Animal;
+    force: number;
+    ratio: number;
+    baselineRatio: number;
+    spikeRatio: number;
+    trigger: "initial" | "renewed-impact";
+  } | null = null;
   for (const [key, peak] of peaks) {
     const previous = contactStates.get(key);
-    const isNewContact = !previous || previous.lastSeenStep < physicsStep - 2;
-    contactStates.set(key, { lastSeenStep: physicsStep });
-    if (!isNewContact) continue;
     const movingMass = peak.first.fixed ? peak.second.body.mass()
       : peak.second.fixed ? peak.first.body.mass()
         : Math.min(peak.first.body.mass(), peak.second.body.mass());
     const ratio = peak.force / Math.max(0.01, movingMass * 9.81);
-    if (ratio < 0.12 || (strongest && ratio <= strongest.ratio)) continue;
-    strongest = { key, ...peak, ratio };
+    const observation = observeContactAudio(previous, physicsStep, ratio);
+    contactStates.set(key, observation.state);
+    if (observation.rearmed) {
+      recorder.event("ceramic_contact_rearmed", {
+        pair: key,
+        baselineRatio: number(observation.state.baselineRatio),
+        quietSteps: observation.state.quietSteps,
+      });
+    }
+    if (!observation.trigger || (strongest && ratio <= strongest.ratio)) continue;
+    strongest = {
+      key,
+      ...peak,
+      ratio,
+      baselineRatio: previous?.baselineRatio ?? ratio,
+      spikeRatio: observation.spikeRatio,
+      trigger: observation.trigger,
+    };
   }
 
   if (strongest) {
@@ -586,6 +605,9 @@ function emitContactAudio() {
       kind,
       force: number(strongest.force),
       weightRatio: number(strongest.ratio),
+      baselineRatio: number(strongest.baselineRatio),
+      spikeRatio: number(strongest.spikeRatio),
+      trigger: strongest.trigger,
       played,
     });
     if (diagnosticsEnabled) {
