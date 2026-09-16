@@ -21,7 +21,7 @@ async function runVariant(mobile, bubble) {
   });
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto(`${root}?trace=1&diagnostics=1&species=skunk&rx=0&ry=0&rz=0&bubble=${bubble ? 1 : 0}`);
+  await page.goto(`${root}?audio=0&trace=1&diagnostics=1&species=skunk&rx=0&ry=0&rz=0&bubble=${bubble ? 1 : 0}`);
   await page.waitForSelector('canvas[data-held-species="skunk"]');
   await page.waitForTimeout(300);
 
@@ -185,7 +185,7 @@ async function verifySurfaceLoops(mobile) {
   });
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto(`${root}?diagnostics=1&species=skunk&rx=0&ry=0&rz=0&loops=1`);
+  await page.goto(`${root}?audio=0&diagnostics=1&species=skunk&rx=0&ry=0&rz=0&loops=1`);
   await page.waitForSelector('canvas[data-held-species="skunk"]');
   await page.waitForTimeout(200);
 
@@ -237,7 +237,7 @@ async function verifySurfaceLoops(mobile) {
 for (const mobile of [true, false]) await verifySurfaceLoops(mobile);
 
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
-await defaultPage.goto(`${root}?diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
+await defaultPage.goto(`${root}?audio=0&diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
 await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');
 await defaultPage.waitForTimeout(200);
 const defaultBubble = defaultPage.locator("#rotation-bubble");

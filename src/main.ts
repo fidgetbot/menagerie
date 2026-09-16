@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
+import { CeramicAudio } from "./ceramic-audio";
 import { FlightRecorder } from "./trace";
 import { RoundedArcball } from "./rounded-arcball";
 import expansionColliders from "./expansion-colliders.json";
@@ -16,8 +17,10 @@ const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
 const forgivingPlacementEnabled = devParams?.get("forgiving") !== "0";
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
 const bubbleLoopsEnabled = runtimeParams.get("loops") === "1";
+const audioEnabled = runtimeParams.get("audio") !== "0";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
+const ceramicAudio = new CeramicAudio(`${import.meta.env.BASE_URL}audio/ceramic/`, audioEnabled);
 shareTraceButton.hidden = !recorder.enabled;
 
 await RAPIER.init();
@@ -126,6 +129,7 @@ for (const [species, model] of loadedModels) {
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
 world.timestep = 1 / 60;
+const physicsEvents = new RAPIER.EventQueue(true);
 const platformBody = world.createRigidBody(RAPIER.RigidBodyDesc.fixed().setTranslation(0, 0, -0.22));
 const platformCollider = world.createCollider(
   RAPIER.ColliderDesc.cylinder(0.22, 3)
@@ -158,7 +162,14 @@ type Animal = {
   resolutionTimer?: number;
 };
 
+type ContactState = {
+  lastSeenStep: number;
+};
+
 const animals: Animal[] = [];
+const colliderOwners = new Map<number, Animal>();
+const contactStates = new Map<string, ContactState>();
+let physicsStep = 0;
 let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
@@ -266,6 +277,8 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: b
       .setFrictionCombineRule(RAPIER.CoefficientCombineRule.Min)
       .setRestitution(0)
       .setRestitutionCombineRule(RAPIER.CoefficientCombineRule.Min)
+      .setActiveEvents(RAPIER.ActiveEvents.CONTACT_FORCE_EVENTS)
+      .setContactForceEventThreshold(0)
       .setDensity(density);
 
   if (species === "tortoise") {
@@ -309,6 +322,9 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   const rig = makeRig(model, species);
   const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, supportedFor: 0, lowering: false, lastSafeZ: position.z, settlingGripRaised: fixed, stackFrictionRestored: fixed };
   animals.push(animal);
+  for (let index = 0; index < body.numColliders(); index += 1) {
+    colliderOwners.set(body.collider(index).handle, animal);
+  }
   recorder.event("animal_created", { id: animal.id, species, fixed, position: vector(position), rotation: quaternion(rotation) });
   return animal;
 }
@@ -529,6 +545,59 @@ function finishLowering(animal: Animal, time: number) {
   animal.lowering = false;
 }
 
+function emitContactAudio() {
+  physicsStep += 1;
+  const peaks = new Map<string, { first: Animal; second: Animal; force: number }>();
+  physicsEvents.drainContactForceEvents((event) => {
+    const first = colliderOwners.get(event.collider1());
+    const second = colliderOwners.get(event.collider2());
+    if (!first || !second || first === second || first.lowering || second.lowering || (first.fixed && second.fixed)) return;
+    const key = first.id < second.id ? `${first.id}:${second.id}` : `${second.id}:${first.id}`;
+    const force = event.maxForceMagnitude();
+    const peak = peaks.get(key);
+    if (!peak || force > peak.force) peaks.set(key, { first, second, force });
+  });
+
+  let strongest: { key: string; first: Animal; second: Animal; force: number; ratio: number } | null = null;
+  for (const [key, peak] of peaks) {
+    const previous = contactStates.get(key);
+    const isNewContact = !previous || previous.lastSeenStep < physicsStep - 2;
+    contactStates.set(key, { lastSeenStep: physicsStep });
+    if (!isNewContact) continue;
+    const movingMass = peak.first.fixed ? peak.second.body.mass()
+      : peak.second.fixed ? peak.first.body.mass()
+        : Math.min(peak.first.body.mass(), peak.second.body.mass());
+    const ratio = peak.force / Math.max(0.01, movingMass * 9.81);
+    if (ratio < 0.12 || (strongest && ratio <= strongest.ratio)) continue;
+    strongest = { key, ...peak, ratio };
+  }
+
+  if (strongest) {
+    const midpoint = new THREE.Vector3()
+      .copy(strongest.first.group.position)
+      .add(strongest.second.group.position)
+      .multiplyScalar(0.5)
+      .project(camera);
+    const kind = strongest.ratio >= 0.9 ? "body" : "settling";
+    const strength = THREE.MathUtils.clamp((strongest.ratio - 0.12) / 2.4, 0, 1);
+    const played = ceramicAudio.play(kind, strength, midpoint.x);
+    recorder.event("ceramic_contact", {
+      pair: strongest.key,
+      kind,
+      force: number(strongest.force),
+      weightRatio: number(strongest.ratio),
+      played,
+    });
+    if (diagnosticsEnabled) {
+      canvas.dataset.audioContact = `${kind}:${strongest.ratio.toFixed(3)}:${played}`;
+    }
+  }
+
+  for (const [key, state] of contactStates) {
+    if (state.lastSeenStep < physicsStep - 180) contactStates.delete(key);
+  }
+}
+
 function updateRotationControl(dt: number) {
   if (!held || pointerId !== null) return;
   const speed = spinVelocity.length();
@@ -635,7 +704,8 @@ function updatePhysics(dt: number, time: number) {
       animal.lastSafeZ = position.z;
       animal.body.setNextKinematicTranslation({ x: position.x, y: position.y, z: position.z - loweringSpeed * world.timestep });
     }
-    world.step();
+    world.step(physicsEvents);
+    emitContactAudio();
     for (const animal of animals) {
       if (animal.lowering && intersectsLandingSurface(animal)) finishLowering(animal, time);
     }
@@ -871,6 +941,11 @@ function reset() {
     world.removeRigidBody(animal.body);
     scene.remove(animal.group);
   }
+  colliderOwners.clear();
+  contactStates.clear();
+  physicsStep = 0;
+  physicsEvents.clear();
+  ceramicAudio.reset();
   if (held) scene.remove(held);
   held = null;
   heldModel = null;
@@ -894,6 +969,7 @@ function reset() {
 }
 
 canvas.addEventListener("pointerdown", (event) => {
+  ceramicAudio.unlock();
   if (lost || pointerId !== null || bubblePopping) return;
   if (!held) return;
   rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
@@ -988,6 +1064,7 @@ function restartGame() {
 }
 
 dropButton.addEventListener("click", () => {
+  ceramicAudio.unlock();
   if (lost) { restartGame(); return; }
 });
 shareTraceButton.addEventListener("click", async () => {

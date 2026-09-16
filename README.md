@@ -32,7 +32,7 @@ Every run starts on a fixed tortoise. Incoming animals arrive in shuffled sets c
 
 ## Built for the browser
 
-Menagerie runs entirely on your device, with no account or installation required. It supports touch and mouse input and plays without sound.
+Menagerie runs entirely on your device, with no account or installation required. It supports touch and mouse input. Ceramic ticks and hollow clinks respond to actual animal contacts after the first touch unlocks browser audio.
 
 - **Three.js** renders the scene and Blender-authored GLB models.
 - **Rapier** simulates collisions and stacking at a fixed timestep.
@@ -79,7 +79,7 @@ Append `?loops=1` to try an experimental orientation aid. Once a touch moves bey
 
 ### Sound development
 
-The playable game remains silent while its generated ceramic contact bank is developed and auditioned. `npm run audio:generate` creates reproducible seeded candidates with Stable Audio 3 Small SFX, preserves untouched raw generations, produces technically normalized audition copies, and records full provenance outside the repository. See [audio/README.md](audio/README.md).
+The playable game uses eight approved ceramic contact samples generated with Stable Audio 3 Small SFX. Rapier contact strength chooses and modulates them at runtime while pair-level onset tracking suppresses resting chatter. `npm run audio:generate` creates reproducible seeded candidates, preserves untouched raw generations, produces technically normalized audition copies, and records full provenance outside the repository. See [audio/README.md](audio/README.md). Append `?audio=0` to disable playback for diagnostics.
 
 ### Project layout
 

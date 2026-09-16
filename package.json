@@ -10,6 +10,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "test:audio": "node scripts/test-ceramic-audio.mjs",
     "test:expansion": "node scripts/test-expansion.mjs",
     "test:towers": "node scripts/test-towers.mjs",
     "test:rotation": "node scripts/test-rounded-arcball.mjs"

@@ -1,6 +1,6 @@
 # Menagerie sound-bank development
 
-Menagerie is currently silent. This directory defines reproducible source prompts for an exploratory physics-driven ceramic contact bank; it does not contain approved or shipped audio. The current pass deliberately tests only the core material: four tiny porcelain ticks and four clear hollow clinks. Stronger impacts will be generated only after this material character is approved.
+This directory defines the reproducible source prompts for Menagerie's physics-driven ceramic contact bank. The approved runtime set contains settling seeds `142001`, `142002`, `142004`, and `142005`, plus body-contact seeds `142103`, `142111`, `142114`, and `142116`. Their processed WAVs ship from `public/audio/ceramic/`; untouched raw generations and the complete run manifest remain in the playground and audition bundle. Stronger impacts and platform contacts still need their own approved family.
 
 ## Generate the candidate bank
 
@@ -27,7 +27,7 @@ Each candidate must contain one isolated contact. The validator rejects a proces
 preview when energy resumes after at least 15 ms below -30 dBFS, while retaining
 zero-crossing rate only as a diagnostic for tonal rings.
 
-Do not copy candidates into `public/` merely because they pass technical validation. First audition repeated clicks and impacts against gameplay, select the pleasing variants, and record that human selection. The browser should use measured Rapier contact strength to choose and modulate approved samples rather than playing a canned settling sequence.
+Do not copy future candidates into the runtime bank merely because they pass technical validation. First audition repeated clicks and impacts against gameplay, select the pleasing variants, and record that human selection. The browser uses measured Rapier contact strength to choose and modulate the approved samples rather than playing a canned settling sequence.
 
 ## Shipping and licensing
 

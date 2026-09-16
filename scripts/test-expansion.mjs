@@ -18,7 +18,7 @@ if(process.env.TEST_PAIR){const [a,b]=process.env.TEST_PAIR.split(',');for(let i
 const results=[];
 async function worker(){while(jobs.length){const job=jobs.shift();const page=await browser.newPage({viewport:{width:402,height:714},isMobile:true,hasTouch:true,reducedMotion:'reduce'}); const errors=[];page.on('pageerror',e=>errors.push(e.stack??e.message));
 try{
- await page.goto(`${process.env.TEST_URL ?? "http://127.0.0.1:5173/menagerie/"}?trace&diagnostics&sequence=${job.a},${job.b}&rx=${job.rx}${job.rotation ? `&rotations=${job.rotation.join(",")}` : ""}`,{waitUntil:'networkidle'});
+ await page.goto(`${process.env.TEST_URL ?? "http://127.0.0.1:5173/menagerie/"}?audio=0&trace&diagnostics&sequence=${job.a},${job.b}&rx=${job.rx}${job.rotation ? `&rotations=${job.rotation.join(",")}` : ""}`,{waitUntil:'networkidle'});
  await page.waitForFunction(()=>document.querySelector('#game').dataset.heldSpecies);
  if(job.a===job.b&&job.rx===0)await page.screenshot({path:new URL(`new-${job.a}.png`,output).pathname});
  for(let turn=0;turn<(job.rx===0?2:1);turn++){

@@ -2,7 +2,7 @@
 
 ## Product
 
-A single-player, phone-first 3D browser game about stacking ceramic animal sculptures. The game runs client-side with TypeScript, Vite, Three.js, and Rapier, and is deployed to GitHub Pages. Audio is silent. No accounts, timer, multiplayer, progression, or animal-selection menu.
+A single-player, phone-first 3D browser game about stacking ceramic animal sculptures. The game runs client-side with TypeScript, Vite, Three.js, and Rapier, and is deployed to GitHub Pages. No accounts, timer, multiplayer, progression, or animal-selection menu.
 
 ## Roster and loop
 
@@ -28,9 +28,11 @@ Use a fixed timestep and continuous collision detection. Initial landing frictio
 
 Broad softened planes, rich ceramic colors, glossy dark eyes, restrained sculpted detail, warm lighting, and readable shadows. Cosmetic blinking, limb animation, and a landing pulse do not alter load-bearing colliders. Original trio: `assets/source/menagerie-lineup-v01.blend`. Armadillo, ram, and skunk: `assets/source/menagerie-reference-rebuild.blend`. Runtime models: `public/models/`.
 
-## Audio development
+## Audio
 
-The shipped game remains silent while a generated contact bank is auditioned. `audio/sfx-bank.json` currently defines a focused Stable Audio 3 Small SFX material prototype: crisp settling ticks and hollow body clinks with subtle musical overtones and natural 500–900 ms resonance. Stronger collisions and platform impacts will be generated only after that core ceramic character is approved. `npm run audio:generate` preserves raw stereo generations outside the repository, creates mono 44.1 kHz audition copies at a consistent peak level without truncating accepted decay tails, validates their technical properties, rejects candidates with multiple distinct contact onsets, and records model, prompt, seed, processing, and licensing provenance. Generated files are exploratory until explicitly selected by ear against gameplay. Runtime integration must use measured Rapier contact strength to select and modulate approved samples; it must not encode a canned settling sequence.
+The game ships four approved settling ticks and four approved hollow body clinks generated with Stable Audio 3 Small SFX. Audio files preload independently of the locked Web Audio context; the first pointer gesture unlocks playback. Rapier contact-force events are consolidated by animal pair, so compound colliders produce one sound rather than a burst. A pair must separate before it can sound again, which suppresses resting-load chatter. Measured peak force relative to the moving animal's weight selects a settling tick or body clink and shapes gain; sample choice rotates across the four variants, with small pitch and screen-space pan variation. Platform contacts remain silent until a suitable stronger-impact family is approved. `?audio=0` disables audio for automated physics and gesture checks.
+
+`audio/sfx-bank.json` defines the reproducible source bank. `npm run audio:generate` preserves raw stereo generations outside the repository, creates mono 44.1 kHz audition copies at a consistent peak level without truncating accepted decay tails, validates their technical properties, rejects candidates with multiple distinct contact onsets, and records model, prompt, seed, processing, and licensing provenance. Only the eight explicitly approved processed files are copied into `public/audio/ceramic/`; the audition bundle remains separate from runtime content.
 
 ## Validation and delivery
 

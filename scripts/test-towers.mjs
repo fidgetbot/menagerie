@@ -38,7 +38,7 @@ async function worker() {
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
     try {
-      const params = new URLSearchParams({ trace: "", diagnostics: "", sequence: job.sequence.join(","), rx: "0" });
+      const params = new URLSearchParams({ audio: "0", trace: "", diagnostics: "", sequence: job.sequence.join(","), rx: "0" });
       if (!forgiving) params.set("forgiving", "0");
       await page.goto(`${baseUrl}?${params}`, { waitUntil: "networkidle" });
       await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
