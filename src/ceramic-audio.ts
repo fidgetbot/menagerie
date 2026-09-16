@@ -4,8 +4,10 @@ type AudioBank = Record<ContactKind, string[]>;
 type EncodedSound = { kind: ContactKind; data: ArrayBuffer; filename: string };
 type AudioTrace = (event: string, detail?: Record<string, unknown>) => void;
 type RecoverableAudioContext = AudioContext & { readonly state: AudioContextState | "interrupted" };
+type PendingContact = { kind: ContactKind; strength: number; pan: number; queuedAt: number };
 const runtimeBankVersion = "pitch-minus-1st-v1";
 const clockProbeDelayMs = 300;
+const pendingContactMaxDelayMs = 1000;
 
 const bank: AudioBank = {
   settling: [
@@ -41,6 +43,7 @@ export class CeramicAudio {
   private recreateOnNextGesture = false;
   private generation = 0;
   private clockProbeTimer: number | undefined;
+  private pendingContact: PendingContact | null = null;
 
   constructor(
     private readonly baseUrl: string,
@@ -72,6 +75,7 @@ export class CeramicAudio {
     if (!this.enabled) return;
     this.backgrounded = true;
     this.unlocked = false;
+    this.pendingContact = null;
     this.clearClockProbe();
     const context = this.context;
     if (!context || context.state === "closed" || context.state === "suspended") return;
@@ -102,7 +106,7 @@ export class CeramicAudio {
     const context = this.context;
     const master = this.master;
     const choices = this.buffers[kind];
-    if (!context || !master || !this.unlocked || context.state !== "running" || choices.length === 0) {
+    if (!context || !master) {
       this.trace("play_blocked", {
         kind,
         context: Boolean(context),
@@ -112,6 +116,22 @@ export class CeramicAudio {
       });
       return false;
     }
+    if (context.state !== "running" || choices.length === 0) {
+      this.queueContact(kind, strength, pan, context.state !== "running" ? context.state : "buffers");
+      return true;
+    }
+    return this.playReady(context, master, kind, strength, pan);
+  }
+
+  private playReady(
+    context: RecoverableAudioContext,
+    master: GainNode,
+    kind: ContactKind,
+    strength: number,
+    pan: number,
+    queuedForMs = 0,
+  ) {
+    const choices = this.buffers[kind];
     if (context.currentTime - this.lastPlayedAt < 0.045) return false;
 
     const index = this.sequence[kind]++ % choices.length;
@@ -134,12 +154,20 @@ export class CeramicAudio {
     }
     source.start();
     this.lastPlayedAt = context.currentTime;
-    this.trace("played", { generation: this.generation, kind, index, state: context.state });
+    this.trace("played", {
+      generation: this.generation,
+      kind,
+      index,
+      state: context.state,
+      unlockConfirmed: this.unlocked,
+      queuedForMs: Math.round(queuedForMs),
+    });
     return true;
   }
 
   reset() {
     this.lastPlayedAt = -Infinity;
+    this.pendingContact = null;
   }
 
   private createContext(reason: string) {
@@ -190,6 +218,7 @@ export class CeramicAudio {
         this.unlocked = true;
         this.trace("unlock_confirmed", { generation, state: context.state });
         this.probeClock(context, "unlock");
+        this.flushPendingContact();
       }, { once: true });
       source.start(0);
       this.trace("unlock_pulse_started", { generation, state: context.state });
@@ -216,12 +245,14 @@ export class CeramicAudio {
     const generation = this.generation;
     if (context.state === "running") {
       this.probeClock(context, reason);
+      this.flushPendingContact();
       return;
     }
     void context.resume().then(() => {
       if (context !== this.context) return;
       this.trace("context_resumed", { generation, reason, state: context.state });
       this.probeClock(context, reason);
+      this.flushPendingContact();
     }).catch((error) => {
       if (context !== this.context) return;
       this.recreateOnNextGesture = true;
@@ -253,6 +284,32 @@ export class CeramicAudio {
     this.clockProbeTimer = undefined;
   }
 
+  private queueContact(kind: ContactKind, strength: number, pan: number, reason: string) {
+    const candidate: PendingContact = { kind, strength, pan, queuedAt: performance.now() };
+    if (!this.pendingContact || strength > this.pendingContact.strength) this.pendingContact = candidate;
+    this.trace("play_queued", {
+      generation: this.generation,
+      kind,
+      reason,
+      unlocked: this.unlocked,
+      buffers: this.buffers[kind].length,
+    });
+  }
+
+  private flushPendingContact() {
+    const pending = this.pendingContact;
+    const context = this.context;
+    const master = this.master;
+    if (!pending || !context || !master || context.state !== "running" || this.buffers[pending.kind].length === 0) return;
+    const queuedForMs = performance.now() - pending.queuedAt;
+    this.pendingContact = null;
+    if (queuedForMs > pendingContactMaxDelayMs) {
+      this.trace("queued_play_expired", { generation: this.generation, kind: pending.kind, queuedForMs: Math.round(queuedForMs) });
+      return;
+    }
+    this.playReady(context, master, pending.kind, pending.strength, pending.pan, queuedForMs);
+  }
+
   private async load(context: RecoverableAudioContext, generation: number) {
     try {
       const entries = await Promise.all((await this.sourceData).map(async ({ kind, data }) => ({
@@ -264,6 +321,7 @@ export class CeramicAudio {
       for (const { kind, buffer } of entries) buffers[kind].push(buffer);
       this.buffers = buffers;
       this.trace("buffers_ready", { generation, count: entries.length });
+      this.flushPendingContact();
     } catch (error) {
       if (context !== this.context || generation !== this.generation) return;
       console.warn("Ceramic audio could not be loaded", error);

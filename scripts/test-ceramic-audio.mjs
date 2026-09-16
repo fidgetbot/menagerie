@@ -19,6 +19,18 @@ await page.addInitScript(() => {
   window.__menagerieAudioDecodes = 0;
   window.__menagerieAudioContexts = [];
   window.__menagerieVisibility = "visible";
+  window.__menagerieHoldWarmupEnd = true;
+  window.__menagerieHoldDecodes = true;
+  window.__menageriePendingWarmups = [];
+  window.__menageriePendingDecodes = [];
+  window.__menagerieReleaseWarmups = () => {
+    window.__menagerieHoldWarmupEnd = false;
+    for (const finish of window.__menageriePendingWarmups.splice(0)) setTimeout(finish, 0);
+  };
+  window.__menagerieReleaseDecodes = () => {
+    window.__menagerieHoldDecodes = false;
+    for (const finish of window.__menageriePendingDecodes.splice(0)) finish();
+  };
   Object.defineProperty(document, "visibilityState", {
     configurable: true,
     get: () => window.__menagerieVisibility,
@@ -71,9 +83,11 @@ await page.addInitScript(() => {
       node.start = () => {
         if (node.buffer?.warmup) {
           window.__menagerieWarmupStarts += 1;
-          setTimeout(() => {
+          const finish = () => {
             if (context.state === "running" && !context.forceStall) node.ended?.();
-          }, 0);
+          };
+          if (window.__menagerieHoldWarmupEnd) window.__menageriePendingWarmups.push(finish);
+          else setTimeout(finish, 0);
         } else {
           window.__menagerieAudioStarts += 1;
         }
@@ -87,6 +101,9 @@ await page.addInitScript(() => {
     }
     async decodeAudioData() {
       window.__menagerieAudioDecodes += 1;
+      if (window.__menagerieHoldDecodes) {
+        await new Promise((resolve) => window.__menageriePendingDecodes.push(resolve));
+      }
       return { decoded: true };
     }
     async resume() {
@@ -132,7 +149,17 @@ const bubble = await page.locator("#rotation-bubble").evaluate((element) => ({
   y: Number(element.dataset.centerY),
 }));
 await page.mouse.click(bubble.x, bubble.y);
-await page.waitForFunction(() => window.__menagerieAudioStarts === 1);
+await page.waitForFunction(() => document.querySelector("#game").dataset.audioContact);
+const queuedFirstContact = await page.locator("#game").evaluate((canvas) => ({
+  contact: canvas.dataset.audioContact,
+  starts: window.__menagerieAudioStarts,
+}));
+if (!queuedFirstContact.contact?.endsWith(":true") || queuedFirstContact.starts !== 0) {
+  throw new Error(`First contact was not accepted while decode and unlock confirmation were pending: ${JSON.stringify(queuedFirstContact)}`);
+}
+await page.evaluate(() => window.__menagerieReleaseDecodes());
+await page.waitForFunction(() => window.__menagerieAudioStarts === 1, undefined, { timeout: 5000 });
+await page.evaluate(() => window.__menagerieReleaseWarmups());
 await page.waitForTimeout(2500);
 
 // Home Screen apps pass through hidden/visible frequently. The context must be
@@ -148,7 +175,7 @@ await page.evaluate(() => {
 });
 await page.waitForFunction((before) => window.__menagerieAudioResumes > before, initialResumeCount);
 await page.mouse.click(5, 5);
-await page.waitForFunction(() => window.__menagerieWarmupStarts === 2);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 3);
 
 // WebKit can claim a context is running while its clock is frozen. Foreground
 // recovery probes that clock; the following gesture must replace the context
@@ -160,7 +187,7 @@ await page.evaluate(() => {
 await page.waitForTimeout(450);
 await page.mouse.click(5, 5);
 await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2);
-await page.waitForFunction(() => window.__menagerieWarmupStarts === 3);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 4);
 await page.waitForFunction(() => window.__menagerieAudioDecodes === 16);
 
 const lifecycle = await page.evaluate(() => ({
@@ -184,4 +211,4 @@ if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true")))
 }
 
 await browser.close();
-console.log("Ceramic audio lifecycle: silent unlock, background recovery, stale-context replacement, 8 cached assets, and one contact verified");
+console.log("Ceramic audio lifecycle: first contact survives pending unlock/decode, background recovery and stale-context replacement verified");
