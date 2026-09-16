@@ -21,7 +21,11 @@ const bubbleLoopsEnabled = runtimeParams.get("loops") === "1";
 const audioEnabled = runtimeParams.get("audio") !== "0";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
-const ceramicAudio = new CeramicAudio(`${import.meta.env.BASE_URL}audio/ceramic/`, audioEnabled);
+const ceramicAudio = new CeramicAudio(
+  `${import.meta.env.BASE_URL}audio/ceramic/`,
+  audioEnabled,
+  (event, detail = {}) => recorder.event(`audio_${event}`, detail),
+);
 shareTraceButton.hidden = !recorder.enabled;
 
 await RAPIER.init();
@@ -1074,7 +1078,10 @@ addEventListener("blur", () => {
 });
 document.addEventListener("visibilitychange", () => {
   recorder.event("visibility_changed", { state: document.visibilityState, pointer: pointerId });
-  if (document.visibilityState === "hidden") finishInterruptedPointer();
+  if (document.visibilityState === "hidden") {
+    finishInterruptedPointer();
+    ceramicAudio.suspendForBackground();
+  }
   else ceramicAudio.recoverAfterForeground();
 });
 addEventListener("pageshow", () => ceramicAudio.recoverAfterForeground());

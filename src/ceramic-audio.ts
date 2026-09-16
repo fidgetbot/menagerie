@@ -2,7 +2,10 @@ type ContactKind = "settling" | "body";
 
 type AudioBank = Record<ContactKind, string[]>;
 type EncodedSound = { kind: ContactKind; data: ArrayBuffer; filename: string };
+type AudioTrace = (event: string, detail?: Record<string, unknown>) => void;
+type RecoverableAudioContext = AudioContext & { readonly state: AudioContextState | "interrupted" };
 const runtimeBankVersion = "pitch-minus-1st-v1";
+const clockProbeDelayMs = 300;
 
 const bank: AudioBank = {
   settling: [
@@ -27,20 +30,28 @@ type NavigatorWithAudioSession = Navigator & {
 };
 
 export class CeramicAudio {
-  private context: AudioContext | null = null;
+  private context: RecoverableAudioContext | null = null;
   private master: GainNode | null = null;
   private buffers: Record<ContactKind, AudioBuffer[]> = { settling: [], body: [] };
   private readonly sourceData: Promise<EncodedSound[]>;
   private sequence: Record<ContactKind, number> = { settling: 0, body: 0 };
   private lastPlayedAt = -Infinity;
+  private unlocked = false;
+  private backgrounded = false;
+  private recreateOnNextGesture = false;
+  private generation = 0;
+  private clockProbeTimer: number | undefined;
 
   constructor(
     private readonly baseUrl: string,
     private readonly enabled = true,
+    private readonly trace: AudioTrace = () => {},
   ) {
+    if (enabled) this.configureAudioSession();
     this.sourceData = enabled
       ? this.fetchSources().catch((error) => {
         console.warn("Ceramic audio could not be fetched", error);
+        this.trace("fetch_failed", { error: String(error) });
         return [];
       })
       : Promise.resolve([]);
@@ -48,28 +59,59 @@ export class CeramicAudio {
 
   unlock() {
     if (!this.enabled || !AudioContextConstructor) return;
+    this.backgrounded = false;
     this.configureAudioSession();
-    if (!this.context) {
-      this.context = new AudioContextConstructor();
-      this.master = this.context.createGain();
-      this.master.gain.value = 0.72;
-      this.master.connect(this.context.destination);
-      void this.load();
-    }
-    this.resumeContext();
+    if (this.recreateOnNextGesture) this.replaceContext("stalled_or_failed");
+    const context = this.context ?? this.createContext("first_gesture");
+    this.trace("unlock_attempt", { generation: this.generation, state: context.state, unlocked: this.unlocked });
+    this.startUnlockPulse(context);
+    this.resumeContext(context, "gesture");
+  }
+
+  suspendForBackground() {
+    if (!this.enabled) return;
+    this.backgrounded = true;
+    this.unlocked = false;
+    this.clearClockProbe();
+    const context = this.context;
+    if (!context || context.state === "closed" || context.state === "suspended") return;
+    const generation = this.generation;
+    this.trace("background_suspend_attempt", { generation, state: context.state });
+    void context.suspend().then(() => {
+      if (context !== this.context) return;
+      this.trace("background_suspended", { generation, state: context.state });
+    }).catch((error) => {
+      if (context !== this.context) return;
+      this.recreateOnNextGesture = true;
+      console.warn("Ceramic audio could not suspend", error);
+      this.trace("background_suspend_failed", { generation, error: String(error) });
+    });
   }
 
   recoverAfterForeground() {
     if (!this.enabled || document.visibilityState !== "visible") return;
+    this.backgrounded = false;
     this.configureAudioSession();
-    this.resumeContext();
+    const context = this.context;
+    if (!context) return;
+    this.trace("foreground_recovery", { generation: this.generation, state: context.state });
+    this.resumeContext(context, "foreground");
   }
 
   play(kind: ContactKind, strength: number, pan: number) {
     const context = this.context;
     const master = this.master;
     const choices = this.buffers[kind];
-    if (!context || !master || context.state !== "running" || choices.length === 0) return false;
+    if (!context || !master || !this.unlocked || context.state !== "running" || choices.length === 0) {
+      this.trace("play_blocked", {
+        kind,
+        context: Boolean(context),
+        unlocked: this.unlocked,
+        state: context?.state ?? "missing",
+        buffers: choices.length,
+      });
+      return false;
+    }
     if (context.currentTime - this.lastPlayedAt < 0.045) return false;
 
     const index = this.sequence[kind]++ % choices.length;
@@ -92,11 +134,70 @@ export class CeramicAudio {
     }
     source.start();
     this.lastPlayedAt = context.currentTime;
+    this.trace("played", { generation: this.generation, kind, index, state: context.state });
     return true;
   }
 
   reset() {
     this.lastPlayedAt = -Infinity;
+  }
+
+  private createContext(reason: string) {
+    const context = new (AudioContextConstructor as typeof AudioContext)() as RecoverableAudioContext;
+    const generation = ++this.generation;
+    this.context = context;
+    this.unlocked = false;
+    this.recreateOnNextGesture = false;
+    this.buffers = { settling: [], body: [] };
+    this.master = context.createGain();
+    this.master.gain.value = 0.72;
+    this.master.connect(context.destination);
+    context.addEventListener("statechange", () => {
+      if (context === this.context) this.trace("state_changed", { generation, state: context.state });
+    });
+    this.trace("context_created", { generation, reason, state: context.state, sampleRate: context.sampleRate });
+    void this.load(context, generation);
+    return context;
+  }
+
+  private replaceContext(reason: string) {
+    this.clearClockProbe();
+    const previous = this.context;
+    const previousGeneration = this.generation;
+    this.context = null;
+    this.master = null;
+    this.unlocked = false;
+    this.buffers = { settling: [], body: [] };
+    if (previous && previous.state !== "closed") {
+      void previous.close().catch((error) => {
+        console.warn("Ceramic audio could not close its stale context", error);
+      });
+    }
+    this.trace("context_replaced", { previousGeneration, reason });
+    return this.createContext(reason);
+  }
+
+  private startUnlockPulse(context: RecoverableAudioContext) {
+    if (this.unlocked || context !== this.context) return;
+    const generation = this.generation;
+    try {
+      const source = context.createBufferSource();
+      source.buffer = context.createBuffer(1, 1, context.sampleRate);
+      source.connect(context.destination);
+      source.addEventListener("ended", () => {
+        source.disconnect();
+        if (context !== this.context || this.backgrounded) return;
+        this.unlocked = true;
+        this.trace("unlock_confirmed", { generation, state: context.state });
+        this.probeClock(context, "unlock");
+      }, { once: true });
+      source.start(0);
+      this.trace("unlock_pulse_started", { generation, state: context.state });
+    } catch (error) {
+      this.recreateOnNextGesture = true;
+      console.warn("Ceramic audio could not start its unlock pulse", error);
+      this.trace("unlock_pulse_failed", { generation, error: String(error) });
+    }
   }
 
   private configureAudioSession() {
@@ -106,28 +207,67 @@ export class CeramicAudio {
       audioSession.type = "playback";
     } catch (error) {
       console.warn("Ceramic audio session could not use playback mode", error);
+      this.trace("session_configuration_failed", { error: String(error) });
     }
   }
 
-  private resumeContext() {
-    const context = this.context;
-    if (!context || context.state === "running" || context.state === "closed") return;
-    void context.resume().catch((error) => {
+  private resumeContext(context: RecoverableAudioContext, reason: string) {
+    if (context !== this.context || context.state === "closed") return;
+    const generation = this.generation;
+    if (context.state === "running") {
+      this.probeClock(context, reason);
+      return;
+    }
+    void context.resume().then(() => {
+      if (context !== this.context) return;
+      this.trace("context_resumed", { generation, reason, state: context.state });
+      this.probeClock(context, reason);
+    }).catch((error) => {
+      if (context !== this.context) return;
+      this.recreateOnNextGesture = true;
       console.warn("Ceramic audio could not resume", error);
+      this.trace("resume_failed", { generation, reason, error: String(error) });
     });
   }
 
-  private async load() {
-    const context = this.context;
-    if (!context) return;
+  private probeClock(context: RecoverableAudioContext, reason: string) {
+    if (context !== this.context || this.backgrounded || document.visibilityState !== "visible" || context.state !== "running") return;
+    this.clearClockProbe();
+    const generation = this.generation;
+    const startedAt = context.currentTime;
+    this.clockProbeTimer = window.setTimeout(() => {
+      this.clockProbeTimer = undefined;
+      if (context !== this.context || this.backgrounded || document.visibilityState !== "visible" || context.state !== "running") return;
+      const advancedBy = context.currentTime - startedAt;
+      if (advancedBy > 0.001) return;
+      this.unlocked = false;
+      this.recreateOnNextGesture = true;
+      console.warn("Ceramic audio clock stalled; the context will be recreated on the next gesture");
+      this.trace("clock_stalled", { generation, reason, currentTime: context.currentTime });
+    }, clockProbeDelayMs);
+  }
+
+  private clearClockProbe() {
+    if (this.clockProbeTimer === undefined) return;
+    clearTimeout(this.clockProbeTimer);
+    this.clockProbeTimer = undefined;
+  }
+
+  private async load(context: RecoverableAudioContext, generation: number) {
     try {
       const entries = await Promise.all((await this.sourceData).map(async ({ kind, data }) => ({
         kind,
         buffer: await context.decodeAudioData(data.slice(0)),
       })));
-      for (const { kind, buffer } of entries) this.buffers[kind].push(buffer);
+      if (context !== this.context || generation !== this.generation) return;
+      const buffers: Record<ContactKind, AudioBuffer[]> = { settling: [], body: [] };
+      for (const { kind, buffer } of entries) buffers[kind].push(buffer);
+      this.buffers = buffers;
+      this.trace("buffers_ready", { generation, count: entries.length });
     } catch (error) {
+      if (context !== this.context || generation !== this.generation) return;
       console.warn("Ceramic audio could not be loaded", error);
+      this.trace("decode_failed", { generation, error: String(error) });
       this.buffers = { settling: [], body: [] };
     }
   }

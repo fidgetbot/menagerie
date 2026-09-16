@@ -12,32 +12,72 @@ page.on("response", (response) => {
 });
 await page.addInitScript(() => {
   window.__menagerieAudioStarts = 0;
+  window.__menagerieWarmupStarts = 0;
   window.__menagerieAudioResumes = 0;
+  window.__menagerieAudioSuspends = 0;
+  window.__menagerieAudioCloses = 0;
+  window.__menagerieAudioDecodes = 0;
   window.__menagerieAudioContexts = [];
+  window.__menagerieVisibility = "visible";
+  Object.defineProperty(document, "visibilityState", {
+    configurable: true,
+    get: () => window.__menagerieVisibility,
+  });
   Object.defineProperty(navigator, "audioSession", {
     value: { type: "ambient" },
     configurable: true,
   });
+
   class FakeNode {
     connect() { return this; }
+    disconnect() {}
   }
+
   class FakeAudioContext {
     constructor() {
       this.destination = {};
+      this.sampleRate = 44100;
       this.state = "interrupted";
       this.startedAt = performance.now();
+      this.forceStall = false;
+      this.stalledAt = 0;
+      this.listeners = [];
       window.__menagerieAudioContexts.push(this);
     }
-    get currentTime() { return (performance.now() - this.startedAt) / 1000; }
+    get currentTime() {
+      return this.forceStall ? this.stalledAt : (performance.now() - this.startedAt) / 1000;
+    }
+    addEventListener(type, listener) {
+      if (type === "statechange") this.listeners.push(listener);
+    }
+    emitStateChange() {
+      for (const listener of this.listeners) listener();
+    }
+    createBuffer() {
+      return { warmup: true };
+    }
     createGain() {
       const node = new FakeNode();
       node.gain = { value: 0 };
       return node;
     }
     createBufferSource() {
+      const context = this;
       const node = new FakeNode();
       node.playbackRate = { value: 1 };
-      node.start = () => { window.__menagerieAudioStarts += 1; };
+      node.addEventListener = (type, listener) => {
+        if (type === "ended") node.ended = listener;
+      };
+      node.start = () => {
+        if (node.buffer?.warmup) {
+          window.__menagerieWarmupStarts += 1;
+          setTimeout(() => {
+            if (context.state === "running" && !context.forceStall) node.ended?.();
+          }, 0);
+        } else {
+          window.__menagerieAudioStarts += 1;
+        }
+      };
       return node;
     }
     createStereoPanner() {
@@ -45,10 +85,28 @@ await page.addInitScript(() => {
       node.pan = { value: 0 };
       return node;
     }
-    async decodeAudioData() { return {}; }
+    async decodeAudioData() {
+      window.__menagerieAudioDecodes += 1;
+      return { decoded: true };
+    }
     async resume() {
       window.__menagerieAudioResumes += 1;
       this.state = "running";
+      this.emitStateChange();
+    }
+    async suspend() {
+      window.__menagerieAudioSuspends += 1;
+      this.state = "suspended";
+      this.emitStateChange();
+    }
+    async close() {
+      window.__menagerieAudioCloses += 1;
+      this.state = "closed";
+      this.emitStateChange();
+    }
+    stall() {
+      this.stalledAt = this.currentTime;
+      this.forceStall = true;
     }
   }
   Object.defineProperty(window, "AudioContext", { value: FakeAudioContext, configurable: true });
@@ -57,6 +115,18 @@ await page.addInitScript(() => {
 await page.goto(`${root}?diagnostics=1&species=capybara&rx=0&ry=0&rz=0`);
 await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
 await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 8);
+
+// Unlock without placing the animal. iOS requires a source to start inside the
+// gesture, not merely a later resume() call.
+await page.mouse.click(5, 5);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 1);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 8);
+const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
+if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
+
+const sessionType = await page.evaluate(() => navigator.audioSession.type);
+if (sessionType !== "playback") throw new Error(`Unexpected audio session type: ${sessionType}`);
+
 const bubble = await page.locator("#rotation-bubble").evaluate((element) => ({
   x: Number(element.dataset.centerX),
   y: Number(element.dataset.centerY),
@@ -65,29 +135,53 @@ await page.mouse.click(bubble.x, bubble.y);
 await page.waitForFunction(() => window.__menagerieAudioStarts === 1);
 await page.waitForTimeout(2500);
 
-const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
-if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
-const sessionType = await page.evaluate(() => navigator.audioSession.type);
-if (sessionType !== "playback") throw new Error(`Unexpected audio session type: ${sessionType}`);
-
+// Home Screen apps pass through hidden/visible frequently. The context must be
+// explicitly suspended, resumed, and unlocked again by the next real gesture.
 await page.evaluate(() => {
-  window.__menagerieAudioContexts[0].state = "interrupted";
+  window.__menagerieVisibility = "hidden";
+  document.dispatchEvent(new Event("visibilitychange"));
+});
+await page.waitForFunction(() => window.__menagerieAudioSuspends === 1);
+await page.evaluate(() => {
+  window.__menagerieVisibility = "visible";
   document.dispatchEvent(new Event("visibilitychange"));
 });
 await page.waitForFunction((before) => window.__menagerieAudioResumes > before, initialResumeCount);
+await page.mouse.click(5, 5);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 2);
 
-const starts = await page.evaluate(() => window.__menagerieAudioStarts);
+// WebKit can claim a context is running while its clock is frozen. Foreground
+// recovery probes that clock; the following gesture must replace the context
+// and decode the cached bytes without fetching the bank again.
+await page.evaluate(() => {
+  window.__menagerieAudioContexts[0].stall();
+  dispatchEvent(new Event("pageshow"));
+});
+await page.waitForTimeout(450);
+await page.mouse.click(5, 5);
+await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 3);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 16);
+
+const lifecycle = await page.evaluate(() => ({
+  contexts: window.__menagerieAudioContexts.length,
+  closes: window.__menagerieAudioCloses,
+  starts: window.__menagerieAudioStarts,
+}));
 const contact = await page.locator("#game").evaluate((canvas) => canvas.dataset.audioContact);
 if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
 if (audioResponses.length !== 8 || audioResponses.some((status) => status !== 200)) {
   throw new Error(`Runtime bank did not preload cleanly: ${audioResponses.join(",")}`);
 }
-if (contact ? starts !== 1 : starts < 1) {
-  throw new Error(contact ? `Resting contact produced ${starts} sounds instead of one` : "Live contact produced no sound");
+if (lifecycle.contexts !== 2 || lifecycle.closes !== 1) {
+  throw new Error(`Stalled context was not replaced exactly once: ${JSON.stringify(lifecycle)}`);
+}
+if (contact ? lifecycle.starts !== 1 : lifecycle.starts < 1) {
+  throw new Error(contact ? `Resting contact produced ${lifecycle.starts} sounds instead of one` : "Live contact produced no sound");
 }
 if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true"))) {
   throw new Error(`Unexpected contact classification: ${contact}`);
 }
 
 await browser.close();
-console.log("Ceramic runtime bank: 8 assets loaded, iOS session recovered, contact played once, resting chatter suppressed");
+console.log("Ceramic audio lifecycle: silent unlock, background recovery, stale-context replacement, 8 cached assets, and one contact verified");
