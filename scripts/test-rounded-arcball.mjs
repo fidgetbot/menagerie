@@ -247,6 +247,114 @@ async function verifySurfaceLoops(mobile) {
 
 for (const mobile of [true, false]) await verifySurfaceLoops(mobile);
 
+async function verifyTowerExploration(mobile) {
+  const page = await browser.newPage({
+    viewport: mobile ? { width: 390, height: 714 } : { width: 1000, height: 800 },
+    isMobile: mobile,
+    hasTouch: mobile,
+    reducedMotion: "reduce",
+  });
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(`${root}?audio=0&diagnostics=1&species=skunk&rx=0&ry=0&rz=0`);
+  await page.waitForSelector('canvas[data-held-species="skunk"]');
+  await page.waitForTimeout(200);
+
+  const bubble = page.locator("#rotation-bubble");
+  const geometry = () => bubble.evaluate((element) => ({
+    x: Number(element.dataset.centerX),
+    y: Number(element.dataset.centerY),
+    r: Number(element.dataset.radius),
+    opacity: Number(getComputedStyle(element).opacity),
+  }));
+  const state = () => page.locator("#game").evaluate((canvas) => ({
+    phase: canvas.dataset.cameraExplorePhase,
+    yaw: Number(canvas.dataset.cameraExploreYaw),
+    height: Number(canvas.dataset.cameraExploreHeight),
+    cameraHeight: Number(canvas.dataset.cameraHeight),
+    pointerMode: canvas.dataset.pointerMode,
+    q: canvas.dataset.heldQuaternion.split(",").map(Number),
+    species: canvas.dataset.heldSpecies,
+  }));
+
+  // The moat below the bubble is deliberately inert.
+  let current = await geometry();
+  const beforeMoat = await state();
+  await page.mouse.move(current.x, current.y + current.r + 10);
+  await page.mouse.down();
+  await page.mouse.move(current.x + 60, current.y + current.r + 35);
+  await page.mouse.up();
+  await page.waitForTimeout(60);
+  const afterMoat = await state();
+  assert(afterMoat.phase === "idle", "The bubble safety margin started camera exploration");
+  assert(quaternionDistance(beforeMoat.q, afterMoat.q) < 0.001, "The bubble safety margin rotated the animal");
+
+  // Below the moat, a diagonal drag orbits and raises the view without
+  // touching the animal. Releasing it leaves a short, damped glide.
+  current = await geometry();
+  await page.mouse.move(current.x, current.y + current.r + 32);
+  await page.mouse.down();
+  const beforeExplore = await state();
+  await page.mouse.move(current.x + 80, current.y + current.r - 38, { steps: 3 });
+  await page.waitForTimeout(30);
+  const duringExplore = await state();
+  assert(duringExplore.phase === "dragging" && duringExplore.pointerMode === "explore", "Below-bubble drag did not own camera exploration");
+  assert(Math.abs(duringExplore.yaw) > 0.2, `Horizontal exploration did not orbit: ${duringExplore.yaw}`);
+  assert(duringExplore.height > 0.35, `Vertical exploration did not rise: ${duringExplore.height}`);
+  assert(quaternionDistance(beforeExplore.q, duringExplore.q) < 0.001, "Camera exploration rotated the held animal");
+  assert((await geometry()).opacity < 0.8, "Bubble did not soften while camera exploration owned input");
+  await page.screenshot({ path: `tmp/tower-exploration-${mobile ? "phone" : "desktop"}.png` });
+  await page.mouse.up();
+  await page.waitForTimeout(35);
+  const released = await state();
+  assert(released.phase === "momentum", `Exploration did not keep gentle momentum: ${released.phase}`);
+  await page.waitForTimeout(140);
+  const afterMomentum = await state();
+  assert(Math.abs(afterMomentum.yaw - released.yaw) > 0.005 || Math.abs(afterMomentum.height - released.height) > 0.01, "Exploration stopped dead on release");
+  await page.waitForTimeout(520);
+  assert((await state()).phase === "dwell", "Exploration did not settle into its inspection pause");
+
+  // The sphere is softly locked while the view is displaced. Touching it
+  // fast-recentres, then promotes the same held pointer into rotation without
+  // allowing that transitional touch to pop the bubble.
+  current = await geometry();
+  const beforeRecenter = await state();
+  await page.mouse.move(current.x, current.y);
+  await page.mouse.down();
+  await page.mouse.move(current.x + 20, current.y + 8);
+  await page.waitForTimeout(90);
+  const recentering = await state();
+  assert(recentering.pointerMode === "recenter", "Sphere touch did not start the fast recenter");
+  assert(quaternionDistance(beforeRecenter.q, recentering.q) < 0.001, "Sphere moved while the camera was recentering");
+  await page.waitForTimeout(360);
+  const ready = await state();
+  assert(ready.phase === "idle" && ready.pointerMode === "rotate", `Held touch was not promoted after recenter: ${JSON.stringify(ready)}`);
+  await page.mouse.move(current.x + 58, current.y + 18);
+  await page.waitForTimeout(35);
+  assert(quaternionDistance(ready.q, (await state()).q) > 0.02, "Promoted sphere touch did not gain rotation control");
+  await page.mouse.up();
+  await page.waitForTimeout(220);
+  assert((await state()).species === "skunk", "The recentering touch accidentally popped the bubble");
+
+  // With no interruption, momentum settles, pauses, and returns to the live
+  // default camera automatically.
+  current = await geometry();
+  await page.mouse.move(current.x, current.y + current.r + 32);
+  await page.mouse.down();
+  await page.mouse.move(current.x - 70, current.y + current.r + 78, { steps: 3 });
+  await page.mouse.up();
+  await page.waitForTimeout(3300);
+  const returned = await state();
+  assert(returned.phase === "idle", `Camera did not return automatically: ${returned.phase}`);
+  assert(Math.abs(returned.yaw) < 0.003 && Math.abs(returned.height) < 0.01, `Camera retained exploration offsets: ${JSON.stringify(returned)}`);
+  assert((await geometry()).opacity > 0.9, "Bubble did not restore after camera return");
+  assert(!errors.length, errors.join(", "));
+  await page.close();
+  console.log(`${mobile ? "Phone" : "Desktop"}: safety moat, tower orbit/pan, momentum, pause, return, and soft sphere lock passed`);
+}
+
+for (const mobile of [true, false]) await verifyTowerExploration(mobile);
+
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
 await defaultPage.goto(`${root}?audio=0&diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
 await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');

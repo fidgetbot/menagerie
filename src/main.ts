@@ -6,6 +6,7 @@ import { CeramicAudio } from "./ceramic-audio";
 import { observeContactAudio, type ContactAudioState } from "./contact-audio-detector";
 import { FlightRecorder } from "./trace";
 import { RoundedArcball } from "./rounded-arcball";
+import { CameraExploration } from "./camera-exploration";
 import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
@@ -49,6 +50,8 @@ renderer.toneMappingExposure = 1.05;
 const camera = new THREE.OrthographicCamera(-4, 4, 5, -5, 0.1, 60);
 camera.up.set(0, 0, 1);
 const cameraTarget = new THREE.Vector3(0, 0, 1.9);
+const cameraOrbit = new THREE.Vector3();
+const cameraWorldUp = new THREE.Vector3(0, 0, 1);
 let cameraHeight = 1.9;
 let fallTarget: Animal | null = null;
 let endingElapsed = 0;
@@ -193,6 +196,10 @@ let pointerStartedAt = 0;
 let pointerTravel = 0;
 let tapCandidate = false;
 let pointerId: number | null = null;
+type PointerMode = "rotate" | "explore" | "recenter";
+let pointerMode: PointerMode | null = null;
+const cameraExploration = new CameraExploration();
+let explorationLastMoveTime = 0;
 let bubblePopping = false;
 let bubblePopTimer: number | undefined;
 let score = 0;
@@ -448,6 +455,8 @@ function releaseHeld() {
   bubblePopTimer = undefined;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
+  cameraExploration.reset();
+  pointerMode = null;
   if (!held || lost) return;
   rotationControl.end();
   rotationControl.update(null, camera);
@@ -668,6 +677,8 @@ function endGame(reason = "unknown", animal?: Animal) {
   endingElapsed = 0;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
+  cameraExploration.reset();
+  pointerMode = null;
   for (const animal of animals) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
   }
@@ -842,7 +853,7 @@ function updatePhysics(dt: number, time: number) {
   if (diagnosticsEnabled) canvas.dataset.maxStackUpwardSpeed = maxStackUpwardSpeed.toFixed(4);
 }
 
-function updateCamera(dt: number) {
+function highestStackPoint() {
   let highest = 1.25;
   for (const animal of animals) {
     if (!animal.counted) continue;
@@ -850,6 +861,18 @@ function updateCamera(dt: number) {
     const r = animal.body.rotation();
     highest = Math.max(highest, p.z + verticalExtent(new THREE.Quaternion(r.x, r.y, r.z, r.w), animal.halfExtents));
   }
+  return highest;
+}
+
+function explorationHeightBounds(highest = highestStackPoint()) {
+  return {
+    min: Math.min(0, 1.9 - cameraHeight),
+    max: Math.max(0, Math.max(1.9, highest + 1.75) - cameraHeight),
+  };
+}
+
+function updateCamera(dt: number) {
+  const highest = highestStackPoint();
   const candidate = newestReleased;
   const clearlyFalling = candidate && !candidate.lowering
     && candidate.body.linvel().z < -1
@@ -884,10 +907,41 @@ function updateCamera(dt: number) {
     finalViewRecorded = true;
     recorder.event("final_view", { cameraHeight });
   }
-  if (diagnosticsEnabled) canvas.dataset.cameraHeight = cameraHeight.toFixed(4);
-  cameraTarget.set(0, 0.05, cameraHeight);
-  camera.position.set(6.9, -12.3, cameraHeight + 6.0);
+
+  const cameraOverride = lost || !!fallTarget || !held || bubblePopping;
+  if (cameraOverride && cameraExploration.active) {
+    recorder.event("camera_explore_cancelled", {
+      reason: lost ? "game_over" : fallTarget ? "fall_tracking" : bubblePopping ? "placement" : "no_held_piece",
+      yaw: number(cameraExploration.yaw),
+      height: number(cameraExploration.height),
+    });
+    cameraExploration.reset();
+  } else {
+    const previousPhase = cameraExploration.phase;
+    cameraExploration.update(dt, explorationHeightBounds(highest));
+    if (previousPhase !== cameraExploration.phase) {
+      if (cameraExploration.phase === "return") {
+        recorder.event("camera_explore_return_started", {
+          yaw: number(cameraExploration.yaw),
+          height: number(cameraExploration.height),
+        });
+      } else if (cameraExploration.phase === "idle") {
+        recorder.event("camera_explore_default", {});
+      }
+    }
+  }
+  const targetHeight = cameraHeight + cameraExploration.height;
+  cameraTarget.set(0, 0.05, targetHeight);
+  cameraOrbit.set(6.9, -12.3, 0).applyAxisAngle(cameraWorldUp, cameraExploration.yaw);
+  camera.position.set(cameraOrbit.x, cameraOrbit.y, targetHeight + 6.0);
   camera.lookAt(cameraTarget);
+  if (diagnosticsEnabled) {
+    canvas.dataset.cameraHeight = cameraHeight.toFixed(4);
+    canvas.dataset.cameraExploreHeight = cameraExploration.height.toFixed(4);
+    canvas.dataset.cameraExploreYaw = cameraExploration.yaw.toFixed(4);
+    canvas.dataset.cameraExplorePhase = cameraExploration.phase;
+    canvas.dataset.pointerMode = pointerMode ?? "none";
+  }
 }
 
 function resize() {
@@ -966,6 +1020,9 @@ function reset() {
   finalViewRecorded = false;
   endingElapsed = 0;
   cameraHeight = 1.9;
+  cameraExploration.reset();
+  pointerMode = null;
+  rotationControl.bubble.classList.remove("exploring");
   for (const animal of animals.splice(0)) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
     world.removeRigidBody(animal.body);
@@ -998,37 +1055,98 @@ function reset() {
   createHeld();
 }
 
-canvas.addEventListener("pointerdown", (event) => {
-  ceramicAudio.unlock();
-  if (lost || pointerId !== null || bubblePopping) return;
+function capturePointer(pointer: number, x: number, y: number) {
+  pointerId = pointer;
+  pointerPosition.set(x, y);
+  canvas.setPointerCapture(pointer);
+}
+
+function beginRotationPointer(x: number, y: number, allowTap: boolean) {
   if (!held) return;
-  rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
-  if (!rotationControl.contains(event.clientX, event.clientY)) {
-    recorder.event("pointer_ignored", {
-      pointer: event.pointerId,
-      reason: "outside_bubble",
-      x: number(event.clientX),
-      y: number(event.clientY),
-      species: heldSpecies,
-    });
-    return;
-  }
-  pointerId = event.pointerId;
-  canvas.setPointerCapture(pointerId);
+  pointerMode = "rotate";
   spinVelocity.set(0, 0, 0);
   pointerStartedAt = performance.now();
   lastDragTime = pointerStartedAt;
-  pointerStart.set(event.clientX, event.clientY);
+  pointerStart.set(x, y);
+  pointerPosition.set(x, y);
   pointerTravel = 0;
-  tapCandidate = pointerStart.distanceTo(rotationControl.center) <= rotationControl.radius * 1.08;
-  dragOrigin.set(event.clientX, event.clientY);
-  rotationControl.begin(event.clientX, event.clientY, held.quaternion, camera);
+  tapCandidate = allowTap && pointerStart.distanceTo(rotationControl.center) <= rotationControl.radius * 1.08;
+  dragOrigin.set(x, y);
+  rotationControl.begin(x, y, held.quaternion, camera);
   rotationInput.set(0, 0);
-  recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
+}
+
+function beginExplorationPointer(event: PointerEvent) {
+  capturePointer(event.pointerId, event.clientX, event.clientY);
+  pointerMode = "explore";
+  spinVelocity.set(0, 0, 0);
+  rotationControl.end();
+  cameraExploration.begin();
+  explorationLastMoveTime = performance.now();
+  recorder.event("camera_explore_started", {
+    pointer: event.pointerId,
+    x: number(event.clientX),
+    y: number(event.clientY),
+    yaw: number(cameraExploration.yaw),
+    height: number(cameraExploration.height),
+  });
+}
+
+function beginRecenterPointer(event: PointerEvent) {
+  capturePointer(event.pointerId, event.clientX, event.clientY);
+  pointerMode = "recenter";
+  spinVelocity.set(0, 0, 0);
+  rotationControl.end();
+  cameraExploration.quickReturn();
+  recorder.event("camera_explore_fast_recenter", {
+    pointer: event.pointerId,
+    yaw: number(cameraExploration.yaw),
+    height: number(cameraExploration.height),
+  });
+}
+
+canvas.addEventListener("pointerdown", (event) => {
+  ceramicAudio.unlock();
+  if (lost || pointerId !== null || bubblePopping || !held) return;
+  rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
+  if (rotationControl.contains(event.clientX, event.clientY)) {
+    if (cameraExploration.active) beginRecenterPointer(event);
+    else {
+      capturePointer(event.pointerId, event.clientX, event.clientY);
+      beginRotationPointer(event.clientX, event.clientY, true);
+      recorder.event("pointer_down", { pointer: event.pointerId, x: number(event.clientX), y: number(event.clientY), species: heldSpecies });
+    }
+    return;
+  }
+  if (event.clientY >= rotationControl.center.y + rotationControl.radius + cameraExploration.safetyMargin) {
+    beginExplorationPointer(event);
+    return;
+  }
+  recorder.event("pointer_ignored", {
+    pointer: event.pointerId,
+    reason: event.clientY > rotationControl.center.y + rotationControl.radius ? "bubble_safety_margin" : "outside_exploration_zone",
+    x: number(event.clientX),
+    y: number(event.clientY),
+    species: heldSpecies,
+  });
 });
 
 canvas.addEventListener("pointermove", (event) => {
   if (event.pointerId !== pointerId || !held) return;
+  if (pointerMode === "recenter") {
+    pointerPosition.set(event.clientX, event.clientY);
+    return;
+  }
+  if (pointerMode === "explore") {
+    const now = performance.now();
+    const dx = event.clientX - pointerPosition.x;
+    const dy = event.clientY - pointerPosition.y;
+    cameraExploration.drag(dx, dy, (now - explorationLastMoveTime) / 1000, explorationHeightBounds());
+    pointerPosition.set(event.clientX, event.clientY);
+    explorationLastMoveTime = now;
+    return;
+  }
+  if (pointerMode !== "rotate") return;
   const now = performance.now();
   rotationInput.set(event.clientX - dragOrigin.x, event.clientY - dragOrigin.y);
   pointerPosition.set(event.clientX, event.clientY);
@@ -1053,12 +1171,39 @@ canvas.addEventListener("pointermove", (event) => {
 
 function finishPointer(pointer: number, reason: string) {
   if (pointer !== pointerId) return;
+  const finishedMode = pointerMode;
+  if (finishedMode === "explore") {
+    const completed = reason.endsWith("pointerup");
+    if (completed) cameraExploration.end(performance.now() - explorationLastMoveTime <= 90);
+    else cameraExploration.reset();
+    recorder.event("camera_explore_released", {
+      pointer,
+      reason,
+      phase: cameraExploration.phase,
+      yaw: number(cameraExploration.yaw),
+      height: number(cameraExploration.height),
+      yawVelocity: number(cameraExploration.yawVelocity),
+      heightVelocity: number(cameraExploration.heightVelocity),
+    });
+    pointerId = null;
+    pointerMode = null;
+    return;
+  }
+  if (finishedMode === "recenter") {
+    if (!reason.endsWith("pointerup")) cameraExploration.reset();
+    recorder.event("camera_explore_recenter_released", { pointer, reason });
+    pointerId = null;
+    pointerMode = null;
+    return;
+  }
   const shouldPop = reason.endsWith("pointerup")
+    && finishedMode === "rotate"
     && tapCandidate
     && pointerTravel <= tapMaxTravel
     && performance.now() - pointerStartedAt <= tapMaxDuration;
   recorder.event("pointer_finished", { pointer, reason, rotationInput: [number(rotationInput.x), number(rotationInput.y)] });
   pointerId = null;
+  pointerMode = null;
   rotationControl.end();
   rotationInput.set(0, 0);
   tapCandidate = false;
@@ -1067,6 +1212,16 @@ function finishPointer(pointer: number, reason: string) {
   } else if (!reason.endsWith("pointerup") || performance.now() - lastDragTime > 90) {
     spinVelocity.set(0, 0, 0);
   }
+}
+
+function promoteRecenteredPointer() {
+  if (pointerMode !== "recenter" || pointerId === null || cameraExploration.active || !held) return;
+  beginRotationPointer(pointerPosition.x, pointerPosition.y, false);
+  recorder.event("camera_explore_control_ready", {
+    pointer: pointerId,
+    x: number(pointerPosition.x),
+    y: number(pointerPosition.y),
+  });
 }
 
 canvas.addEventListener("pointerup", (event) => finishPointer(event.pointerId, "canvas_pointerup"));
@@ -1095,6 +1250,10 @@ addEventListener("touchcancel", finishInterruptedPointer, { capture: true });
 function finishInterruptedPointer() {
   spinVelocity.set(0, 0, 0);
   if (pointerId !== null) finishPointer(pointerId, "touch_or_page_interruption");
+  if (cameraExploration.active) {
+    cameraExploration.reset();
+    recorder.event("camera_explore_cancelled", { reason: "touch_or_page_interruption" });
+  }
 }
 
 addEventListener("blur", () => {
@@ -1163,6 +1322,8 @@ function frame(nowMilliseconds: number) {
       updateCamera(dt);
     }
     rotationControl.update(held, camera, held ? heldAnchorPosition : undefined, held ? heldRotationRadius : undefined);
+    rotationControl.bubble.classList.toggle("exploring", cameraExploration.active);
+    promoteRecenteredPointer();
     renderer.render(scene, camera);
     recordTrace(dt);
   } catch (error) {
