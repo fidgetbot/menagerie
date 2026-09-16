@@ -12,7 +12,7 @@ A phone-first 3D animal-stacking game. Turn colorful ceramic creatures into a to
 - **Sweep around it** to twist it clockwise or anticlockwise.
 - **Flick** to spin it; begin another drag to stop and fine-tune.
 - **Tap the bubble** to pop it and place the animal in its current orientation.
-- **Drag below the bubble** to orbit around the tower or move the view up and down. The view glides gently, pauses, then returns automatically; touch the bubble to recenter quickly and resume control.
+- **Drag below the bubble** to orbit around the tower or move the view up and down. The view glides gently; height recenters after a short pause while your chosen orbit remains available for play.
 - Earn one point when it settles onto the stack. Keep stacking without letting a released animal reach the ground.
 - When the run ends, a circular replay button appears.
 
@@ -70,7 +70,7 @@ The stacking harness checks the 36 ordered species pairings and nine tilted/inve
 
 The tower benchmark runs twelve reproducible upright ten-piece sequences with a short aiming interval between placements. It reports median score, eight-piece and ten-piece reach, anomalies, and browser errors to ignored `tmp/tower-test.json`; natural collapses remain valid outcomes. Set `TEST_FORGIVING=0` to compare the fixed-position/landing-friction baseline in development, and `TEST_STRICT_ANOMALIES=1` when upward markers should fail the command.
 
-`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, below-bubble tower exploration and return, the soft sphere lock, bubble/no-bubble parity, and the opt-in surface-loop study on phone and desktop layouts.
+`TEST_URL` overrides the server URL. Deterministic species and orientation fixtures are available only in development builds. `scripts/test-rounded-arcball.mjs` checks continuous sphere tumbling and screen-axis roll, the rounded transition between them, drag-back undo, pivot stability, gentle momentum, hold-to-catch, tap-to-pop placement, direct-manipulation tower panning, persistent tower orbit, temporary-height return, the soft sphere lock, bubble/no-bubble parity, and the opt-in surface-loop study on phone and desktop layouts.
 
 Append `?trace=1` to enable the diagnostic flight recorder and Share trace action.
 

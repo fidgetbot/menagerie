@@ -295,12 +295,12 @@ async function verifyTowerExploration(mobile) {
   await page.mouse.move(current.x, current.y + current.r + 32);
   await page.mouse.down();
   const beforeExplore = await state();
-  await page.mouse.move(current.x + 80, current.y + current.r - 38, { steps: 3 });
+  await page.mouse.move(current.x + 80, current.y + current.r + 102, { steps: 3 });
   await page.waitForTimeout(30);
   const duringExplore = await state();
   assert(duringExplore.phase === "dragging" && duringExplore.pointerMode === "explore", "Below-bubble drag did not own camera exploration");
   assert(Math.abs(duringExplore.yaw) > 0.2, `Horizontal exploration did not orbit: ${duringExplore.yaw}`);
-  assert(duringExplore.height > 0.35, `Vertical exploration did not rise: ${duringExplore.height}`);
+  assert(duringExplore.height > 0.35, `Dragging downward did not raise the camera: ${duringExplore.height}`);
   assert(quaternionDistance(beforeExplore.q, duringExplore.q) < 0.001, "Camera exploration rotated the held animal");
   assert((await geometry()).opacity < 0.05, "Bubble did not fade out while camera exploration owned input");
   await page.screenshot({ path: `tmp/tower-exploration-${mobile ? "phone" : "desktop"}.png` });
@@ -329,6 +329,7 @@ async function verifyTowerExploration(mobile) {
   await page.waitForTimeout(360);
   const ready = await state();
   assert(ready.phase === "idle" && ready.pointerMode === "rotate", `Held touch was not promoted after recenter: ${JSON.stringify(ready)}`);
+  assert(Math.abs(ready.yaw - beforeRecenter.yaw) < 0.003, "Fast height recenter discarded the chosen orbit");
   await page.mouse.move(current.x + 58, current.y + 18);
   await page.waitForTimeout(35);
   assert(quaternionDistance(ready.q, (await state()).q) > 0.02, "Promoted sphere touch did not gain rotation control");
@@ -336,21 +337,37 @@ async function verifyTowerExploration(mobile) {
   await page.waitForTimeout(220);
   assert((await state()).species === "skunk", "The recentering touch accidentally popped the bubble");
 
-  // With no interruption, momentum settles, pauses, and returns to the live
-  // default camera automatically.
+  // With no interruption, momentum settles, pauses briefly, and returns only
+  // the temporary height while preserving the chosen working orbit.
   current = await geometry();
   await page.mouse.move(current.x, current.y + current.r + 32);
   await page.mouse.down();
-  await page.mouse.move(current.x - 70, current.y + current.r + 78, { steps: 3 });
+  await page.mouse.move(current.x + 70, current.y + current.r + 78, { steps: 3 });
   await page.mouse.up();
-  await page.waitForTimeout(3300);
+  await page.waitForTimeout(1500);
+  const returning = await state();
+  assert(returning.phase === "return" || returning.phase === "idle", `Short inspection pause did not start height return: ${JSON.stringify(returning)}`);
+  await page.waitForTimeout(900);
   const returned = await state();
   assert(returned.phase === "idle", `Camera did not return automatically: ${returned.phase}`);
-  assert(Math.abs(returned.yaw) < 0.003 && Math.abs(returned.height) < 0.01, `Camera retained exploration offsets: ${JSON.stringify(returned)}`);
+  assert(Math.abs(returned.height) < 0.01, `Camera retained its temporary height: ${JSON.stringify(returned)}`);
+  assert(Math.abs(returned.yaw) > 0.1, `Camera discarded the chosen orbit: ${JSON.stringify(returned)}`);
+  await page.waitForTimeout(300);
+  assert(Math.abs((await state()).yaw - returned.yaw) < 0.003, "Chosen orbit drifted after height reset");
   assert((await geometry()).opacity > 0.9, "Bubble did not restore after camera return");
+
+  // Committing the piece clears transient camera motion but keeps the selected
+  // working orbit for the placement and the next turn.
+  current = await geometry();
+  await page.mouse.move(current.x, current.y);
+  await page.mouse.down();
+  await page.waitForTimeout(40);
+  await page.mouse.up();
+  await page.waitForTimeout(240);
+  assert(Math.abs((await state()).yaw - returned.yaw) < 0.003, "Placement reset the selected working orbit");
   assert(!errors.length, errors.join(", "));
   await page.close();
-  console.log(`${mobile ? "Phone" : "Desktop"}: safety moat, tower orbit/pan, momentum, pause, return, and soft sphere lock passed`);
+  console.log(`${mobile ? "Phone" : "Desktop"}: safety moat, tower orbit/pan, momentum, short height return, persistent orbit, and soft sphere lock passed`);
 }
 
 for (const mobile of [true, false]) await verifyTowerExploration(mobile);

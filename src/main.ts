@@ -455,7 +455,7 @@ function releaseHeld() {
   bubblePopTimer = undefined;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
-  cameraExploration.reset();
+  cameraExploration.resetHeight();
   pointerMode = null;
   if (!held || lost) return;
   rotationControl.end();
@@ -677,7 +677,7 @@ function endGame(reason = "unknown", animal?: Animal) {
   endingElapsed = 0;
   dropButton.disabled = true;
   spinVelocity.set(0, 0, 0);
-  cameraExploration.reset();
+  cameraExploration.resetHeight();
   pointerMode = null;
   for (const animal of animals) {
     if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
@@ -915,7 +915,7 @@ function updateCamera(dt: number) {
       yaw: number(cameraExploration.yaw),
       height: number(cameraExploration.height),
     });
-    cameraExploration.reset();
+    cameraExploration.resetHeight();
   } else {
     const previousPhase = cameraExploration.phase;
     cameraExploration.update(dt, explorationHeightBounds(highest));
@@ -926,7 +926,7 @@ function updateCamera(dt: number) {
           height: number(cameraExploration.height),
         });
       } else if (cameraExploration.phase === "idle") {
-        recorder.event("camera_explore_default", {});
+        recorder.event("camera_explore_height_reset", { yaw: number(cameraExploration.yaw) });
       }
     }
   }
@@ -1175,7 +1175,7 @@ function finishPointer(pointer: number, reason: string) {
   if (finishedMode === "explore") {
     const completed = reason.endsWith("pointerup");
     if (completed) cameraExploration.end(performance.now() - explorationLastMoveTime <= 90);
-    else cameraExploration.reset();
+    else cameraExploration.resetHeight();
     recorder.event("camera_explore_released", {
       pointer,
       reason,
@@ -1190,7 +1190,7 @@ function finishPointer(pointer: number, reason: string) {
     return;
   }
   if (finishedMode === "recenter") {
-    if (!reason.endsWith("pointerup")) cameraExploration.reset();
+    if (!reason.endsWith("pointerup")) cameraExploration.resetHeight();
     recorder.event("camera_explore_recenter_released", { pointer, reason });
     pointerId = null;
     pointerMode = null;
@@ -1251,7 +1251,7 @@ function finishInterruptedPointer() {
   spinVelocity.set(0, 0, 0);
   if (pointerId !== null) finishPointer(pointerId, "touch_or_page_interruption");
   if (cameraExploration.active) {
-    cameraExploration.reset();
+    cameraExploration.resetHeight();
     recorder.event("camera_explore_cancelled", { reason: "touch_or_page_interruption" });
   }
 }

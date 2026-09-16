@@ -5,10 +5,10 @@ type HeightBounds = { min: number; max: number };
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /**
- * Temporary camera offsets for inspecting the tower.
+ * Camera controls for inspecting the tower.
  *
- * The ordinary gameplay camera remains authoritative. Exploration only adds
- * bounded yaw/height offsets, then decays those offsets back to zero.
+ * The ordinary gameplay camera remains authoritative. Exploration adds a
+ * bounded persistent yaw plus a temporary height offset that returns to zero.
  */
 export class CameraExploration {
   yaw = 0;
@@ -18,17 +18,19 @@ export class CameraExploration {
   phase: CameraExplorationPhase = "idle";
 
   private dwellElapsed = 0;
+  private dragged = false;
 
   readonly yawLimit = 75 * Math.PI / 180;
   readonly safetyMargin = 22;
 
   get active() {
-    return this.phase !== "idle" || Math.abs(this.yaw) > 0.002 || Math.abs(this.height) > 0.008;
+    return this.phase !== "idle" || this.heightDisplaced();
   }
 
   begin() {
     this.phase = "dragging";
     this.dwellElapsed = 0;
+    this.dragged = false;
     this.yawVelocity = 0;
     this.heightVelocity = 0;
   }
@@ -36,12 +38,15 @@ export class CameraExploration {
   drag(dx: number, dy: number, dt: number, bounds: HeightBounds) {
     if (this.phase !== "dragging") return;
     const yawDelta = -dx * 0.005;
-    const heightDelta = -dy * 0.012;
+    // Direct manipulation: dragging the tower downward raises the view, while
+    // dragging it upward moves the view back toward the platform.
+    const heightDelta = dy * 0.012;
     const safeDt = clamp(dt, 0.008, 0.08);
     const measuredYawVelocity = clamp(yawDelta / safeDt, -0.9, 0.9);
     const measuredHeightVelocity = clamp(heightDelta / safeDt, -1.5, 1.5);
     this.yawVelocity += (measuredYawVelocity - this.yawVelocity) * 0.48;
     this.heightVelocity += (measuredHeightVelocity - this.heightVelocity) * 0.48;
+    this.dragged ||= Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1;
     this.yaw = clamp(this.yaw + yawDelta, -this.yawLimit, this.yawLimit);
     this.height = clamp(this.height + heightDelta, bounds.min, bounds.max);
     if (Math.abs(this.yaw) >= this.yawLimit - 1e-5 && Math.sign(this.yawVelocity) === Math.sign(this.yaw)) {
@@ -59,21 +64,21 @@ export class CameraExploration {
       this.yawVelocity = 0;
       this.heightVelocity = 0;
     }
-    if (!this.displaced()) {
-      this.reset();
+    if (!this.dragged) {
+      this.settleAtCurrentYaw();
     } else if (Math.abs(this.yawVelocity) >= 0.08 || Math.abs(this.heightVelocity) >= 0.12) {
       this.phase = "momentum";
     } else {
-      this.beginDwell();
+      this.settleAtCurrentYaw();
     }
   }
 
   quickReturn() {
     if (!this.active) return;
-    this.phase = "quick-return";
     this.dwellElapsed = 0;
     this.yawVelocity = 0;
     this.heightVelocity = 0;
+    this.phase = this.heightDisplaced() ? "quick-return" : "idle";
   }
 
   update(dt: number, bounds: HeightBounds) {
@@ -87,27 +92,31 @@ export class CameraExploration {
       const decay = Math.exp(-7 * dt);
       this.yawVelocity *= decay;
       this.heightVelocity *= decay;
-      if (Math.abs(this.yawVelocity) < 0.025 && Math.abs(this.heightVelocity) < 0.04) this.beginDwell();
+      if (Math.abs(this.yawVelocity) < 0.025 && Math.abs(this.heightVelocity) < 0.04) this.settleAtCurrentYaw();
     } else if (this.phase === "dwell") {
       this.dwellElapsed += dt;
-      if (this.dwellElapsed >= 1.4) this.phase = "return";
+      if (this.dwellElapsed >= 0.7) this.phase = "return";
     } else if (this.phase === "return" || this.phase === "quick-return") {
       const rate = this.phase === "quick-return" ? 18 : 6;
       const decay = Math.exp(-rate * dt);
-      this.yaw *= decay;
       this.height *= decay;
-      if (!this.displaced()) this.reset();
+      if (!this.heightDisplaced()) this.resetHeight();
     }
     this.height = clamp(this.height, bounds.min, bounds.max);
   }
 
   reset() {
     this.yaw = 0;
+    this.resetHeight();
+  }
+
+  resetHeight() {
     this.height = 0;
     this.yawVelocity = 0;
     this.heightVelocity = 0;
     this.phase = "idle";
     this.dwellElapsed = 0;
+    this.dragged = false;
   }
 
   private beginDwell() {
@@ -117,7 +126,12 @@ export class CameraExploration {
     this.phase = "dwell";
   }
 
-  private displaced() {
-    return Math.abs(this.yaw) > 0.002 || Math.abs(this.height) > 0.008;
+  private settleAtCurrentYaw() {
+    if (this.heightDisplaced()) this.beginDwell();
+    else this.resetHeight();
+  }
+
+  private heightDisplaced() {
+    return Math.abs(this.height) > 0.008;
   }
 }
