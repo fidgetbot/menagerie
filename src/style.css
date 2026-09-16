@@ -125,7 +125,7 @@ html, body, #app {
 }
 #rotation-bubble.active { opacity: 1; }
 #rotation-bubble.held.exploring {
-  opacity: .52;
+  opacity: 0;
   filter: saturate(.72) brightness(.98);
 }
 #rotation-bubble .bubble-loops {

@@ -302,7 +302,7 @@ async function verifyTowerExploration(mobile) {
   assert(Math.abs(duringExplore.yaw) > 0.2, `Horizontal exploration did not orbit: ${duringExplore.yaw}`);
   assert(duringExplore.height > 0.35, `Vertical exploration did not rise: ${duringExplore.height}`);
   assert(quaternionDistance(beforeExplore.q, duringExplore.q) < 0.001, "Camera exploration rotated the held animal");
-  assert((await geometry()).opacity < 0.8, "Bubble did not soften while camera exploration owned input");
+  assert((await geometry()).opacity < 0.05, "Bubble did not fade out while camera exploration owned input");
   await page.screenshot({ path: `tmp/tower-exploration-${mobile ? "phone" : "desktop"}.png` });
   await page.mouse.up();
   await page.waitForTimeout(35);
