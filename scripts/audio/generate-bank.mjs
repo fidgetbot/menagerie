@@ -69,6 +69,18 @@ for (const [index, job] of jobs.entries()) {
   const processedSampleStats = inspectPcm16(processedPath);
   validateProbe(processedProbe, sourceManifest.processing);
   if (processedSampleStats.clippedSampleCount > 0) fail(`processed output clips: ${processedPath}`);
+  if (processedSampleStats.crestFactor < sourceManifest.processing.minimumCrestFactor) {
+    fail(
+      `candidate lacks a transient peak (crest ${processedSampleStats.crestFactor.toFixed(2)}): ` +
+        processedPath,
+    );
+  }
+  if (processedSampleStats.zeroCrossingRate > sourceManifest.processing.maximumZeroCrossingRate) {
+    fail(
+      `candidate contains excessive high-frequency energy ` +
+        `(zero crossings ${processedSampleStats.zeroCrossingRate.toFixed(3)}): ${processedPath}`,
+    );
+  }
 
   results.push({
     eventId: job.event.id,
@@ -85,7 +97,9 @@ for (const [index, job] of jobs.entries()) {
   });
   console.log(
     `  validated ${processedProbe.durationSeconds.toFixed(3)}s, ` +
-      `${processedProbe.sampleRate} Hz, mono, peak ${processingResult.outputPeakDb.toFixed(1)} dB`,
+      `${processedProbe.sampleRate} Hz, mono, peak ${processingResult.outputPeakDb.toFixed(1)} dB, ` +
+      `crest ${processedSampleStats.crestFactor.toFixed(1)}, ` +
+      `zero crossings ${processedSampleStats.zeroCrossingRate.toFixed(3)}`,
   );
 }
 
@@ -143,24 +157,27 @@ function requireCommand(command) {
 
 function generate(job, rawPath) {
   const model = sourceManifest.model;
-  run("stable-audio", [
+  const argumentsList = [
     "--dit", model.dit,
     "--decoder", model.decoder,
     "--prompt", job.event.prompt,
-    "--negative-prompt", model.negativePrompt,
     "--cfg", String(model.cfg),
     "--steps", String(model.steps),
     "--seconds", String(model.durationSeconds),
     "--seed", String(job.seed),
     "--out", rawPath,
-  ]);
+  ];
+  if (model.negativePrompt) argumentsList.splice(6, 0, "--negative-prompt", model.negativePrompt);
+  run("stable-audio", argumentsList);
 }
 
 function processAudio(rawPath, processedPath, processing) {
   const temporaryPath = `${processedPath}.trim.wav`;
   rmSync(temporaryPath, { force: true });
   const trimFilter = [
-    `silenceremove=start_periods=1:start_duration=0.005:start_threshold=${processing.silenceThresholdDb}dB` +
+    "pan=mono|c0=c0",
+    `silenceremove=start_periods=1:start_duration=0:start_threshold=${processing.onsetThresholdDb}dB` +
+      `:start_mode=any:detection=${processing.silenceDetection}:window=${processing.detectionWindowSeconds}` +
       `:stop_periods=1:stop_duration=${processing.trailingSilenceSeconds}` +
       `:stop_threshold=${processing.silenceThresholdDb}dB`,
     `atrim=duration=${processing.maximumDurationSeconds}`,
@@ -180,12 +197,10 @@ function processAudio(rawPath, processedPath, processing) {
     trimmedProbe = null;
   }
   if (!trimmedProbe || trimmedProbe.durationSeconds < 0.04) {
-    run("ffmpeg", [
-      "-y", "-hide_banner", "-loglevel", "error", "-i", rawPath,
-      "-af", `atrim=duration=${processing.maximumDurationSeconds},afade=t=in:st=0:d=0.002`,
-      "-ar", String(processing.sampleRate), "-ac", String(processing.channels),
-      "-c:a", processing.codec, temporaryPath,
-    ]);
+    fail(`no isolated transient found: ${rawPath}`);
+  }
+  if (trimmedProbe.durationSeconds > processing.maximumAcceptedDurationSeconds) {
+    fail(`transient did not decay naturally: ${rawPath}`);
   }
 
   const inputPeakDb = measurePeakDb(temporaryPath);
@@ -270,6 +285,8 @@ function inspectPcm16(path) {
   let peakSample = 0;
   let clippedSampleCount = 0;
   let nonZeroSampleCount = 0;
+  let zeroCrossingCount = 0;
+  let previousSample = 0;
   let sumSquares = 0;
   const sampleCount = Math.floor(dataSize / 2);
   for (let index = 0; index < sampleCount; index += 1) {
@@ -278,17 +295,25 @@ function inspectPcm16(path) {
     peakSample = Math.max(peakSample, magnitude);
     if (magnitude >= 32767) clippedSampleCount += 1;
     if (sample !== 0) nonZeroSampleCount += 1;
+    if (previousSample !== 0 && sample !== 0 && Math.sign(previousSample) !== Math.sign(sample)) {
+      zeroCrossingCount += 1;
+    }
+    previousSample = sample;
     const normalized = sample / 32768;
     sumSquares += normalized * normalized;
   }
   if (sampleCount === 0 || nonZeroSampleCount === 0) fail(`silent PCM data: ${path}`);
+  const rmsLinear = Math.sqrt(sumSquares / sampleCount);
+  const peakLinear = peakSample / 32768;
   return {
     sampleCount,
     nonZeroSampleCount,
     clippedSampleCount,
     peakSample,
-    peakLinear: peakSample / 32768,
-    rmsLinear: Math.sqrt(sumSquares / sampleCount),
+    peakLinear,
+    rmsLinear,
+    crestFactor: peakLinear / rmsLinear,
+    zeroCrossingRate: zeroCrossingCount / sampleCount,
   };
 }
 

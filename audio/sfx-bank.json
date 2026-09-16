@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bankId": "ceramic-contacts-v1",
-  "status": "material-prototype-v2",
+  "status": "material-prototype-v4",
   "model": {
     "name": "Stable Audio 3 Small SFX",
     "id": "stabilityai/stable-audio-3-small-sfx",
@@ -9,17 +9,23 @@
     "dit": "sm-sfx",
     "decoder": "same-s",
     "steps": 8,
-    "cfg": 4.0,
-    "durationSeconds": 0.6,
-    "negativePrompt": "low pitch, low frequency, bass, rumble, thud, boom, paving stone, flagstone, rock, concrete, heavy object, dragging, scraping, sliding, rolling, rattling, handling noise, multiple impacts, repeated impacts, long decay, sustained resonance, drone, reverb, ambience, glass, metal, bell, xylophone, breaking, cracking, shattering, speech, music"
+    "cfg": 1.0,
+    "durationSeconds": 3.0,
+    "negativePrompt": null
   },
   "processing": {
     "sampleRate": 44100,
     "channels": 1,
     "codec": "pcm_s16le",
-    "silenceThresholdDb": -50,
-    "trailingSilenceSeconds": 0.06,
-    "maximumDurationSeconds": 0.55,
+    "onsetThresholdDb": -24,
+    "silenceThresholdDb": -42,
+    "silenceDetection": "peak",
+    "detectionWindowSeconds": 0.005,
+    "trailingSilenceSeconds": 0.08,
+    "maximumDurationSeconds": 1.1,
+    "maximumAcceptedDurationSeconds": 1.08,
+    "minimumCrestFactor": 8.0,
+    "maximumZeroCrossingRate": 0.15,
     "targetPeakDb": -4.5
   },
   "licensing": {
@@ -32,13 +38,13 @@
     {
       "id": "settling_tick",
       "role": "Tiny bright porcelain contacts for quiet settling",
-      "prompt": "One single tiny bright click from two miniature thin-walled glazed porcelain ornaments touching very lightly. Crisp high-pitched ceramic tick, clear delicate attack, subtle hollow porcelain body, resonance ends within 200 milliseconds. An isolated close dry studio recording, completely still and silent before and after the one contact.",
+      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
       "seeds": [142001, 142002, 142003, 142004]
     },
     {
       "id": "body_contact",
       "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "prompt": "One single clear clink as two miniature hollow glazed porcelain figurines touch gently. Bright mid-high ceramic tone, crisp clean attack, pleasing warm hollow body, delicate resonance ends within 350 milliseconds. An isolated close dry studio recording, completely still and silent before and after the one contact.",
+      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
       "seeds": [142101, 142102, 142103, 142104]
     }
   ]
