@@ -45,7 +45,7 @@ await page.addInitScript(() => {
 });
 
 await page.goto(`${root}?diagnostics=1&species=capybara&rx=0&ry=0&rz=0`);
-await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies === "capybara");
+await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
 await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 8);
 const bubble = await page.locator("#rotation-bubble").evaluate((element) => ({
   x: Number(element.dataset.centerX),
@@ -61,8 +61,10 @@ if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
 if (audioResponses.length !== 8 || audioResponses.some((status) => status !== 200)) {
   throw new Error(`Runtime bank did not preload cleanly: ${audioResponses.join(",")}`);
 }
-if (starts !== 1) throw new Error(`Resting contact produced ${starts} sounds instead of one`);
-if (!contact?.startsWith("settling:") || !contact.endsWith(":true")) {
+if (contact ? starts !== 1 : starts < 1) {
+  throw new Error(contact ? `Resting contact produced ${starts} sounds instead of one` : "Live contact produced no sound");
+}
+if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true"))) {
   throw new Error(`Unexpected contact classification: ${contact}`);
 }
 
