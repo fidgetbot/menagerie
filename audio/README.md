@@ -23,6 +23,10 @@ Each run preserves:
 - model, prompt, seed, processing, probe, sample-level clipping checks, and licensing provenance in `run-manifest.json`;
 - an `audition.html` page with players grouped by event family.
 
+Each candidate must contain one isolated contact. The validator rejects a processed
+preview when energy resumes after at least 15 ms below -30 dBFS, while retaining
+zero-crossing rate only as a diagnostic for tonal rings.
+
 Do not copy candidates into `public/` merely because they pass technical validation. First audition repeated clicks and impacts against gameplay, select the pleasing variants, and record that human selection. The browser should use measured Rapier contact strength to choose and modulate approved samples rather than playing a canned settling sequence.
 
 ## Shipping and licensing

@@ -25,6 +25,9 @@
     "maximumDurationSeconds": 1.1,
     "maximumAcceptedDurationSeconds": 1.08,
     "minimumCrestFactor": 8.0,
+    "secondaryOnsetSilenceThresholdDb": -30,
+    "minimumInterOnsetSilenceSeconds": 0.015,
+    "maximumSecondaryOnsets": 0,
     "targetPeakDb": -4.5
   },
   "licensing": {
@@ -38,13 +41,13 @@
       "id": "settling_tick",
       "role": "Tiny bright porcelain contacts for quiet settling",
       "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "seeds": [142001, 142002, 142003, 142004]
+      "seeds": [142001, 142002, 142004, 142005]
     },
     {
       "id": "body_contact",
       "role": "Clear hollow clinks for ordinary animal-to-animal contact",
       "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "seeds": [142101, 142102, 142103, 142104]
+      "seeds": [142103, 142105, 142106, 142107]
     }
   ]
 }

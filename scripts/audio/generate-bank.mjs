@@ -67,12 +67,22 @@ for (const [index, job] of jobs.entries()) {
   const processingResult = processAudio(rawPath, processedPath, sourceManifest.processing);
   const processedProbe = probeAudio(processedPath);
   const processedSampleStats = inspectPcm16(processedPath);
+  const onsetStats = inspectSecondaryOnsets(
+    processedPath,
+    processedProbe.durationSeconds,
+    sourceManifest.processing,
+  );
   validateProbe(processedProbe, sourceManifest.processing);
   if (processedSampleStats.clippedSampleCount > 0) fail(`processed output clips: ${processedPath}`);
   if (processedSampleStats.crestFactor < sourceManifest.processing.minimumCrestFactor) {
     fail(
       `candidate lacks a transient peak (crest ${processedSampleStats.crestFactor.toFixed(2)}): ` +
         processedPath,
+    );
+  }
+  if (onsetStats.secondaryOnsetCount > sourceManifest.processing.maximumSecondaryOnsets) {
+    fail(
+      `candidate contains ${onsetStats.secondaryOnsetCount} extra onset(s): ${processedPath}`,
     );
   }
   results.push({
@@ -86,13 +96,15 @@ for (const [index, job] of jobs.entries()) {
     rawSampleStats,
     processedProbe,
     processedSampleStats,
+    onsetStats,
     processing: processingResult,
   });
   console.log(
     `  validated ${processedProbe.durationSeconds.toFixed(3)}s, ` +
       `${processedProbe.sampleRate} Hz, mono, peak ${processingResult.outputPeakDb.toFixed(1)} dB, ` +
       `crest ${processedSampleStats.crestFactor.toFixed(1)}, ` +
-      `zero crossings ${processedSampleStats.zeroCrossingRate.toFixed(3)}`,
+      `zero crossings ${processedSampleStats.zeroCrossingRate.toFixed(3)}, ` +
+      `${onsetStats.secondaryOnsetCount} extra onsets`,
   );
 }
 
@@ -244,6 +256,31 @@ function measurePeakDb(path) {
   const match = `${result.stdout}\n${result.stderr}`.match(/max_volume:\s*(-?[\d.]+) dB/);
   if (!match) fail(`could not measure peak: ${path}`);
   return Number(match[1]);
+}
+
+function inspectSecondaryOnsets(path, durationSeconds, processing) {
+  const result = spawnSync("ffmpeg", [
+    "-hide_banner", "-nostats", "-i", path,
+    "-af",
+    `silencedetect=n=${processing.secondaryOnsetSilenceThresholdDb}dB:` +
+      `d=${processing.minimumInterOnsetSilenceSeconds}`,
+    "-f", "null", "-",
+  ], { encoding: "utf8" });
+  if (result.status !== 0) fail(`could not inspect onsets: ${path}`);
+
+  const log = `${result.stdout}\n${result.stderr}`;
+  const silenceEnds = [...log.matchAll(/silence_end:\s*([\d.]+)/g)]
+    .map((match) => Number(match[1]));
+  const endToleranceSeconds = 0.005;
+  const secondaryOnsetTimesSeconds = silenceEnds.filter(
+    (time) => time < durationSeconds - endToleranceSeconds,
+  );
+  return {
+    silenceThresholdDb: processing.secondaryOnsetSilenceThresholdDb,
+    minimumSilenceSeconds: processing.minimumInterOnsetSilenceSeconds,
+    secondaryOnsetCount: secondaryOnsetTimesSeconds.length,
+    secondaryOnsetTimesSeconds,
+  };
 }
 
 function inspectPcm16(path) {
