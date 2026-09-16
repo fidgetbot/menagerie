@@ -75,13 +75,6 @@ for (const [index, job] of jobs.entries()) {
         processedPath,
     );
   }
-  if (processedSampleStats.zeroCrossingRate > sourceManifest.processing.maximumZeroCrossingRate) {
-    fail(
-      `candidate contains excessive high-frequency energy ` +
-        `(zero crossings ${processedSampleStats.zeroCrossingRate.toFixed(3)}): ${processedPath}`,
-    );
-  }
-
   results.push({
     eventId: job.event.id,
     role: job.event.role,

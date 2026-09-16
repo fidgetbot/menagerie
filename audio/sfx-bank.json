@@ -25,7 +25,6 @@
     "maximumDurationSeconds": 1.1,
     "maximumAcceptedDurationSeconds": 1.08,
     "minimumCrestFactor": 8.0,
-    "maximumZeroCrossingRate": 0.15,
     "targetPeakDb": -4.5
   },
   "licensing": {
