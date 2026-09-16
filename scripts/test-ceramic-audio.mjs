@@ -149,7 +149,19 @@ const bubble = await page.locator("#rotation-bubble").evaluate((element) => ({
   y: Number(element.dataset.centerY),
 }));
 await page.mouse.click(bubble.x, bubble.y);
-await page.waitForFunction(() => document.querySelector("#game").dataset.audioContact);
+try {
+  await page.waitForFunction(() => document.querySelector("#game").dataset.audioContact);
+} catch (error) {
+  const state = await page.evaluate(() => ({
+    canvas: { ...document.querySelector("#game").dataset },
+    bubble: { ...document.querySelector("#rotation-bubble").dataset },
+    warmups: window.__menagerieWarmupStarts,
+    decodes: window.__menagerieAudioDecodes,
+    starts: window.__menagerieAudioStarts,
+  }));
+  console.error("Audio contact wait failed", JSON.stringify({ state, errors, audioResponses }));
+  throw error;
+}
 const queuedFirstContact = await page.locator("#game").evaluate((canvas) => ({
   contact: canvas.dataset.audioContact,
   starts: window.__menagerieAudioStarts,

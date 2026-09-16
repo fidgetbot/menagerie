@@ -13,9 +13,13 @@ const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
 const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
 const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
 const runtimeParams = new URLSearchParams(location.search);
+// Explicit diagnostics are safe data attributes used by browser regressions,
+// including checks against the deployed production build. Deterministic setup
+// overrides accompany that explicit mode; fault injection stays dev-only.
+const diagnosticsEnabled = runtimeParams.has("diagnostics");
 const devParams = import.meta.env.DEV ? runtimeParams : null;
-const diagnosticsEnabled = devParams?.has("diagnostics") ?? false;
-const forgivingPlacementEnabled = devParams?.get("forgiving") !== "0";
+const diagnosticParams = devParams ?? (diagnosticsEnabled ? runtimeParams : null);
+const forgivingPlacementEnabled = diagnosticParams?.get("forgiving") !== "0";
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
 const bubbleLoopsEnabled = runtimeParams.get("loops") === "1";
 const audioEnabled = runtimeParams.get("audio") !== "0";
@@ -202,11 +206,11 @@ let nextAnimalId = 1;
 const activeUpwardAnomalies = new Set<number>();
 
 let speciesBag: SpeciesId[] = [];
-const devSpeciesSequence = (devParams?.get("sequence") ?? "")
+const devSpeciesSequence = (diagnosticParams?.get("sequence") ?? "")
   .split(",")
   .filter((species): species is SpeciesId => speciesIds.includes(species as SpeciesId));
 let devSpeciesIndex = 0;
-const devRotations = (devParams?.get("rotations") ?? "")
+const devRotations = (diagnosticParams?.get("rotations") ?? "")
   .split(";")
   .map((value) => value.split(",").map(Number))
   .filter((value) => value.length === 4 && value.every(Number.isFinite));
@@ -352,7 +356,7 @@ function landingTop(x: number, y: number) {
 
 function takeNextSpecies() {
   if (devSpeciesSequence.length > 0) return devSpeciesSequence[devSpeciesIndex++ % devSpeciesSequence.length];
-  const requested = devParams?.get("species") as SpeciesId | null;
+  const requested = diagnosticParams?.get("species") as SpeciesId | null;
   if (requested && speciesIds.includes(requested)) return requested;
   if (speciesBag.length === 0) {
     speciesBag = [...speciesIds];
@@ -403,7 +407,7 @@ function createHeld() {
   heldRig = makeRig(heldModel, heldSpecies);
   held.add(heldModel);
   const devRotation = devRotations[devRotationIndex++ % devRotations.length];
-  const eulerDegrees = ["rx", "ry", "rz"].map((key) => Number(devParams?.get(key)));
+  const eulerDegrees = ["rx", "ry", "rz"].map((key) => Number(diagnosticParams?.get(key)));
   if (devRotation) {
     held.quaternion.set(devRotation[0], devRotation[1], devRotation[2], devRotation[3]).normalize();
   } else if (eulerDegrees.every(Number.isFinite)) {
