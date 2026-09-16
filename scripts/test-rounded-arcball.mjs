@@ -55,9 +55,20 @@ async function runVariant(mobile, bubble) {
     assert(center.held && center.opacity > 0.5, "Bubble was not visible around the waiting animal");
   }
 
-  // Outside the rounded shoulder, a quarter-circle gesture is a pure 90°
-  // twist around the camera view direction.
-  const rollRadius = center.r * 1.10;
+  // A gesture that begins outside the bubble must remain inert even if it
+  // later crosses into the control surface.
+  const beforeOutsideTouch = await held();
+  await move(center.x + center.r + 6, center.y);
+  await page.mouse.down();
+  await move(center.x + center.r * 0.45, center.y - center.r * 0.2);
+  await page.waitForTimeout(35);
+  assert(!(await geometry()).active, "A press outside the bubble activated rotation");
+  assert(quaternionDistance(beforeOutsideTouch.q, (await held()).q) < 0.001, "A press outside the bubble steered the animal");
+  await page.mouse.up();
+
+  // A quarter-circle gesture beginning at the visible edge is predominantly
+  // twist around the camera view direction while remaining admissible.
+  const rollRadius = center.r;
   await move(center.x + rollRadius, center.y);
   await page.mouse.down();
   const rollStart = await held();
@@ -79,8 +90,8 @@ async function runVariant(mobile, bubble) {
   const axis = new Vector3(delta.x, delta.y, delta.z).normalize();
   const view = new Vector3(6.9, -12.35, 6).normalize();
   const angle = 2 * Math.acos(Math.min(1, Math.abs(delta.w)));
-  assert(Math.abs(axis.dot(view)) > 0.998, `Outer sweep tipped instead of twisting: axis=${axis.toArray()} dot=${axis.dot(view)}`);
-  assert(Math.abs(angle - Math.PI / 2) < 0.025, `Outer sweep was not 1:1: ${angle}`);
+  assert(Math.abs(axis.dot(view)) > 0.98, `Outer sweep tipped instead of twisting: axis=${axis.toArray()} dot=${axis.dot(view)}`);
+  assert(Math.abs(angle - Math.PI / 2) < 0.04, `Edge sweep was not approximately 1:1: ${angle}`);
   await page.mouse.up();
   await page.waitForTimeout(170);
   if (bubble) assert((await geometry()).opacity > 0.5, "Bubble disappeared before it was popped");
@@ -170,9 +181,9 @@ async function runVariant(mobile, bubble) {
 for (const mobile of [true, false]) {
   const plain = await runVariant(mobile, false);
   const bubble = await runVariant(mobile, true);
-  // Browser pointer coordinates are quantized to device pixels; allow a
-  // sub-degree difference while still proving the overlay has no control path.
-  assert(quaternionDistance(plain, bubble) < 0.004, `Bubble changed the rotation mapping: ${quaternionDistance(plain, bubble)} plain=${plain} bubble=${bubble}`);
+  // Browser pointer coordinates are quantized to device pixels; allow a small
+  // near-edge difference while still proving the overlay has no control path.
+  assert(quaternionDistance(plain, bubble) < 0.012, `Bubble changed the rotation mapping: ${quaternionDistance(plain, bubble)} plain=${plain} bubble=${bubble}`);
   console.log(`${mobile ? "Phone" : "Desktop"}: rounded tumble/roll, smooth shoulder, stable pivot, undo, flick, hold-to-catch, tap-to-pop, and bubble A/B passed`);
 }
 

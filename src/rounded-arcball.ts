@@ -93,6 +93,10 @@ export class RoundedArcball {
     if (this.bubbleEnabled) this.bubble.classList.add("active");
   }
 
+  contains(x: number, y: number) {
+    return Math.hypot(x - this.center.x, y - this.center.y) <= this.radius;
+  }
+
   engageLoops() {
     if (this.active && this.loopsEnabled) this.bubble.classList.add("looping");
   }

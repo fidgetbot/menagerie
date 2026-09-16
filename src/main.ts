@@ -1003,6 +1003,16 @@ canvas.addEventListener("pointerdown", (event) => {
   if (lost || pointerId !== null || bubblePopping) return;
   if (!held) return;
   rotationControl.update(held, camera, heldAnchorPosition, heldRotationRadius);
+  if (!rotationControl.contains(event.clientX, event.clientY)) {
+    recorder.event("pointer_ignored", {
+      pointer: event.pointerId,
+      reason: "outside_bubble",
+      x: number(event.clientX),
+      y: number(event.clientY),
+      species: heldSpecies,
+    });
+    return;
+  }
   pointerId = event.pointerId;
   canvas.setPointerCapture(pointerId);
   spinVelocity.set(0, 0, 0);
