@@ -21,6 +21,7 @@ await page.addInitScript(() => {
   window.__menagerieVisibility = "visible";
   window.__menagerieHoldWarmupEnd = true;
   window.__menagerieHoldDecodes = true;
+  window.__menagerieHoldFirstResume = true;
   window.__menageriePendingWarmups = [];
   window.__menageriePendingDecodes = [];
   window.__menagerieReleaseWarmups = () => {
@@ -108,6 +109,9 @@ await page.addInitScript(() => {
     }
     async resume() {
       window.__menagerieAudioResumes += 1;
+      if (this === window.__menagerieAudioContexts[0] && window.__menagerieHoldFirstResume) {
+        return new Promise(() => {});
+      }
       this.state = "running";
       this.emitStateChange();
     }
@@ -133,13 +137,17 @@ await page.goto(`${root}?diagnostics=1&species=capybara&rx=0&ry=0&rz=0`);
 await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
 await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 8);
 
-// Unlock without placing the animal. iOS requires a source to start inside the
-// gesture, not merely a later resume() call.
+// Unlock without placing the animal. The first context emulates WebKit's
+// pending-forever resume failure; pointerup must replace it inside the same
+// physical gesture before the first contact occurs.
 await page.mouse.click(5, 5);
-await page.waitForFunction(() => window.__menagerieWarmupStarts === 1);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 8);
+await page.waitForFunction(() => window.__menagerieWarmupStarts === 2);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 16);
 const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
 if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
+await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2, undefined, { timeout: 2000 });
+const initialCloseCount = await page.evaluate(() => window.__menagerieAudioCloses);
+if (initialCloseCount !== 1) throw new Error("Pending AudioContext was not replaced on pointerup");
 
 const sessionType = await page.evaluate(() => navigator.audioSession.type);
 if (sessionType !== "playback") throw new Error(`Unexpected audio session type: ${sessionType}`);
@@ -193,14 +201,14 @@ await page.waitForFunction(() => window.__menagerieWarmupStarts === 3);
 // recovery probes that clock; the following gesture must replace the context
 // and decode the cached bytes without fetching the bank again.
 await page.evaluate(() => {
-  window.__menagerieAudioContexts[0].stall();
+  window.__menagerieAudioContexts[1].stall();
   dispatchEvent(new Event("pageshow"));
 });
 await page.waitForTimeout(450);
 await page.mouse.click(5, 5);
-await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2);
+await page.waitForFunction(() => window.__menagerieAudioContexts.length === 3);
 await page.waitForFunction(() => window.__menagerieWarmupStarts === 4);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 16);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 24);
 
 const lifecycle = await page.evaluate(() => ({
   contexts: window.__menagerieAudioContexts.length,
@@ -212,8 +220,8 @@ if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
 if (audioResponses.length !== 8 || audioResponses.some((status) => status !== 200)) {
   throw new Error(`Runtime bank did not preload cleanly: ${audioResponses.join(",")}`);
 }
-if (lifecycle.contexts !== 2 || lifecycle.closes !== 1) {
-  throw new Error(`Stalled context was not replaced exactly once: ${JSON.stringify(lifecycle)}`);
+if (lifecycle.contexts !== 3 || lifecycle.closes !== 2) {
+  throw new Error(`Pending and stalled contexts were not each replaced exactly once: ${JSON.stringify(lifecycle)}`);
 }
 if (contact ? lifecycle.starts !== 1 : lifecycle.starts < 1) {
   throw new Error(contact ? `Resting contact produced ${lifecycle.starts} sounds instead of one` : "Live contact produced no sound");
@@ -223,4 +231,4 @@ if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true")))
 }
 
 await browser.close();
-console.log("Ceramic audio lifecycle: first contact survives pending unlock/decode, background recovery and stale-context replacement verified");
+console.log("Ceramic audio lifecycle: pending resume replacement, first-contact queue, background recovery and stale-clock replacement verified");

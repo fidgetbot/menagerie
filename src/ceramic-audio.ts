@@ -44,6 +44,8 @@ export class CeramicAudio {
   private generation = 0;
   private clockProbeTimer: number | undefined;
   private pendingContact: PendingContact | null = null;
+  private resumePendingContext: RecoverableAudioContext | null = null;
+  private unlockPulseContext: RecoverableAudioContext | null = null;
 
   constructor(
     private readonly baseUrl: string,
@@ -65,7 +67,11 @@ export class CeramicAudio {
     this.backgrounded = false;
     this.configureAudioSession();
     if (this.recreateOnNextGesture) this.replaceContext("stalled_or_failed");
-    const context = this.context ?? this.createContext("first_gesture");
+    let context = this.context ?? this.createContext("first_gesture");
+    if (this.resumePendingContext === context && context.state !== "running") {
+      this.trace("resume_still_pending", { generation: this.generation, state: context.state });
+      context = this.replaceContext("resume_pending");
+    }
     this.trace("unlock_attempt", { generation: this.generation, state: context.state, unlocked: this.unlocked });
     this.startUnlockPulse(context);
     this.resumeContext(context, "gesture");
@@ -195,6 +201,8 @@ export class CeramicAudio {
     this.context = null;
     this.master = null;
     this.unlocked = false;
+    this.resumePendingContext = null;
+    this.unlockPulseContext = null;
     this.buffers = { settling: [], body: [] };
     if (previous && previous.state !== "closed") {
       void previous.close().catch((error) => {
@@ -206,14 +214,16 @@ export class CeramicAudio {
   }
 
   private startUnlockPulse(context: RecoverableAudioContext) {
-    if (this.unlocked || context !== this.context) return;
+    if (this.unlocked || context !== this.context || this.unlockPulseContext === context) return;
     const generation = this.generation;
     try {
       const source = context.createBufferSource();
       source.buffer = context.createBuffer(1, 1, context.sampleRate);
       source.connect(context.destination);
+      this.unlockPulseContext = context;
       source.addEventListener("ended", () => {
         source.disconnect();
+        if (this.unlockPulseContext === context) this.unlockPulseContext = null;
         if (context !== this.context || this.backgrounded) return;
         this.unlocked = true;
         this.trace("unlock_confirmed", { generation, state: context.state });
@@ -223,6 +233,7 @@ export class CeramicAudio {
       source.start(0);
       this.trace("unlock_pulse_started", { generation, state: context.state });
     } catch (error) {
+      if (this.unlockPulseContext === context) this.unlockPulseContext = null;
       this.recreateOnNextGesture = true;
       console.warn("Ceramic audio could not start its unlock pulse", error);
       this.trace("unlock_pulse_failed", { generation, error: String(error) });
@@ -244,17 +255,26 @@ export class CeramicAudio {
     if (context !== this.context || context.state === "closed") return;
     const generation = this.generation;
     if (context.state === "running") {
+      if (this.resumePendingContext === context) this.resumePendingContext = null;
       this.probeClock(context, reason);
       this.flushPendingContact();
       return;
     }
+    if (this.resumePendingContext === context) {
+      this.trace("resume_already_pending", { generation, reason, state: context.state });
+      return;
+    }
+    this.resumePendingContext = context;
+    this.trace("resume_requested", { generation, reason, state: context.state });
     void context.resume().then(() => {
       if (context !== this.context) return;
+      if (this.resumePendingContext === context) this.resumePendingContext = null;
       this.trace("context_resumed", { generation, reason, state: context.state });
       this.probeClock(context, reason);
       this.flushPendingContact();
     }).catch((error) => {
       if (context !== this.context) return;
+      if (this.resumePendingContext === context) this.resumePendingContext = null;
       this.recreateOnNextGesture = true;
       console.warn("Ceramic audio could not resume", error);
       this.trace("resume_failed", { generation, reason, error: String(error) });

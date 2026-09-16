@@ -1067,7 +1067,18 @@ canvas.addEventListener("pointercancel", (event) => {
 // gesture takes over. Without this path, the old pointer ID remains latched and
 // all later presses are ignored, leaving the animal suspended indefinitely.
 canvas.addEventListener("lostpointercapture", (event) => finishPointer(event.pointerId, "lost_pointer_capture"));
-addEventListener("pointerup", (event) => finishPointer(event.pointerId, "window_pointerup"), { capture: true });
+addEventListener("pointerup", (event) => {
+  // WebKit can leave resume() pending after pointerdown. Pointerup is a second
+  // trusted activation in the same physical gesture, so give audio a chance to
+  // replace that stuck context before the event releases a held piece.
+  ceramicAudio.unlock();
+  finishPointer(event.pointerId, "window_pointerup");
+}, { capture: true });
+// A tap may provide one more trusted activation after pointerup. This is the
+// same fallback used by mature mobile-audio unlockers and gives a replacement
+// context one final synchronous resume opportunity without waiting for the
+// player's next piece.
+addEventListener("click", () => ceramicAudio.unlock(), { capture: true });
 addEventListener("pointercancel", (event) => finishPointer(event.pointerId, "window_pointercancel"), { capture: true });
 addEventListener("touchcancel", finishInterruptedPointer, { capture: true });
 
