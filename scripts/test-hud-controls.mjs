@@ -69,20 +69,48 @@ for (const mobile of [true, false]) {
     sound.boundingBox(), score.boundingBox(), loops.boundingBox(),
   ]);
   assert(soundBox && scoreBox && loopsBox, "HUD controls were not rendered");
-  for (const [name, box] of [["sound", soundBox], ["score", scoreBox], ["loops", loopsBox]]) {
+  for (const [name, box] of [["sound", soundBox], ["loops", loopsBox]]) {
     assert(Math.abs(box.width - 54) < 0.5 && Math.abs(box.height - 54) < 0.5, `${name} control was not 54 px circular`);
   }
+  assert(Math.abs(scoreBox.width - 54) < 0.5 && Math.abs(scoreBox.height - 54) < 0.5, "Score did not retain its centered HUD area");
   assert(Math.abs(scoreBox.x + scoreBox.width / 2 - viewport.width / 2) < 0.5, "Score was not horizontally centered");
   assert(soundBox.x < scoreBox.x && loopsBox.x > scoreBox.x, "Toggles did not flank the score");
   assert(soundBox.x <= 17 && loopsBox.x + loopsBox.width >= viewport.width - 17, "Toggles did not reach the safe-area edges");
   assert(Math.abs(soundBox.y - scoreBox.y) < 0.5 && Math.abs(loopsBox.y - scoreBox.y) < 0.5, "HUD controls were not top-aligned");
   const scoreStyle = await score.evaluate((element) => ({
-    radius: getComputedStyle(element).borderRadius,
     border: parseFloat(getComputedStyle(element).borderTopWidth),
+    background: getComputedStyle(element).backgroundColor,
   }));
-  assert(scoreStyle.radius === "50%" && scoreStyle.border >= 1, "Score did not have a visible circle");
+  assert(scoreStyle.border === 0 && scoreStyle.background === "rgba(0, 0, 0, 0)", "Score still had a visible circle");
   assert(await sound.getAttribute("aria-pressed") === "true", "Sound did not default on");
   assert(await loops.getAttribute("aria-pressed") === "false", "Bubble loops did not default off");
+  const loopGlyph = await loops.locator("svg").innerHTML();
+  const replayStyle = await page.locator("#drop").evaluate((element) => {
+    const button = getComputedStyle(element);
+    const icon = getComputedStyle(element.querySelector("path"));
+    return {
+      borderColor: button.borderTopColor,
+      background: button.backgroundColor,
+      color: button.color,
+      radius: button.borderRadius,
+      fill: icon.fill,
+      stroke: icon.stroke,
+    };
+  });
+  const soundStyle = await sound.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      borderColor: style.borderTopColor,
+      background: style.backgroundColor,
+      color: style.color,
+      radius: style.borderRadius,
+    };
+  });
+  assert(replayStyle.fill === "none" && replayStyle.stroke !== "none", "Replay icon was not a thin-stroke loop arrow");
+  assert(replayStyle.borderColor === soundStyle.borderColor
+    && replayStyle.background === soundStyle.background
+    && replayStyle.color === soundStyle.color
+    && replayStyle.radius === soundStyle.radius, "Replay button did not match the new controls");
   const tapControl = (box) => mobile
     ? page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2)
     : page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
@@ -90,6 +118,7 @@ for (const mobile of [true, false]) {
   const beforeToggle = await page.locator("#game").getAttribute("data-held-quaternion");
   await tapControl(loopsBox);
   assert(await loops.getAttribute("aria-pressed") === "true", "Bubble-loop button did not turn on");
+  assert(await loops.locator("svg").innerHTML() === loopGlyph, "Bubble-loop glyph changed between off and on states");
   assert(await page.locator("#rotation-bubble").getAttribute("data-loops-enabled") === "true", "Loop renderer did not receive the live setting");
   assert(await page.evaluate(() => localStorage.getItem("menagerie-bubble-loops-v1")) === "1", "Loop preference was not saved");
   assert(await page.locator("#game").getAttribute("data-held-quaternion") === beforeToggle, "Loop button changed the held piece");
@@ -126,9 +155,25 @@ for (const mobile of [true, false]) {
   await tapControl(soundBox);
   assert(await sound.getAttribute("aria-pressed") === "true", "Sound could not be turned back on");
   assert(await page.evaluate(() => localStorage.getItem("menagerie-sound-v1")) === "1", "Re-enabled sound preference was not saved");
+
+  await page.goto(`${root}?diagnostics=1&sequence=ram&rx=180`);
+  await page.waitForSelector('canvas[data-held-species="ram"]');
+  const lossGeometry = await page.locator("#rotation-bubble").evaluate((element) => ({
+    x: Number(element.dataset.centerX),
+    y: Number(element.dataset.centerY),
+  }));
+  await page.mouse.click(lossGeometry.x, lossGeometry.y);
+  await page.waitForFunction(() => !document.querySelector("#drop").hidden, undefined, { timeout: 12000 });
+  const replayBox = await page.locator("#drop").boundingBox();
+  assert(replayBox && Math.abs(replayBox.width - 54) < 0.5 && Math.abs(replayBox.height - 54) < 0.5, "Visible replay button did not match the HUD controls");
+  await page.screenshot({ path: `tmp/hud-replay-${mobile ? "phone" : "desktop"}.png` });
+  await tapControl(replayBox);
+  await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
+  assert(await page.locator("#drop").isHidden(), "Replay button remained visible after reset");
+  assert(await page.locator("#score").textContent() === "0", "Replay did not reset the score");
   assert(!errors.length, errors.join(", "));
   await page.close();
-  console.log(`${mobile ? "Phone" : "Desktop"}: circular HUD layout, live toggles, mute, and persisted preferences passed`);
+  console.log(`${mobile ? "Phone" : "Desktop"}: HUD layout, stable loop glyph, matching replay, mute, and persisted preferences passed`);
 }
 
 await browser.close();

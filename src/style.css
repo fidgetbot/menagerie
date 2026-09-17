@@ -60,6 +60,9 @@ html, body, #app {
   display: grid;
   place-items: center;
   grid-column: 2;
+  width: 54px;
+  height: 54px;
+  color: #173c3a;
   font-size: clamp(30px, 8vw, 44px);
   font-weight: 650;
   line-height: 1;
@@ -70,10 +73,7 @@ html, body, #app {
 }
 
 #score.bump { transform: scale(1.16); }
-#score.lost {
-  border-color: #b94c42;
-  color: #b94c42;
-}
+#score.lost { color: #b94c42; }
 
 .hud-toggle {
   display: grid;
@@ -95,7 +95,8 @@ html, body, #app {
   margin: auto;
 }
 
-.hud-toggle svg {
+.hud-toggle svg,
+#drop svg {
   overflow: visible;
   fill: none;
   stroke: currentColor;
@@ -124,10 +125,6 @@ html, body, #app {
 #drop {
   color: #1f5550;
   cursor: pointer;
-}
-
-#drop svg {
-  fill: currentColor;
 }
 
 
