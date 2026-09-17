@@ -7,6 +7,7 @@
   "scripts": {
     "audio:generate": "node scripts/audio/generate-bank.mjs",
     "audio:plan": "node scripts/audio/generate-bank.mjs --dry-run",
+    "audio:publish-audition": "node scripts/audio/publish-audition.mjs",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",

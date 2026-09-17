@@ -6,10 +6,12 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(scriptDirectory, "../..");
-const sourceManifestPath = join(repositoryRoot, "audio/sfx-bank.json");
-const sourceManifest = JSON.parse(readFileSync(sourceManifestPath, "utf8"));
-
 const options = parseArguments(process.argv.slice(2));
+const sourceManifestPath = resolve(
+  repositoryRoot,
+  options.manifest ?? "audio/sfx-bank.json",
+);
+const sourceManifest = JSON.parse(readFileSync(sourceManifestPath, "utf8"));
 const defaultOutput = join(
   homedir(),
   ".openclaw/playground/audio-generation/menagerie",
@@ -131,13 +133,21 @@ console.log(`Manifest: ${join(outputRoot, "run-manifest.json")}`);
 console.log(`Audition: ${join(outputRoot, "audition.html")}`);
 
 function parseArguments(argumentsList) {
-  const parsed = { dryRun: false, force: false, event: null, limit: null, output: null };
+  const parsed = {
+    dryRun: false,
+    force: false,
+    event: null,
+    limit: null,
+    manifest: null,
+    output: null,
+  };
   for (let index = 0; index < argumentsList.length; index += 1) {
     const argument = argumentsList[index];
     if (argument === "--dry-run") parsed.dryRun = true;
     else if (argument === "--force") parsed.force = true;
     else if (argument === "--event") parsed.event = requireValue(argumentsList, ++index, argument);
     else if (argument === "--limit") parsed.limit = Number.parseInt(requireValue(argumentsList, ++index, argument), 10);
+    else if (argument === "--manifest") parsed.manifest = requireValue(argumentsList, ++index, argument);
     else if (argument === "--output") parsed.output = requireValue(argumentsList, ++index, argument);
     else fail(`unknown argument: ${argument}`);
   }

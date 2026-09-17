@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "bankId": "ceramic-contacts-v1",
+  "bankId": "ceramic-material-audition-v2",
   "status": "exploratory-unreviewed",
-  "sourceManifestPath": "/Users/fidget/.openclaw/git/menagerie/audio/sfx-bank.json",
+  "sourceManifestPath": "audio/sfx-audition-v2.json",
   "sourceManifest": {
     "schemaVersion": 1,
-    "bankId": "ceramic-contacts-v1",
-    "status": "material-prototype-v4",
+    "bankId": "ceramic-material-audition-v2",
+    "status": "exploratory-unreviewed",
     "model": {
       "name": "Stable Audio 3 Small SFX",
       "id": "stabilityai/stable-audio-3-small-sfx",
@@ -16,7 +16,7 @@
       "steps": 8,
       "cfg": 1,
       "durationSeconds": 3,
-      "negativePrompt": null
+      "negativePrompt": "multiple hits, repeated impacts, percussion rhythm, bells, glass, metal, long reverberation, background noise"
     },
     "processing": {
       "sampleRate": 44100,
@@ -36,51 +36,60 @@
       "targetPeakDb": -4.5
     },
     "licensing": {
+      "modelCard": "https://huggingface.co/stabilityai/stable-audio-3-small-sfx",
       "modelTerms": "https://stability.ai/community-license-agreement",
+      "acceptableUse": "https://stability.ai/use-policy",
       "gemmaTerms": "https://ai.google.dev/gemma/terms",
       "distributionCategory": "Generated WAV outputs only; model weights and runtime are not distributed with Menagerie.",
       "projectLicense": "MIT"
     },
     "events": [
       {
-        "id": "settling_tick",
-        "role": "Tiny bright porcelain contacts for quiet settling",
-        "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
+        "id": "muted_stoneware",
+        "role": "Soft, low, tactile contacts with very little ring",
+        "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
         "seeds": [
-          142001,
-          142002,
-          142004,
-          142005
+          216001,
+          216002,
+          216003,
+          216004
         ]
       },
       {
-        "id": "body_contact",
-        "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-        "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
+        "id": "warm_earthenware",
+        "role": "Rounded ceramic clacks with a short hollow body",
+        "prompt": "One isolated gentle clack between two small thick-walled glazed earthenware animal figurines. A tactile ceramic attack with a warm rounded hollow body, subtle pitch, and a short natural decay. Close dry studio recording, exactly one impact, no room sound.",
         "seeds": [
-          142103,
-          142111,
-          142114,
-          142116
+          216101,
+          216104
+        ]
+      },
+      {
+        "id": "crisp_porcelain",
+        "role": "Small, bright contacts with a clean delicate ring",
+        "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+        "seeds": [
+          216201,
+          216202,
+          216203,
+          216204
         ]
       }
     ]
   },
-  "runStartedAt": "2026-09-16T07:31:50.741Z",
-  "runCompletedAt": "2026-09-16T07:31:51.911Z",
-  "sourceRevision": "46e2b840d03b1e7b130bce96c209c25919abe04e",
-  "sourceDirty": false,
+  "runStartedAt": "2026-09-17T04:43:44.142Z",
+  "runCompletedAt": "2026-09-17T04:43:50.370Z",
+  "sourceRevision": "b4adc8366cdf24d1202c4d12d4a0b521aa389a38",
+  "sourceDirty": true,
   "stableAudioRevision": "74754b8ce416591d38de59c907c73aace2c2e1ed",
   "modelWeightsRevision": "da6edc54ddba10bfd79a077102ded687f80e882b",
-  "outputRoot": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1",
   "results": [
     {
-      "eventId": "settling_tick",
-      "role": "Tiny bright porcelain contacts for quiet settling",
-      "seed": 142001,
-      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/settling_tick__seed-142001.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/settling_tick__seed-142001.wav",
+      "eventId": "muted_stoneware",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "seed": 216001,
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/muted_stoneware__seed-216001.wav",
       "rawProbe": {
         "codec": "pcm_s16le",
         "sampleRate": 44100,
@@ -90,30 +99,354 @@
       },
       "rawSampleStats": {
         "sampleCount": 264600,
-        "nonZeroSampleCount": 107011,
+        "nonZeroSampleCount": 204790,
         "clippedSampleCount": 0,
-        "peakSample": 10407,
-        "peakLinear": 0.317596435546875,
-        "rmsLinear": 0.005383152809423746,
-        "crestFactor": 58.99822033491056,
-        "zeroCrossingRate": 0.009996220710506425
+        "peakSample": 12308,
+        "peakLinear": 0.3756103515625,
+        "rmsLinear": 0.007219796684099452,
+        "crestFactor": 52.025059429959704,
+        "zeroCrossingRate": 0.019561602418745275
       },
       "processedProbe": {
         "codec": "pcm_s16le",
         "sampleRate": 44100,
         "channels": 1,
-        "durationSeconds": 0.120794,
-        "sizeBytes": 10732
+        "durationSeconds": 0.110884,
+        "sizeBytes": 9858
       },
       "processedSampleStats": {
-        "sampleCount": 5327,
-        "nonZeroSampleCount": 4835,
+        "sampleCount": 4890,
+        "nonZeroSampleCount": 4805,
+        "clippedSampleCount": 0,
+        "peakSample": 19520,
+        "peakLinear": 0.595703125,
+        "rmsLinear": 0.050963668187986894,
+        "crestFactor": 11.688780383756178,
+        "zeroCrossingRate": 0.08568507157464213
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -11.1,
+        "appliedGainDb": 6.6,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "muted_stoneware",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "seed": 216002,
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/muted_stoneware__seed-216002.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 187135,
+        "clippedSampleCount": 0,
+        "peakSample": 13364,
+        "peakLinear": 0.4078369140625,
+        "rmsLinear": 0.00807869522340342,
+        "crestFactor": 50.48301771318526,
+        "zeroCrossingRate": 0.011303854875283447
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.114898,
+        "sizeBytes": 10212
+      },
+      "processedSampleStats": {
+        "sampleCount": 5067,
+        "nonZeroSampleCount": 4902,
+        "clippedSampleCount": 0,
+        "peakSample": 19541,
+        "peakLinear": 0.596343994140625,
+        "rmsLinear": 0.04268823512300042,
+        "crestFactor": 13.969750504379949,
+        "zeroCrossingRate": 0.09769094138543517
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -7.8,
+        "appliedGainDb": 3.3,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "muted_stoneware",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "seed": 216003,
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/muted_stoneware__seed-216003.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 214125,
+        "clippedSampleCount": 0,
+        "peakSample": 11721,
+        "peakLinear": 0.357696533203125,
+        "rmsLinear": 0.006389877435528796,
+        "crestFactor": 55.97862193948697,
+        "zeroCrossingRate": 0.009342403628117914
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.104331,
+        "sizeBytes": 9280
+      },
+      "processedSampleStats": {
+        "sampleCount": 4601,
+        "nonZeroSampleCount": 4456,
+        "clippedSampleCount": 0,
+        "peakSample": 19503,
+        "peakLinear": 0.595184326171875,
+        "rmsLinear": 0.04496251776605695,
+        "crestFactor": 13.237344253465958,
+        "zeroCrossingRate": 0.09367528798087373
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -15.2,
+        "appliedGainDb": 10.7,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "muted_stoneware",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "seed": 216004,
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/muted_stoneware__seed-216004.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 197995,
+        "clippedSampleCount": 0,
+        "peakSample": 14028,
+        "peakLinear": 0.4281005859375,
+        "rmsLinear": 0.008015275088934931,
+        "crestFactor": 53.41059179971151,
+        "zeroCrossingRate": 0.008892668178382464
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.11322,
+        "sizeBytes": 10064
+      },
+      "processedSampleStats": {
+        "sampleCount": 4993,
+        "nonZeroSampleCount": 4907,
+        "clippedSampleCount": 0,
+        "peakSample": 19588,
+        "peakLinear": 0.5977783203125,
+        "rmsLinear": 0.04256616089375534,
+        "crestFactor": 14.04351033217555,
+        "zeroCrossingRate": 0.14520328459843782
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -7.4,
+        "appliedGainDb": 2.9000000000000004,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "warm_earthenware",
+      "role": "Rounded ceramic clacks with a short hollow body",
+      "seed": 216101,
+      "prompt": "One isolated gentle clack between two small thick-walled glazed earthenware animal figurines. A tactile ceramic attack with a warm rounded hollow body, subtle pitch, and a short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/warm_earthenware__seed-216101.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 242498,
+        "clippedSampleCount": 0,
+        "peakSample": 17107,
+        "peakLinear": 0.522064208984375,
+        "rmsLinear": 0.011868097119755734,
+        "crestFactor": 43.98887232860123,
+        "zeroCrossingRate": 0.012146636432350718
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.095941,
+        "sizeBytes": 8540
+      },
+      "processedSampleStats": {
+        "sampleCount": 4231,
+        "nonZeroSampleCount": 4119,
+        "clippedSampleCount": 0,
+        "peakSample": 19572,
+        "peakLinear": 0.5972900390625,
+        "rmsLinear": 0.045786729897574596,
+        "crestFactor": 13.045046903298056,
+        "zeroCrossingRate": 0.11746632001890805
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -15.2,
+        "appliedGainDb": 10.7,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "warm_earthenware",
+      "role": "Rounded ceramic clacks with a short hollow body",
+      "seed": 216104,
+      "prompt": "One isolated gentle clack between two small thick-walled glazed earthenware animal figurines. A tactile ceramic attack with a warm rounded hollow body, subtle pitch, and a short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/warm_earthenware__seed-216104.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 213256,
+        "clippedSampleCount": 0,
+        "peakSample": 13193,
+        "peakLinear": 0.402618408203125,
+        "rmsLinear": 0.009816711428966998,
+        "crestFactor": 41.01357273425446,
+        "zeroCrossingRate": 0.010517762660619804
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.157052,
+        "sizeBytes": 13930
+      },
+      "processedSampleStats": {
+        "sampleCount": 6926,
+        "nonZeroSampleCount": 6818,
+        "clippedSampleCount": 0,
+        "peakSample": 19514,
+        "peakLinear": 0.59552001953125,
+        "rmsLinear": 0.03994018885195857,
+        "crestFactor": 14.910295535621815,
+        "zeroCrossingRate": 0.0739243430551545
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -7.9,
+        "appliedGainDb": 3.4000000000000004,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "crisp_porcelain",
+      "role": "Small, bright contacts with a clean delicate ring",
+      "seed": 216201,
+      "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/crisp_porcelain__seed-216201.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 83852,
+        "clippedSampleCount": 0,
+        "peakSample": 10161,
+        "peakLinear": 0.310089111328125,
+        "rmsLinear": 0.006419086480749034,
+        "crestFactor": 48.30735841588804,
+        "zeroCrossingRate": 0.013560090702947846
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.100748,
+        "sizeBytes": 8964
+      },
+      "processedSampleStats": {
+        "sampleCount": 4443,
+        "nonZeroSampleCount": 2464,
         "clippedSampleCount": 0,
         "peakSample": 19586,
         "peakLinear": 0.59771728515625,
-        "rmsLinear": 0.049131835652555265,
-        "crestFactor": 12.16558016238426,
-        "zeroCrossingRate": 0.37920030035667357
+        "rmsLinear": 0.04779289552164507,
+        "crestFactor": 12.506404532145327,
+        "zeroCrossingRate": 0.06144496961512492
       },
       "onsetStats": {
         "silenceThresholdDb": -30,
@@ -122,20 +455,19 @@
         "secondaryOnsetTimesSeconds": []
       },
       "processing": {
-        "inputPeakDb": -10,
-        "appliedGainDb": 5.5,
+        "inputPeakDb": -17.7,
+        "appliedGainDb": 13.2,
         "outputPeakDb": -4.5,
         "silenceTrimmed": true,
         "rawPreserved": true
       }
     },
     {
-      "eventId": "settling_tick",
-      "role": "Tiny bright porcelain contacts for quiet settling",
-      "seed": 142002,
-      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/settling_tick__seed-142002.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/settling_tick__seed-142002.wav",
+      "eventId": "crisp_porcelain",
+      "role": "Small, bright contacts with a clean delicate ring",
+      "seed": 216202,
+      "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/crisp_porcelain__seed-216202.wav",
       "rawProbe": {
         "codec": "pcm_s16le",
         "sampleRate": 44100,
@@ -145,360 +477,30 @@
       },
       "rawSampleStats": {
         "sampleCount": 264600,
-        "nonZeroSampleCount": 97636,
+        "nonZeroSampleCount": 79085,
         "clippedSampleCount": 0,
-        "peakSample": 8284,
-        "peakLinear": 0.2528076171875,
-        "rmsLinear": 0.003486399516446567,
-        "crestFactor": 72.51252072372026,
-        "zeroCrossingRate": 0.008567649281934996
+        "peakSample": 12942,
+        "peakLinear": 0.39495849609375,
+        "rmsLinear": 0.007155328524482379,
+        "crestFactor": 55.19781443191269,
+        "zeroCrossingRate": 0.012588813303099017
       },
       "processedProbe": {
         "codec": "pcm_s16le",
         "sampleRate": 44100,
         "channels": 1,
-        "durationSeconds": 0.100045,
-        "sizeBytes": 8902
+        "durationSeconds": 0.099161,
+        "sizeBytes": 8824
       },
       "processedSampleStats": {
-        "sampleCount": 4412,
-        "nonZeroSampleCount": 4160,
+        "sampleCount": 4373,
+        "nonZeroSampleCount": 3684,
         "clippedSampleCount": 0,
-        "peakSample": 19557,
-        "peakLinear": 0.596832275390625,
-        "rmsLinear": 0.04172629908388405,
-        "crestFactor": 14.303503749297038,
-        "zeroCrossingRate": 0.3868993653671804
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -12,
-        "appliedGainDb": 7.5,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "settling_tick",
-      "role": "Tiny bright porcelain contacts for quiet settling",
-      "seed": 142004,
-      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/settling_tick__seed-142004.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/settling_tick__seed-142004.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 42864,
-        "clippedSampleCount": 0,
-        "peakSample": 10106,
-        "peakLinear": 0.30841064453125,
-        "rmsLinear": 0.005790521222810135,
-        "crestFactor": 53.26129249234987,
-        "zeroCrossingRate": 0.009293272864701435
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.146916,
-        "sizeBytes": 13036
-      },
-      "processedSampleStats": {
-        "sampleCount": 6479,
-        "nonZeroSampleCount": 6090,
-        "clippedSampleCount": 0,
-        "peakSample": 19441,
-        "peakLinear": 0.593292236328125,
-        "rmsLinear": 0.04962575869365108,
-        "crestFactor": 11.955328280029468,
-        "zeroCrossingRate": 0.32613057570612747
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -10.2,
-        "appliedGainDb": 5.699999999999999,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "settling_tick",
-      "role": "Tiny bright porcelain contacts for quiet settling",
-      "seed": 142005,
-      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/settling_tick__seed-142005.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/settling_tick__seed-142005.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 57581,
-        "clippedSampleCount": 0,
-        "peakSample": 15551,
-        "peakLinear": 0.474578857421875,
-        "rmsLinear": 0.006925094735335349,
-        "crestFactor": 68.53030544121408,
-        "zeroCrossingRate": 0.008760393046107331
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.104558,
-        "sizeBytes": 9300
-      },
-      "processedSampleStats": {
-        "sampleCount": 4611,
-        "nonZeroSampleCount": 4344,
-        "clippedSampleCount": 0,
-        "peakSample": 19551,
-        "peakLinear": 0.596649169921875,
-        "rmsLinear": 0.04606422395453728,
-        "crestFactor": 12.952550128940263,
-        "zeroCrossingRate": 0.44155280850140965
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -6.5,
-        "appliedGainDb": 2,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "body_contact",
-      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "seed": 142103,
-      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/body_contact__seed-142103.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/body_contact__seed-142103.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 200654,
-        "clippedSampleCount": 0,
-        "peakSample": 12755,
-        "peakLinear": 0.389251708984375,
-        "rmsLinear": 0.009719320659747182,
-        "crestFactor": 40.04927120024664,
-        "zeroCrossingRate": 0.016432350718065005
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.116145,
-        "sizeBytes": 10322
-      },
-      "processedSampleStats": {
-        "sampleCount": 5122,
-        "nonZeroSampleCount": 4936,
-        "clippedSampleCount": 0,
-        "peakSample": 19470,
-        "peakLinear": 0.59417724609375,
-        "rmsLinear": 0.04224511436983753,
-        "crestFactor": 14.064993194052871,
-        "zeroCrossingRate": 0.12983209683717298
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -15.4,
-        "appliedGainDb": 10.9,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "body_contact",
-      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "seed": 142111,
-      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/body_contact__seed-142111.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/body_contact__seed-142111.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 165968,
-        "clippedSampleCount": 0,
-        "peakSample": 14743,
-        "peakLinear": 0.449920654296875,
-        "rmsLinear": 0.013013130227644054,
-        "crestFactor": 34.57436039033095,
-        "zeroCrossingRate": 0.04418367346938776
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.128617,
-        "sizeBytes": 11422
-      },
-      "processedSampleStats": {
-        "sampleCount": 5672,
-        "nonZeroSampleCount": 5474,
-        "clippedSampleCount": 0,
-        "peakSample": 19619,
-        "peakLinear": 0.598724365234375,
-        "rmsLinear": 0.04837967638991937,
-        "crestFactor": 12.375534726791356,
-        "zeroCrossingRate": 0.11583215796897038
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -14.4,
-        "appliedGainDb": 9.9,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "body_contact",
-      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "seed": 142114,
-      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/body_contact__seed-142114.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/body_contact__seed-142114.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 183339,
-        "clippedSampleCount": 0,
-        "peakSample": 9574,
-        "peakLinear": 0.29217529296875,
-        "rmsLinear": 0.008087971590227732,
-        "crestFactor": 36.12466855370386,
-        "zeroCrossingRate": 0.015128495842781557
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.108889,
-        "sizeBytes": 9682
-      },
-      "processedSampleStats": {
-        "sampleCount": 4802,
-        "nonZeroSampleCount": 4589,
-        "clippedSampleCount": 0,
-        "peakSample": 19531,
-        "peakLinear": 0.596038818359375,
-        "rmsLinear": 0.050804958696515815,
-        "crestFactor": 11.731902429442407,
-        "zeroCrossingRate": 0.11182840483132028
-      },
-      "onsetStats": {
-        "silenceThresholdDb": -30,
-        "minimumSilenceSeconds": 0.015,
-        "secondaryOnsetCount": 0,
-        "secondaryOnsetTimesSeconds": []
-      },
-      "processing": {
-        "inputPeakDb": -17.4,
-        "appliedGainDb": 12.899999999999999,
-        "outputPeakDb": -4.5,
-        "silenceTrimmed": true,
-        "rawPreserved": true
-      }
-    },
-    {
-      "eventId": "body_contact",
-      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "seed": 142116,
-      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "rawPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/raw/body_contact__seed-142116.wav",
-      "processedPath": "/Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/processed/body_contact__seed-142116.wav",
-      "rawProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 2,
-        "durationSeconds": 3,
-        "sizeBytes": 529244
-      },
-      "rawSampleStats": {
-        "sampleCount": 264600,
-        "nonZeroSampleCount": 182317,
-        "clippedSampleCount": 0,
-        "peakSample": 21861,
-        "peakLinear": 0.667144775390625,
-        "rmsLinear": 0.012249376438621807,
-        "crestFactor": 54.463570348539825,
-        "zeroCrossingRate": 0.015880574452003023
-      },
-      "processedProbe": {
-        "codec": "pcm_s16le",
-        "sampleRate": 44100,
-        "channels": 1,
-        "durationSeconds": 0.108027,
-        "sizeBytes": 9606
-      },
-      "processedSampleStats": {
-        "sampleCount": 4764,
-        "nonZeroSampleCount": 4296,
-        "clippedSampleCount": 0,
-        "peakSample": 19538,
-        "peakLinear": 0.59625244140625,
-        "rmsLinear": 0.05430342014601999,
-        "crestFactor": 10.980016356298519,
-        "zeroCrossingRate": 0.0698992443324937
+        "peakSample": 19596,
+        "peakLinear": 0.5980224609375,
+        "rmsLinear": 0.03766521759090691,
+        "crestFactor": 15.87731331948747,
+        "zeroCrossingRate": 0.20672307340498514
       },
       "onsetStats": {
         "silenceThresholdDb": -30,
@@ -513,6 +515,115 @@
         "silenceTrimmed": true,
         "rawPreserved": true
       }
+    },
+    {
+      "eventId": "crisp_porcelain",
+      "role": "Small, bright contacts with a clean delicate ring",
+      "seed": 216203,
+      "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/crisp_porcelain__seed-216203.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 146802,
+        "clippedSampleCount": 0,
+        "peakSample": 10412,
+        "peakLinear": 0.3177490234375,
+        "rmsLinear": 0.004971762989229317,
+        "crestFactor": 63.910734306092685,
+        "zeroCrossingRate": 0.0076455026455026455
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.097528,
+        "sizeBytes": 8680
+      },
+      "processedSampleStats": {
+        "sampleCount": 4301,
+        "nonZeroSampleCount": 4083,
+        "clippedSampleCount": 0,
+        "peakSample": 19435,
+        "peakLinear": 0.593109130859375,
+        "rmsLinear": 0.04579865190586524,
+        "crestFactor": 12.95036220888017,
+        "zeroCrossingRate": 0.12624970936991398
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -24.4,
+        "appliedGainDb": 19.9,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
+    },
+    {
+      "eventId": "crisp_porcelain",
+      "role": "Small, bright contacts with a clean delicate ring",
+      "seed": 216204,
+      "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "processedPath": "processed/crisp_porcelain__seed-216204.wav",
+      "rawProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 2,
+        "durationSeconds": 3,
+        "sizeBytes": 529244
+      },
+      "rawSampleStats": {
+        "sampleCount": 264600,
+        "nonZeroSampleCount": 76856,
+        "clippedSampleCount": 0,
+        "peakSample": 8637,
+        "peakLinear": 0.263580322265625,
+        "rmsLinear": 0.005282337627925447,
+        "crestFactor": 49.89842392356544,
+        "zeroCrossingRate": 0.006844293272864702
+      },
+      "processedProbe": {
+        "codec": "pcm_s16le",
+        "sampleRate": 44100,
+        "channels": 1,
+        "durationSeconds": 0.095578,
+        "sizeBytes": 8508
+      },
+      "processedSampleStats": {
+        "sampleCount": 4215,
+        "nonZeroSampleCount": 3203,
+        "clippedSampleCount": 0,
+        "peakSample": 19554,
+        "peakLinear": 0.59674072265625,
+        "rmsLinear": 0.04522983609629687,
+        "crestFactor": 13.193519458831453,
+        "zeroCrossingRate": 0.07283511269276394
+      },
+      "onsetStats": {
+        "silenceThresholdDb": -30,
+        "minimumSilenceSeconds": 0.015,
+        "secondaryOnsetCount": 0,
+        "secondaryOnsetTimesSeconds": []
+      },
+      "processing": {
+        "inputPeakDb": -15.6,
+        "appliedGainDb": 11.1,
+        "outputPeakDb": -4.5,
+        "silenceTrimmed": true,
+        "rawPreserved": true
+      }
     }
-  ]
+  ],
+  "rawMasters": "Preserved outside the repository in the local generation archive."
 }

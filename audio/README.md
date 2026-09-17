@@ -16,7 +16,7 @@ By default, raw and processed candidates are written outside the repository to:
 /Users/fidget/.openclaw/playground/audio-generation/menagerie/ceramic-contacts-v1/
 ```
 
-Use `npm run audio:plan` to inspect the commands without generating. The generator accepts `--event EVENT_ID`, `--limit COUNT`, `--force`, and `--output ABSOLUTE_DIRECTORY` after `--`.
+Use `npm run audio:plan` to inspect the commands without generating. The generator accepts `--manifest PATH`, `--event EVENT_ID`, `--limit COUNT`, `--force`, and `--output ABSOLUTE_DIRECTORY` after `--`. `audio/sfx-bank.json` remains the approved runtime source definition; separate audition manifests such as `audio/sfx-audition-v2.json` can explore new directions without changing that bank.
 
 Each run preserves:
 
@@ -24,6 +24,16 @@ Each run preserves:
 - mono, silence-trimmed, peak-normalized candidates in `processed/`;
 - model, prompt, seed, processing, probe, sample-level clipping checks, and licensing provenance in `run-manifest.json`;
 - an `audition.html` page with players grouped by event family.
+
+To replace the public audition-only bundle with a validated run, publish its
+processed previews from the external archive:
+
+```sh
+npm run audio:publish-audition -- --source /absolute/path/to/the/run
+```
+
+The publisher deliberately excludes untouched raw masters and removes local
+filesystem paths from the public manifest. It does not modify the runtime bank.
 
 Each candidate must contain one isolated contact. The validator rejects a processed
 preview when energy resumes after at least 15 ms below -30 dBFS, while retaining

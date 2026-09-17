@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "bankId": "ceramic-material-audition-v2",
+  "status": "exploratory-unreviewed",
+  "model": {
+    "name": "Stable Audio 3 Small SFX",
+    "id": "stabilityai/stable-audio-3-small-sfx",
+    "runtime": "stable-audio-3 optimized MLX",
+    "dit": "sm-sfx",
+    "decoder": "same-s",
+    "steps": 8,
+    "cfg": 1,
+    "durationSeconds": 3,
+    "negativePrompt": "multiple hits, repeated impacts, percussion rhythm, bells, glass, metal, long reverberation, background noise"
+  },
+  "processing": {
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "onsetThresholdDb": -24,
+    "silenceThresholdDb": -42,
+    "silenceDetection": "peak",
+    "detectionWindowSeconds": 0.005,
+    "trailingSilenceSeconds": 0.08,
+    "maximumDurationSeconds": 1.1,
+    "maximumAcceptedDurationSeconds": 1.08,
+    "minimumCrestFactor": 8,
+    "secondaryOnsetSilenceThresholdDb": -30,
+    "minimumInterOnsetSilenceSeconds": 0.015,
+    "maximumSecondaryOnsets": 0,
+    "targetPeakDb": -4.5
+  },
+  "licensing": {
+    "modelCard": "https://huggingface.co/stabilityai/stable-audio-3-small-sfx",
+    "modelTerms": "https://stability.ai/community-license-agreement",
+    "acceptableUse": "https://stability.ai/use-policy",
+    "gemmaTerms": "https://ai.google.dev/gemma/terms",
+    "distributionCategory": "Generated WAV outputs only; model weights and runtime are not distributed with Menagerie.",
+    "projectLicense": "MIT"
+  },
+  "events": [
+    {
+      "id": "muted_stoneware",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "seeds": [216001, 216002, 216003, 216004]
+    },
+    {
+      "id": "warm_earthenware",
+      "role": "Rounded ceramic clacks with a short hollow body",
+      "prompt": "One isolated gentle clack between two small thick-walled glazed earthenware animal figurines. A tactile ceramic attack with a warm rounded hollow body, subtle pitch, and a short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "seeds": [216101, 216104]
+    },
+    {
+      "id": "crisp_porcelain",
+      "role": "Small, bright contacts with a clean delicate ring",
+      "prompt": "One isolated light touch between two small thin-walled porcelain animal figurines. A crisp bright ceramic click with a clean delicate pitched ring and a brief natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "seeds": [216201, 216202, 216203, 216204]
+    }
+  ]
+}
