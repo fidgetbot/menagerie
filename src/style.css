@@ -115,7 +115,7 @@ html, body, #app {
     0 5px 22px #315f5a12;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 110ms ease-out, transform 150ms ease-out, filter 140ms ease-out;
+  transition: opacity 55ms ease-out, transform 150ms ease-out, filter 140ms ease-out;
 }
 #rotation-bubble[hidden] { display: none; }
 #rotation-bubble.held {

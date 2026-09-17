@@ -311,8 +311,10 @@ async function verifyTowerExploration(mobile) {
   await page.waitForTimeout(140);
   const afterMomentum = await state();
   assert(Math.abs(afterMomentum.yaw - released.yaw) > 0.005 || Math.abs(afterMomentum.height - released.height) > 0.01, "Exploration stopped dead on release");
-  await page.waitForTimeout(520);
-  assert((await state()).phase === "dwell", "Exploration did not settle into its inspection pause");
+  await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "dwell");
+  const dwellStartedAt = Date.now();
+  await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "return");
+  assert(Date.now() - dwellStartedAt < 650, "Exploration exceeded its 0.5 second inspection pause");
 
   // The sphere is softly locked while the view is displaced. Touching it
   // fast-recentres, then promotes the same held pointer into rotation without
@@ -344,10 +346,12 @@ async function verifyTowerExploration(mobile) {
   await page.mouse.down();
   await page.mouse.move(current.x + 70, current.y + current.r + 78, { steps: 3 });
   await page.mouse.up();
-  await page.waitForTimeout(1500);
-  const returning = await state();
-  assert(returning.phase === "return" || returning.phase === "idle", `Short inspection pause did not start height return: ${JSON.stringify(returning)}`);
-  await page.waitForTimeout(900);
+  await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "dwell");
+  await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "return");
+  await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "idle");
+  const cameraReturnedAt = Date.now();
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector("#rotation-bubble")).opacity) > 0.9);
+  assert(Date.now() - cameraReturnedAt < 100, "Bubble lagged behind the completed camera return");
   const returned = await state();
   assert(returned.phase === "idle", `Camera did not return automatically: ${returned.phase}`);
   assert(Math.abs(returned.height) < 0.01, `Camera retained its temporary height: ${JSON.stringify(returned)}`);

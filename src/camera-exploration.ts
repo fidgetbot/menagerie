@@ -19,6 +19,7 @@ export class CameraExploration {
 
   private dwellElapsed = 0;
   private dragged = false;
+  private readonly heightEpsilon = 0.02;
 
   readonly yawLimit = 75 * Math.PI / 180;
   readonly safetyMargin = 11;
@@ -95,7 +96,7 @@ export class CameraExploration {
       if (Math.abs(this.yawVelocity) < 0.025 && Math.abs(this.heightVelocity) < 0.04) this.settleAtCurrentYaw();
     } else if (this.phase === "dwell") {
       this.dwellElapsed += dt;
-      if (this.dwellElapsed >= 0.7) this.phase = "return";
+      if (this.dwellElapsed >= 0.5) this.phase = "return";
     } else if (this.phase === "return" || this.phase === "quick-return") {
       const rate = this.phase === "quick-return" ? 18 : 6;
       const decay = Math.exp(-rate * dt);
@@ -132,6 +133,6 @@ export class CameraExploration {
   }
 
   private heightDisplaced() {
-    return Math.abs(this.height) > 0.008;
+    return Math.abs(this.height) > this.heightEpsilon;
   }
 }
