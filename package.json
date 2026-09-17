@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "icon:render": "node scripts/render-app-icons.mjs",
     "audio:generate": "node scripts/audio/generate-bank.mjs",
     "audio:plan": "node scripts/audio/generate-bank.mjs --dry-run",
     "audio:publish-audition": "node scripts/audio/publish-audition.mjs",
@@ -15,6 +16,7 @@
     "test:audio-detector": "node scripts/test-contact-audio-detector.mjs",
     "test:audio-ground": "node scripts/test-ground-audio.mjs",
     "test:hud": "node scripts/test-hud-controls.mjs",
+    "test:pwa": "node scripts/test-pwa-install.mjs",
     "test:expansion": "node scripts/test-expansion.mjs",
     "test:towers": "node scripts/test-towers.mjs",
     "test:rotation": "node scripts/test-rounded-arcball.mjs"

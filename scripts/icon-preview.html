@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Menagerie app icon source</title>
+    <style>
+      html, body, canvas { width: 100%; height: 100%; margin: 0; display: block; overflow: hidden; }
+      body { background: #dce8dd; }
+    </style>
+  </head>
+  <body>
+    <canvas id="icon"></canvas>
+    <script type="module">
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+      const canvas = document.querySelector("#icon");
+      const maskable = new URLSearchParams(location.search).get("variant") === "maskable";
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xdce8dd);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      renderer.setPixelRatio(1);
+      renderer.setSize(innerWidth, innerHeight, false);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+
+      scene.add(new THREE.HemisphereLight(0xf8fbef, 0x547667, 2.1));
+      const key = new THREE.DirectionalLight(0xfff5de, 4.1);
+      key.position.set(-5, -6, 10);
+      key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048);
+      key.shadow.camera.left = -4;
+      key.shadow.camera.right = 4;
+      key.shadow.camera.top = 4;
+      key.shadow.camera.bottom = -4;
+      key.shadow.bias = -0.0001;
+      key.shadow.normalBias = 0.035;
+      scene.add(key);
+      const rim = new THREE.DirectionalLight(0x99cbd3, 1.8);
+      rim.position.set(5, 4, 7);
+      scene.add(rim);
+
+      const ground = new THREE.Mesh(
+        new THREE.CircleGeometry(9, 96),
+        new THREE.MeshStandardMaterial({ color: 0xc6dcce, roughness: 1 }),
+      );
+      ground.position.set(0, 2, -0.34);
+      ground.receiveShadow = true;
+      scene.add(ground);
+
+      const platform = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.85, 1.92, 0.32, 96),
+        new THREE.MeshStandardMaterial({ color: 0xf1f0e7, roughness: 0.72 }),
+      );
+      platform.position.z = -0.16;
+      platform.rotation.x = Math.PI / 2;
+      platform.receiveShadow = true;
+      scene.add(platform);
+
+      const model = (await new GLTFLoader().loadAsync("../models/tortoise.glb")).scene;
+      model.rotation.x = Math.PI / 2;
+      model.updateMatrixWorld(true);
+      const bounds = new THREE.Box3().setFromObject(model);
+      const center = bounds.getCenter(new THREE.Vector3());
+      model.position.sub(center);
+      model.updateMatrixWorld(true);
+      const centeredBounds = new THREE.Box3().setFromObject(model);
+      model.position.z -= centeredBounds.min.z;
+      model.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          object.castShadow = true;
+          object.receiveShadow = true;
+        }
+      });
+      scene.add(model);
+
+      const halfHeight = maskable ? 2.35 : 2.0;
+      const camera = new THREE.OrthographicCamera(-halfHeight, halfHeight, halfHeight, -halfHeight, 0.1, 60);
+      camera.up.set(0, 0, 1);
+      const target = new THREE.Vector3(0, -0.02, 0.72);
+      const view = new THREE.Vector3(6.9, -12.3, 6.0).normalize().multiplyScalar(15);
+      camera.position.copy(target).add(view);
+      camera.lookAt(target);
+      camera.updateProjectionMatrix();
+
+      renderer.render(scene, camera);
+      window.__iconReady = true;
+    </script>
+  </body>
+</html>
