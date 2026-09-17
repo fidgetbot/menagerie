@@ -3,12 +3,13 @@ export type CameraExplorationPhase = "idle" | "dragging" | "momentum" | "dwell" 
 type HeightBounds = { min: number; max: number };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const wrapAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 
 /**
  * Camera controls for inspecting the tower.
  *
  * The ordinary gameplay camera remains authoritative. Exploration adds a
- * bounded persistent yaw plus a temporary height offset that returns to zero.
+ * continuous persistent yaw plus a temporary height offset that returns to zero.
  */
 export class CameraExploration {
   yaw = 0;
@@ -26,7 +27,6 @@ export class CameraExploration {
   private readonly quickReturnDuration = 0.24;
   private readonly bubbleRestoreLead = 0.11;
 
-  readonly yawLimit = 75 * Math.PI / 180;
   readonly safetyMargin = 11;
 
   get active() {
@@ -63,11 +63,8 @@ export class CameraExploration {
     this.yawVelocity += (measuredYawVelocity - this.yawVelocity) * 0.48;
     this.heightVelocity += (measuredHeightVelocity - this.heightVelocity) * 0.48;
     this.dragged ||= Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1;
-    this.yaw = clamp(this.yaw + yawDelta, -this.yawLimit, this.yawLimit);
+    this.yaw = wrapAngle(this.yaw + yawDelta);
     this.height = clamp(this.height + heightDelta, bounds.min, bounds.max);
-    if (Math.abs(this.yaw) >= this.yawLimit - 1e-5 && Math.sign(this.yawVelocity) === Math.sign(this.yaw)) {
-      this.yawVelocity = 0;
-    }
     if ((this.height <= bounds.min + 1e-5 && this.heightVelocity < 0)
       || (this.height >= bounds.max - 1e-5 && this.heightVelocity > 0)) {
       this.heightVelocity = 0;
@@ -100,11 +97,9 @@ export class CameraExploration {
 
   update(dt: number, bounds: HeightBounds) {
     if (this.phase === "momentum") {
-      const previousYaw = this.yaw;
       const previousHeight = this.height;
-      this.yaw = clamp(this.yaw + this.yawVelocity * dt, -this.yawLimit, this.yawLimit);
+      this.yaw = wrapAngle(this.yaw + this.yawVelocity * dt);
       this.height = clamp(this.height + this.heightVelocity * dt, bounds.min, bounds.max);
-      if (this.yaw === previousYaw) this.yawVelocity = 0;
       if (this.height === previousHeight) this.heightVelocity = 0;
       const decay = Math.exp(-7 * dt);
       this.yawVelocity *= decay;

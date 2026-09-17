@@ -184,7 +184,6 @@ type Animal = {
   quietFor: number;
   counted: boolean;
   fixed: boolean;
-  landingPulse: number;
   hadSupport: boolean;
   supportedFor: number;
   lowering: boolean;
@@ -198,6 +197,7 @@ const animals: Animal[] = [];
 const colliderOwners = new Map<number, Animal>();
 const contactStates = new Map<string, ContactAudioState>();
 let physicsStep = 0;
+let maxAnimalScaleDeviation = 0;
 let held: THREE.Group | null = null;
 let heldModel: THREE.Object3D | null = null;
 let heldRig: Pick<Animal, "eyes" | "head" | "feet"> | null = null;
@@ -377,7 +377,7 @@ function createAnimal(species: SpeciesId, position: THREE.Vector3, rotation: THR
   group.add(model);
   scene.add(group);
   const rig = makeRig(model, species);
-  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, landingPulse: 0, hadSupport: fixed, supportedFor: 0, lowering: false, lastSafeZ: position.z, settlingGripRaised: fixed, stackFrictionRestored: fixed };
+  const animal: Animal = { id: nextAnimalId++, species, halfExtents: template.halfExtents, body, group, model, ...rig, birth: performance.now() / 1000, quietFor: 0, counted: fixed, fixed, hadSupport: fixed, supportedFor: 0, lowering: false, lastSafeZ: position.z, settlingGripRaised: fixed, stackFrictionRestored: fixed };
   animals.push(animal);
   for (let index = 0; index < body.numColliders(); index += 1) {
     colliderOwners.set(body.collider(index).handle, animal);
@@ -779,7 +779,6 @@ function countAnimal(animal: Animal) {
   if (animal.counted || lost) return;
   if (animal.resolutionTimer !== undefined) clearTimeout(animal.resolutionTimer);
   animal.counted = true;
-  animal.landingPulse = 1;
   // Scoring is bookkeeping, not a physics transition. Forcing a marginally
   // supported body asleep here can preserve penetration in Rapier's contact
   // cache; a later solver pass then ejects the whole stack. Leave velocity,
@@ -840,6 +839,14 @@ function updatePhysics(dt: number, time: number) {
     animal.group.position.set(p.x, p.y, p.z);
     animal.group.quaternion.set(r.x, r.y, r.z, r.w);
     animateRig(animal, time + animal.birth, animal.fixed ? 0.18 : 0.28);
+    if (diagnosticsEnabled) {
+      maxAnimalScaleDeviation = Math.max(
+        maxAnimalScaleDeviation,
+        Math.abs(animal.model.scale.x - 1),
+        Math.abs(animal.model.scale.y - 1),
+        Math.abs(animal.model.scale.z - 1),
+      );
+    }
 
     if (animal.counted && !animal.fixed && !animal.stackFrictionRestored && animal.body.isSleeping()) {
       // Restore grippy stacking friction only after Rapier itself has accepted
@@ -924,13 +931,11 @@ function updatePhysics(dt: number, time: number) {
     }
 
     if (!animal.fixed && (p.z < -1.5 || Math.hypot(p.x, p.y) > 4.2)) endGame("out_of_bounds", animal);
-    if (animal.landingPulse > 0) {
-      animal.landingPulse = Math.max(0, animal.landingPulse - dt * 4.5);
-      const squash = Math.sin(animal.landingPulse * Math.PI) * 0.035;
-      animal.model.scale.set(1 + squash, 1 + squash, 1 - squash * 1.4);
-    }
   }
-  if (diagnosticsEnabled) canvas.dataset.maxStackUpwardSpeed = maxStackUpwardSpeed.toFixed(4);
+  if (diagnosticsEnabled) {
+    canvas.dataset.maxStackUpwardSpeed = maxStackUpwardSpeed.toFixed(4);
+    canvas.dataset.maxAnimalScaleDeviation = maxAnimalScaleDeviation.toFixed(6);
+  }
 }
 
 function highestStackPoint() {
@@ -1111,6 +1116,7 @@ function reset() {
   colliderOwners.clear();
   contactStates.clear();
   physicsStep = 0;
+  maxAnimalScaleDeviation = 0;
   physicsEvents.clear();
   ceramicAudio.reset();
   if (held) scene.remove(held);

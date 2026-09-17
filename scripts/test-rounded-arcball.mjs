@@ -9,6 +9,7 @@ const quaternionDistance = (a, b) => Math.min(
   Math.hypot(...a.map((value, index) => value - b[index])),
   Math.hypot(...a.map((value, index) => value + b[index])),
 );
+const angularDistance = (a, b) => Math.abs(Math.atan2(Math.sin(a - b), Math.cos(a - b)));
 const vectorDistance = (a, b) => Math.hypot(...a.map((value, index) => value - b[index]));
 const root = process.env.TEST_URL ?? "http://127.0.0.1:5175/menagerie/";
 
@@ -289,6 +290,30 @@ async function verifyTowerExploration(mobile) {
   assert(afterMoat.phase === "idle", "The bubble safety margin started camera exploration");
   assert(quaternionDistance(beforeMoat.q, afterMoat.q) < 0.001, "The bubble safety margin rotated the animal");
 
+  // Repeated captured drags can pass through the ±π representation seam and
+  // accumulate more than a full turn. Each camera step remains small even
+  // when the stored wrapped angle changes sign.
+  let priorOrbitYaw = (await state()).yaw;
+  let accumulatedOrbit = 0;
+  let crossedYawSeam = false;
+  for (let pass = 0; pass < 5; pass += 1) {
+    current = await geometry();
+    const orbitY = current.y + current.r + 13;
+    await page.mouse.move(15, orbitY);
+    await page.mouse.down();
+    await page.mouse.move((page.viewportSize()?.width ?? 390) - 15, orbitY, { steps: 2 });
+    await page.waitForTimeout(22);
+    const orbitYaw = (await state()).yaw;
+    crossedYawSeam ||= Math.abs(orbitYaw - priorOrbitYaw) > 4;
+    accumulatedOrbit += angularDistance(orbitYaw, priorOrbitYaw);
+    assert(angularDistance(orbitYaw, priorOrbitYaw) < 2.1, "Camera jumped while crossing the wrapped yaw seam");
+    await page.mouse.up();
+    await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "idle");
+    priorOrbitYaw = (await state()).yaw;
+  }
+  assert(crossedYawSeam, "Full orbit never crossed the wrapped yaw seam");
+  assert(accumulatedOrbit > Math.PI * 2, `Horizontal exploration stopped before a full turn: ${accumulatedOrbit}`);
+
   // Below the moat, a diagonal drag orbits and raises the view without
   // touching the animal. Releasing it leaves a short, damped glide.
   current = await geometry();
@@ -299,7 +324,7 @@ async function verifyTowerExploration(mobile) {
   await page.waitForTimeout(30);
   const duringExplore = await state();
   assert(duringExplore.phase === "dragging" && duringExplore.pointerMode === "explore", "Below-bubble drag did not own camera exploration");
-  assert(Math.abs(duringExplore.yaw) > 0.2, `Horizontal exploration did not orbit: ${duringExplore.yaw}`);
+  assert(angularDistance(duringExplore.yaw, beforeExplore.yaw) > 0.2, `Horizontal exploration did not orbit: ${duringExplore.yaw}`);
   assert(duringExplore.height > 0.35, `Dragging downward did not raise the camera: ${duringExplore.height}`);
   assert(quaternionDistance(beforeExplore.q, duringExplore.q) < 0.001, "Camera exploration rotated the held animal");
   assert((await geometry()).opacity < 0.05, "Bubble did not fade out while camera exploration owned input");
@@ -310,7 +335,7 @@ async function verifyTowerExploration(mobile) {
   assert(released.phase === "momentum", `Exploration did not keep gentle momentum: ${released.phase}`);
   await page.waitForTimeout(140);
   const afterMomentum = await state();
-  assert(Math.abs(afterMomentum.yaw - released.yaw) > 0.005 || Math.abs(afterMomentum.height - released.height) > 0.01, "Exploration stopped dead on release");
+  assert(angularDistance(afterMomentum.yaw, released.yaw) > 0.005 || Math.abs(afterMomentum.height - released.height) > 0.01, "Exploration stopped dead on release");
   await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "dwell");
   const dwellStartedAt = Date.now();
   await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "return");
@@ -331,7 +356,7 @@ async function verifyTowerExploration(mobile) {
   await page.waitForTimeout(360);
   const ready = await state();
   assert(ready.phase === "idle" && ready.pointerMode === "rotate", `Held touch was not promoted after recenter: ${JSON.stringify(ready)}`);
-  assert(Math.abs(ready.yaw - beforeRecenter.yaw) < 0.003, "Fast height recenter discarded the chosen orbit");
+  assert(angularDistance(ready.yaw, beforeRecenter.yaw) < 0.003, "Fast height recenter discarded the chosen orbit");
   await page.mouse.move(current.x + 58, current.y + 18);
   await page.waitForTimeout(35);
   assert(quaternionDistance(ready.q, (await state()).q) > 0.02, "Promoted sphere touch did not gain rotation control");
@@ -342,6 +367,7 @@ async function verifyTowerExploration(mobile) {
   // With no interruption, momentum settles, pauses briefly, and returns only
   // the temporary height while preserving the chosen working orbit.
   current = await geometry();
+  const beforeHeightExplore = await state();
   await page.mouse.move(current.x, current.y + current.r + 13);
   await page.mouse.down();
   await page.mouse.move(current.x + 70, current.y + current.r + 78, { steps: 3 });
@@ -355,9 +381,9 @@ async function verifyTowerExploration(mobile) {
   const returned = await state();
   assert(returned.phase === "idle", `Camera did not return automatically: ${returned.phase}`);
   assert(Math.abs(returned.height) < 0.01, `Camera retained its temporary height: ${JSON.stringify(returned)}`);
-  assert(Math.abs(returned.yaw) > 0.1, `Camera discarded the chosen orbit: ${JSON.stringify(returned)}`);
+  assert(angularDistance(returned.yaw, beforeHeightExplore.yaw) > 0.1, `Camera discarded the chosen orbit: ${JSON.stringify(returned)}`);
   await page.waitForTimeout(300);
-  assert(Math.abs((await state()).yaw - returned.yaw) < 0.003, "Chosen orbit drifted after height reset");
+  assert(angularDistance((await state()).yaw, returned.yaw) < 0.003, "Chosen orbit drifted after height reset");
   assert((await geometry()).opacity > 0.9, "Bubble did not restore after camera return");
 
   // Committing the piece clears transient camera motion but keeps the selected
@@ -367,11 +393,12 @@ async function verifyTowerExploration(mobile) {
   await page.mouse.down();
   await page.waitForTimeout(40);
   await page.mouse.up();
-  await page.waitForTimeout(240);
-  assert(Math.abs((await state()).yaw - returned.yaw) < 0.003, "Placement reset the selected working orbit");
+  await page.waitForFunction(() => Number(document.querySelector("#score")?.textContent) >= 1, null, { timeout: 7000 });
+  assert(angularDistance((await state()).yaw, returned.yaw) < 0.003, "Placement reset the selected working orbit");
+  assert(Number(await page.locator("#game").evaluate((canvas) => canvas.dataset.maxAnimalScaleDeviation)) < 0.000001, "Settling visibly rescaled an animal model");
   assert(!errors.length, errors.join(", "));
   await page.close();
-  console.log(`${mobile ? "Phone" : "Desktop"}: safety moat, tower orbit/pan, momentum, short height return, persistent orbit, and soft sphere lock passed`);
+  console.log(`${mobile ? "Phone" : "Desktop"}: safety moat, seamless full orbit, tower pan, momentum, rigid settling, persistent orbit, and soft sphere lock passed`);
 }
 
 for (const mobile of [true, false]) await verifyTowerExploration(mobile);
