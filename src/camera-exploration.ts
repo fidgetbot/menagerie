@@ -19,7 +19,12 @@ export class CameraExploration {
 
   private dwellElapsed = 0;
   private dragged = false;
+  private returnElapsed = 0;
+  private returnStartHeight = 0;
   private readonly heightEpsilon = 0.02;
+  private readonly returnDuration = 0.62;
+  private readonly quickReturnDuration = 0.24;
+  private readonly bubbleRestoreLead = 0.11;
 
   readonly yawLimit = 75 * Math.PI / 180;
   readonly safetyMargin = 11;
@@ -28,9 +33,19 @@ export class CameraExploration {
     return this.phase !== "idle" || this.heightDisplaced();
   }
 
+  get bubbleHidden() {
+    if (this.phase === "idle") return false;
+    if (this.phase === "return" || this.phase === "quick-return") {
+      const duration = this.phase === "quick-return" ? this.quickReturnDuration : this.returnDuration;
+      return this.returnElapsed < duration - this.bubbleRestoreLead;
+    }
+    return true;
+  }
+
   begin() {
     this.phase = "dragging";
     this.dwellElapsed = 0;
+    this.returnElapsed = 0;
     this.dragged = false;
     this.yawVelocity = 0;
     this.heightVelocity = 0;
@@ -79,7 +94,8 @@ export class CameraExploration {
     this.dwellElapsed = 0;
     this.yawVelocity = 0;
     this.heightVelocity = 0;
-    this.phase = this.heightDisplaced() ? "quick-return" : "idle";
+    if (this.heightDisplaced()) this.beginReturn("quick-return");
+    else this.phase = "idle";
   }
 
   update(dt: number, bounds: HeightBounds) {
@@ -96,12 +112,13 @@ export class CameraExploration {
       if (Math.abs(this.yawVelocity) < 0.025 && Math.abs(this.heightVelocity) < 0.04) this.settleAtCurrentYaw();
     } else if (this.phase === "dwell") {
       this.dwellElapsed += dt;
-      if (this.dwellElapsed >= 0.5) this.phase = "return";
+      if (this.dwellElapsed >= 0.5) this.beginReturn("return");
     } else if (this.phase === "return" || this.phase === "quick-return") {
-      const rate = this.phase === "quick-return" ? 18 : 6;
-      const decay = Math.exp(-rate * dt);
-      this.height *= decay;
-      if (!this.heightDisplaced()) this.resetHeight();
+      const duration = this.phase === "quick-return" ? this.quickReturnDuration : this.returnDuration;
+      this.returnElapsed += dt;
+      const progress = clamp(this.returnElapsed / duration, 0, 1);
+      this.height = this.returnStartHeight * ((1 - progress) ** 3);
+      if (progress >= 1) this.resetHeight();
     }
     this.height = clamp(this.height, bounds.min, bounds.max);
   }
@@ -117,6 +134,8 @@ export class CameraExploration {
     this.heightVelocity = 0;
     this.phase = "idle";
     this.dwellElapsed = 0;
+    this.returnElapsed = 0;
+    this.returnStartHeight = 0;
     this.dragged = false;
   }
 
@@ -125,6 +144,12 @@ export class CameraExploration {
     this.heightVelocity = 0;
     this.dwellElapsed = 0;
     this.phase = "dwell";
+  }
+
+  private beginReturn(phase: "return" | "quick-return") {
+    this.returnElapsed = 0;
+    this.returnStartHeight = this.height;
+    this.phase = phase;
   }
 
   private settleAtCurrentYaw() {

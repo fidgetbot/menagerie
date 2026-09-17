@@ -348,10 +348,10 @@ async function verifyTowerExploration(mobile) {
   await page.mouse.up();
   await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "dwell");
   await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "return");
+  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector("#rotation-bubble")).opacity) > 0.05);
+  assert((await state()).phase === "return", "Bubble restore did not overlap final camera settling");
   await page.waitForFunction(() => document.querySelector("#game")?.dataset.cameraExplorePhase === "idle");
-  const cameraReturnedAt = Date.now();
-  await page.waitForFunction(() => Number(getComputedStyle(document.querySelector("#rotation-bubble")).opacity) > 0.9);
-  assert(Date.now() - cameraReturnedAt < 100, "Bubble lagged behind the completed camera return");
+  assert((await geometry()).opacity > 0.9, "Bubble was not already restored when the camera completed its return");
   const returned = await state();
   assert(returned.phase === "idle", `Camera did not return automatically: ${returned.phase}`);
   assert(Math.abs(returned.height) < 0.01, `Camera retained its temporary height: ${JSON.stringify(returned)}`);

@@ -1322,7 +1322,7 @@ function frame(nowMilliseconds: number) {
       updateCamera(dt);
     }
     rotationControl.update(held, camera, held ? heldAnchorPosition : undefined, held ? heldRotationRadius : undefined);
-    rotationControl.bubble.classList.toggle("exploring", cameraExploration.active);
+    rotationControl.bubble.classList.toggle("exploring", cameraExploration.bubbleHidden);
     promoteRecenteredPointer();
     renderer.render(scene, camera);
     recordTrace(dt);
