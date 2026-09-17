@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bankId": "ceramic-material-audition-v2",
-  "status": "exploratory-unreviewed",
+  "status": "muted-stoneware-selected",
   "model": {
     "name": "Stable Audio 3 Small SFX",
     "id": "stabilityai/stable-audio-3-small-sfx",

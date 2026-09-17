@@ -561,22 +561,42 @@ function finishLowering(animal: Animal, time: number) {
 
 function emitContactAudio() {
   physicsStep += 1;
-  const peaks = new Map<string, { first: Animal; second: Animal; force: number }>();
+  const peaks = new Map<string, {
+    first: Animal;
+    second?: Animal;
+    force: number;
+    surface: "animal" | "ground";
+  }>();
   physicsEvents.drainContactForceEvents((event) => {
-    const first = colliderOwners.get(event.collider1());
-    const second = colliderOwners.get(event.collider2());
+    const firstHandle = event.collider1();
+    const secondHandle = event.collider2();
+    const first = colliderOwners.get(firstHandle);
+    const second = colliderOwners.get(secondHandle);
+    const force = event.maxForceMagnitude();
+    const groundAnimal = firstHandle === platformCollider.handle ? second
+      : secondHandle === platformCollider.handle ? first
+        : undefined;
+    if (groundAnimal) {
+      if (groundAnimal.fixed || groundAnimal.lowering) return;
+      const key = `ground:${groundAnimal.id}`;
+      const peak = peaks.get(key);
+      if (!peak || force > peak.force) {
+        peaks.set(key, { first: groundAnimal, force, surface: "ground" });
+      }
+      return;
+    }
     if (!first || !second || first === second || first.lowering || second.lowering || (first.fixed && second.fixed)) return;
     const key = first.id < second.id ? `${first.id}:${second.id}` : `${second.id}:${first.id}`;
-    const force = event.maxForceMagnitude();
     const peak = peaks.get(key);
-    if (!peak || force > peak.force) peaks.set(key, { first, second, force });
+    if (!peak || force > peak.force) peaks.set(key, { first, second, force, surface: "animal" });
   });
 
   let strongest: {
     key: string;
     first: Animal;
-    second: Animal;
+    second?: Animal;
     force: number;
+    surface: "animal" | "ground";
     ratio: number;
     baselineRatio: number;
     spikeRatio: number;
@@ -584,9 +604,10 @@ function emitContactAudio() {
   } | null = null;
   for (const [key, peak] of peaks) {
     const previous = contactStates.get(key);
-    const movingMass = peak.first.fixed ? peak.second.body.mass()
-      : peak.second.fixed ? peak.first.body.mass()
-        : Math.min(peak.first.body.mass(), peak.second.body.mass());
+    const movingMass = peak.surface === "ground" ? peak.first.body.mass()
+      : peak.first.fixed ? peak.second!.body.mass()
+        : peak.second!.fixed ? peak.first.body.mass()
+          : Math.min(peak.first.body.mass(), peak.second!.body.mass());
     const ratio = peak.force / Math.max(0.01, movingMass * 9.81);
     const observation = observeContactAudio(previous, physicsStep, ratio);
     contactStates.set(key, observation.state);
@@ -597,7 +618,15 @@ function emitContactAudio() {
         quietSteps: observation.state.quietSteps,
       });
     }
-    if (!observation.trigger || (strongest && ratio <= strongest.ratio)) continue;
+    if (!observation.trigger) continue;
+    // Prefer a ground impact over an animal-to-animal hit from the same physics
+    // step so a failed placement always reads as a distinct, heavier contact.
+    if (
+      strongest &&
+      (strongest.surface === "ground" || (peak.surface !== "ground" && ratio <= strongest.ratio))
+    ) {
+      continue;
+    }
     strongest = {
       key,
       ...peak,
@@ -609,17 +638,17 @@ function emitContactAudio() {
   }
 
   if (strongest) {
-    const midpoint = new THREE.Vector3()
-      .copy(strongest.first.group.position)
-      .add(strongest.second.group.position)
-      .multiplyScalar(0.5)
-      .project(camera);
-    const kind = strongest.ratio >= 0.9 ? "body" : "settling";
+    const midpoint = new THREE.Vector3().copy(strongest.first.group.position);
+    if (strongest.second) midpoint.add(strongest.second.group.position).multiplyScalar(0.5);
+    midpoint.project(camera);
+    const kind = strongest.surface === "ground" ? "ground"
+      : strongest.ratio >= 0.9 ? "body" : "settling";
     const strength = THREE.MathUtils.clamp((strongest.ratio - 0.12) / 2.4, 0, 1);
     const played = ceramicAudio.play(kind, strength, midpoint.x);
     recorder.event("ceramic_contact", {
       pair: strongest.key,
       kind,
+      surface: strongest.surface,
       force: number(strongest.force),
       weightRatio: number(strongest.ratio),
       baselineRatio: number(strongest.baselineRatio),

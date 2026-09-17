@@ -135,14 +135,14 @@ await page.addInitScript(() => {
 
 await page.goto(`${root}?diagnostics=1&species=capybara&rx=0&ry=0&rz=0`);
 await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
-await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 8);
+await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 4);
 
 // Unlock without placing the animal. The first context emulates WebKit's
 // pending-forever resume failure; pointerup must replace it inside the same
 // physical gesture before the first contact occurs.
 await page.mouse.click(5, 5);
 await page.waitForFunction(() => window.__menagerieWarmupStarts === 2);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 16);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 8);
 const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
 if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
 await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2, undefined, { timeout: 2000 });
@@ -208,7 +208,7 @@ await page.waitForTimeout(450);
 await page.mouse.click(5, 5);
 await page.waitForFunction(() => window.__menagerieAudioContexts.length === 3);
 await page.waitForFunction(() => window.__menagerieWarmupStarts === 4);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 24);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 12);
 
 const lifecycle = await page.evaluate(() => ({
   contexts: window.__menagerieAudioContexts.length,
@@ -217,7 +217,7 @@ const lifecycle = await page.evaluate(() => ({
 }));
 const contact = await page.locator("#game").evaluate((canvas) => canvas.dataset.audioContact);
 if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
-if (audioResponses.length !== 8 || audioResponses.some((status) => status !== 200)) {
+if (audioResponses.length !== 4 || audioResponses.some((status) => status !== 200)) {
   throw new Error(`Runtime bank did not preload cleanly: ${audioResponses.join(",")}`);
 }
 if (lifecycle.contexts !== 3 || lifecycle.closes !== 2) {

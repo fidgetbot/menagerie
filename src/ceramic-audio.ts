@@ -1,27 +1,29 @@
-type ContactKind = "settling" | "body";
+type ContactKind = "settling" | "body" | "ground";
 
-type AudioBank = Record<ContactKind, string[]>;
-type EncodedSound = { kind: ContactKind; data: ArrayBuffer; filename: string };
+type EncodedSound = { data: ArrayBuffer; filename: string };
 type AudioTrace = (event: string, detail?: Record<string, unknown>) => void;
 type RecoverableAudioContext = AudioContext & { readonly state: AudioContextState | "interrupted" };
 type PendingContact = { kind: ContactKind; strength: number; pan: number; queuedAt: number };
-const runtimeBankVersion = "pitch-minus-1st-v1";
+const runtimeBankVersion = "muted-stoneware-v2";
 const clockProbeDelayMs = 300;
 const pendingContactMaxDelayMs = 1000;
 
-const bank: AudioBank = {
-  settling: [
-    "settling_tick__seed-142001.wav",
-    "settling_tick__seed-142002.wav",
-    "settling_tick__seed-142004.wav",
-    "settling_tick__seed-142005.wav",
-  ],
-  body: [
-    "body_contact__seed-142103.wav",
-    "body_contact__seed-142111.wav",
-    "body_contact__seed-142114.wav",
-    "body_contact__seed-142116.wav",
-  ],
+const bank = [
+  "stoneware_contact__seed-216001.wav",
+  "stoneware_contact__seed-216002.wav",
+  "stoneware_contact__seed-216003.wav",
+  "stoneware_contact__seed-216004.wav",
+];
+
+const treatment: Record<ContactKind, {
+  rate: number;
+  rateSpread: number;
+  minimumGain: number;
+  maximumGain: number;
+}> = {
+  settling: { rate: 1.04, rateSpread: 0.05, minimumGain: 0.08, maximumGain: 0.18 },
+  body: { rate: 0.98, rateSpread: 0.07, minimumGain: 0.13, maximumGain: 0.32 },
+  ground: { rate: 0.86, rateSpread: 0.05, minimumGain: 0.20, maximumGain: 0.44 },
 };
 
 const AudioContextConstructor = window.AudioContext
@@ -34,9 +36,9 @@ type NavigatorWithAudioSession = Navigator & {
 export class CeramicAudio {
   private context: RecoverableAudioContext | null = null;
   private master: GainNode | null = null;
-  private buffers: Record<ContactKind, AudioBuffer[]> = { settling: [], body: [] };
+  private buffers: AudioBuffer[] = [];
   private readonly sourceData: Promise<EncodedSound[]>;
-  private sequence: Record<ContactKind, number> = { settling: 0, body: 0 };
+  private sequence: Record<ContactKind, number> = { settling: 0, body: 0, ground: 0 };
   private lastPlayedAt = -Infinity;
   private unlocked = false;
   private backgrounded = false;
@@ -111,7 +113,7 @@ export class CeramicAudio {
   play(kind: ContactKind, strength: number, pan: number) {
     const context = this.context;
     const master = this.master;
-    const choices = this.buffers[kind];
+    const choices = this.buffers;
     if (!context || !master) {
       this.trace("play_blocked", {
         kind,
@@ -137,17 +139,18 @@ export class CeramicAudio {
     pan: number,
     queuedForMs = 0,
   ) {
-    const choices = this.buffers[kind];
+    const choices = this.buffers;
     if (context.currentTime - this.lastPlayedAt < 0.045) return false;
 
     const index = this.sequence[kind]++ % choices.length;
     const source = context.createBufferSource();
     source.buffer = choices[index];
-    source.playbackRate.value = 0.96 + Math.random() * 0.08;
+    const voice = treatment[kind];
+    source.playbackRate.value = voice.rate + (Math.random() - 0.5) * voice.rateSpread;
 
     const gain = context.createGain();
     const shapedStrength = Math.sqrt(Math.min(1, Math.max(0, strength)));
-    gain.gain.value = (kind === "settling" ? 0.10 : 0.16) + shapedStrength * (kind === "settling" ? 0.12 : 0.24);
+    gain.gain.value = voice.minimumGain + shapedStrength * (voice.maximumGain - voice.minimumGain);
 
     source.connect(gain);
     if (typeof context.createStereoPanner === "function") {
@@ -182,7 +185,7 @@ export class CeramicAudio {
     this.context = context;
     this.unlocked = false;
     this.recreateOnNextGesture = false;
-    this.buffers = { settling: [], body: [] };
+    this.buffers = [];
     this.master = context.createGain();
     this.master.gain.value = 0.72;
     this.master.connect(context.destination);
@@ -203,7 +206,7 @@ export class CeramicAudio {
     this.unlocked = false;
     this.resumePendingContext = null;
     this.unlockPulseContext = null;
-    this.buffers = { settling: [], body: [] };
+    this.buffers = [];
     if (previous && previous.state !== "closed") {
       void previous.close().catch((error) => {
         console.warn("Ceramic audio could not close its stale context", error);
@@ -312,7 +315,7 @@ export class CeramicAudio {
       kind,
       reason,
       unlocked: this.unlocked,
-      buffers: this.buffers[kind].length,
+      buffers: this.buffers.length,
     });
   }
 
@@ -320,7 +323,7 @@ export class CeramicAudio {
     const pending = this.pendingContact;
     const context = this.context;
     const master = this.master;
-    if (!pending || !context || !master || context.state !== "running" || this.buffers[pending.kind].length === 0) return;
+    if (!pending || !context || !master || context.state !== "running" || this.buffers.length === 0) return;
     const queuedForMs = performance.now() - pending.queuedAt;
     this.pendingContact = null;
     if (queuedForMs > pendingContactMaxDelayMs) {
@@ -332,31 +335,28 @@ export class CeramicAudio {
 
   private async load(context: RecoverableAudioContext, generation: number) {
     try {
-      const entries = await Promise.all((await this.sourceData).map(async ({ kind, data }) => ({
-        kind,
-        buffer: await context.decodeAudioData(data.slice(0)),
-      })));
+      const entries = await Promise.all((await this.sourceData).map(async ({ data }) => (
+        context.decodeAudioData(data.slice(0))
+      )));
       if (context !== this.context || generation !== this.generation) return;
-      const buffers: Record<ContactKind, AudioBuffer[]> = { settling: [], body: [] };
-      for (const { kind, buffer } of entries) buffers[kind].push(buffer);
-      this.buffers = buffers;
+      this.buffers = entries;
       this.trace("buffers_ready", { generation, count: entries.length });
       this.flushPendingContact();
     } catch (error) {
       if (context !== this.context || generation !== this.generation) return;
       console.warn("Ceramic audio could not be loaded", error);
       this.trace("decode_failed", { generation, error: String(error) });
-      this.buffers = { settling: [], body: [] };
+      this.buffers = [];
     }
   }
 
   private async fetchSources() {
     return Promise.all(
-      (Object.keys(bank) as ContactKind[]).flatMap((kind) => bank[kind].map(async (filename) => {
+      bank.map(async (filename) => {
         const response = await fetch(`${this.baseUrl}${filename}?v=${runtimeBankVersion}`);
         if (!response.ok) throw new Error(`Could not load ${filename}: ${response.status}`);
-        return { kind, data: await response.arrayBuffer(), filename };
-      })),
+        return { data: await response.arrayBuffer(), filename };
+      }),
     );
   }
 }

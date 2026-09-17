@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "bankId": "ceramic-contacts-v1",
-  "status": "material-prototype-v4",
+  "bankId": "stoneware-contacts-v2",
+  "status": "selected-runtime-v2",
   "model": {
     "name": "Stable Audio 3 Small SFX",
     "id": "stabilityai/stable-audio-3-small-sfx",
@@ -11,7 +11,7 @@
     "steps": 8,
     "cfg": 1.0,
     "durationSeconds": 3.0,
-    "negativePrompt": null
+    "negativePrompt": "multiple hits, repeated impacts, percussion rhythm, bells, glass, metal, long reverberation, background noise"
   },
   "processing": {
     "sampleRate": 44100,
@@ -31,23 +31,28 @@
     "targetPeakDb": -4.5
   },
   "licensing": {
+    "modelCard": "https://huggingface.co/stabilityai/stable-audio-3-small-sfx",
     "modelTerms": "https://stability.ai/community-license-agreement",
+    "acceptableUse": "https://stability.ai/use-policy",
     "gemmaTerms": "https://ai.google.dev/gemma/terms",
     "distributionCategory": "Generated WAV outputs only; model weights and runtime are not distributed with Menagerie.",
     "projectLicense": "MIT"
   },
   "events": [
     {
-      "id": "settling_tick",
-      "role": "Tiny bright porcelain contacts for quiet settling",
-      "prompt": "One isolated light touch between two miniature thin-walled glazed porcelain ornaments. Crisp bright ceramic click followed by a clear, gently pitched hollow ring with delicate musical overtones and a natural 500 to 650 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "seeds": [142001, 142002, 142004, 142005]
-    },
-    {
-      "id": "body_contact",
-      "role": "Clear hollow clinks for ordinary animal-to-animal contact",
-      "prompt": "One isolated gentle clink between two miniature hollow glazed porcelain figurines. Crisp ceramic attack followed by a warm, resonant hollow tone with subtle musical overtones and a natural 700 to 900 millisecond decay. Close, dry studio recording with minimal room sound and no washy reverb.",
-      "seeds": [142103, 142111, 142114, 142116]
+      "id": "stoneware_contact",
+      "role": "Soft, low, tactile contacts with very little ring",
+      "prompt": "One isolated soft contact between two small matte stoneware animal figurines. A rounded woody ceramic tick with restrained resonance, warm low-mid body, and a very short natural decay. Close dry studio recording, exactly one impact, no room sound.",
+      "seeds": [216001, 216002, 216003, 216004]
     }
-  ]
+  ],
+  "selection": {
+    "sourceManifest": "audio/sfx-audition-v2.json",
+    "decision": "Muted stoneware family selected after browser audition.",
+    "runtimeTreatments": {
+      "settling": "Slightly brighter and quiet",
+      "body": "Natural pitch and medium gain",
+      "ground": "Lower pitch and stronger gain"
+    }
+  }
 }
