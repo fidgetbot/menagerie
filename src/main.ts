@@ -27,7 +27,7 @@ const audioEnabled = runtimeParams.get("audio") !== "0";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
 const ceramicAudio = new CeramicAudio(
-  `${import.meta.env.BASE_URL}audio/ceramic/`,
+  `${import.meta.env.BASE_URL}audio/`,
   audioEnabled,
   (event, detail = {}) => recorder.event(`audio_${event}`, detail),
 );
@@ -487,7 +487,13 @@ function popHeldBubble() {
   bubblePopping = true;
   spinVelocity.set(0, 0, 0);
   rotationControl.pop();
-  recorder.event("bubble_popped", { species: heldSpecies, rotation: quaternion(held.quaternion) });
+  const soundPlayed = ceramicAudio.playBubble();
+  if (diagnosticsEnabled) canvas.dataset.audioBubblePop = String(soundPlayed);
+  recorder.event("bubble_popped", {
+    species: heldSpecies,
+    rotation: quaternion(held.quaternion),
+    soundPlayed,
+  });
   bubblePopTimer = window.setTimeout(() => {
     bubblePopTimer = undefined;
     if (held && !lost && !engineFault) releaseHeld();

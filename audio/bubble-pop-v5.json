@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "assetId": "bubble-pop-v5",
+  "status": "selected-runtime",
+  "runtimeFile": "public/audio/ui/bubble_pop__seed-277201-v5.wav",
+  "selection": {
+    "decision": "Nicolas approved the softer, gently brightened lip-pop derivative after Telegram audition.",
+    "date": "2026-09-16",
+    "sourceAudition": "lip-bubble-pop-audition-v3",
+    "rejectedDirections": [
+      "72 ms dry tick",
+      "rubbery chewing-gum plop",
+      "sharp pitched zoom"
+    ]
+  },
+  "model": {
+    "name": "Stable Audio 3 Small SFX",
+    "id": "stabilityai/stable-audio-3-small-sfx",
+    "runtime": "stable-audio-3 optimized MLX",
+    "runtimeRevision": "74754b8ce416591d38de59c907c73aace2c2e1ed",
+    "modelWeightsRevision": "da6edc54ddba10bfd79a077102ded687f80e882b",
+    "dit": "sm-sfx",
+    "decoder": "same-s",
+    "steps": 8,
+    "cfg": 2,
+    "durationSeconds": 3,
+    "seed": 277201,
+    "prompt": "One isolated playful bubble-popping sound performed only with relaxed human lips: a soft rounded bilabial bwoop-plop, slightly wet and airy, like imitating a chewing-gum bubble popping. No speech or vocalization. Close dry studio recording, exactly one lip pop, no room sound.",
+    "negativePrompt": "speech, word, voice line, tongue click, finger snap, hard tick, ceramic, glass, gunshot, firecracker, balloon bang, multiple pops, repeated sounds, long reverberation, background noise"
+  },
+  "sourceProcessing": {
+    "silenceTrimmed": true,
+    "sampleRate": 44100,
+    "channels": 1,
+    "codec": "pcm_s16le",
+    "peakDb": -4.5,
+    "durationSeconds": 0.152336,
+    "secondaryOnsetCount": 0,
+    "clippedSampleCount": 0
+  },
+  "finalProcessing": {
+    "bass": "-1.5 dB at 220 Hz, width 0.7",
+    "treble": "+2.0 dB at 3200 Hz, width 0.6",
+    "gainDb": -3,
+    "peakDb": -7.5,
+    "durationSeconds": 0.152336,
+    "crestFactor": 7.120269,
+    "zeroCrossingRate": 0.015332
+  },
+  "licensing": {
+    "modelCard": "https://huggingface.co/stabilityai/stable-audio-3-small-sfx",
+    "modelTerms": "https://stability.ai/community-license-agreement",
+    "acceptableUse": "https://stability.ai/use-policy",
+    "gemmaTerms": "https://ai.google.dev/gemma/terms",
+    "distributionCategory": "Generated WAV output only; model weights and runtime are not distributed with Menagerie.",
+    "projectLicense": "MIT"
+  }
+}

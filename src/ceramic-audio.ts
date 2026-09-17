@@ -1,19 +1,22 @@
 type ContactKind = "settling" | "body" | "ground";
 
-type EncodedSound = { data: ArrayBuffer; filename: string };
+type SoundFamily = "contact" | "bubble";
+type EncodedSound = { family: SoundFamily; data: ArrayBuffer; filename: string };
 type AudioTrace = (event: string, detail?: Record<string, unknown>) => void;
 type RecoverableAudioContext = AudioContext & { readonly state: AudioContextState | "interrupted" };
 type PendingContact = { kind: ContactKind; strength: number; pan: number; queuedAt: number };
-const runtimeBankVersion = "muted-stoneware-v2";
+const runtimeBankVersion = "muted-stoneware-v2-bubble-v5";
 const clockProbeDelayMs = 300;
 const pendingContactMaxDelayMs = 1000;
+const pendingBubbleMaxDelayMs = 800;
 
-const bank = [
-  "stoneware_contact__seed-216001.wav",
-  "stoneware_contact__seed-216002.wav",
-  "stoneware_contact__seed-216003.wav",
-  "stoneware_contact__seed-216004.wav",
+const contactBank = [
+  "ceramic/stoneware_contact__seed-216001.wav",
+  "ceramic/stoneware_contact__seed-216002.wav",
+  "ceramic/stoneware_contact__seed-216003.wav",
+  "ceramic/stoneware_contact__seed-216004.wav",
 ];
+const bubbleSound = "ui/bubble_pop__seed-277201-v5.wav";
 
 const treatment: Record<ContactKind, {
   rate: number;
@@ -36,7 +39,8 @@ type NavigatorWithAudioSession = Navigator & {
 export class CeramicAudio {
   private context: RecoverableAudioContext | null = null;
   private master: GainNode | null = null;
-  private buffers: AudioBuffer[] = [];
+  private contactBuffers: AudioBuffer[] = [];
+  private bubbleBuffer: AudioBuffer | null = null;
   private readonly sourceData: Promise<EncodedSound[]>;
   private sequence: Record<ContactKind, number> = { settling: 0, body: 0, ground: 0 };
   private lastPlayedAt = -Infinity;
@@ -46,6 +50,7 @@ export class CeramicAudio {
   private generation = 0;
   private clockProbeTimer: number | undefined;
   private pendingContact: PendingContact | null = null;
+  private pendingBubbleAt: number | null = null;
   private resumePendingContext: RecoverableAudioContext | null = null;
   private unlockPulseContext: RecoverableAudioContext | null = null;
 
@@ -84,6 +89,7 @@ export class CeramicAudio {
     this.backgrounded = true;
     this.unlocked = false;
     this.pendingContact = null;
+    this.pendingBubbleAt = null;
     this.clearClockProbe();
     const context = this.context;
     if (!context || context.state === "closed" || context.state === "suspended") return;
@@ -113,7 +119,7 @@ export class CeramicAudio {
   play(kind: ContactKind, strength: number, pan: number) {
     const context = this.context;
     const master = this.master;
-    const choices = this.buffers;
+    const choices = this.contactBuffers;
     if (!context || !master) {
       this.trace("play_blocked", {
         kind,
@@ -131,6 +137,30 @@ export class CeramicAudio {
     return this.playReady(context, master, kind, strength, pan);
   }
 
+  playBubble() {
+    const context = this.context;
+    const master = this.master;
+    if (!context || !master) {
+      this.trace("bubble_play_blocked", {
+        context: Boolean(context),
+        unlocked: this.unlocked,
+        state: context?.state ?? "missing",
+        buffer: Boolean(this.bubbleBuffer),
+      });
+      return false;
+    }
+    if (context.state !== "running" || !this.bubbleBuffer) {
+      this.pendingBubbleAt = performance.now();
+      this.trace("bubble_play_queued", {
+        generation: this.generation,
+        state: context.state,
+        buffer: Boolean(this.bubbleBuffer),
+      });
+      return true;
+    }
+    return this.playBubbleReady(context, master);
+  }
+
   private playReady(
     context: RecoverableAudioContext,
     master: GainNode,
@@ -139,7 +169,7 @@ export class CeramicAudio {
     pan: number,
     queuedForMs = 0,
   ) {
-    const choices = this.buffers;
+    const choices = this.contactBuffers;
     if (context.currentTime - this.lastPlayedAt < 0.045) return false;
 
     const index = this.sequence[kind]++ % choices.length;
@@ -174,9 +204,30 @@ export class CeramicAudio {
     return true;
   }
 
+  private playBubbleReady(context: RecoverableAudioContext, master: GainNode, queuedForMs = 0) {
+    const buffer = this.bubbleBuffer;
+    if (!buffer) return false;
+    const source = context.createBufferSource();
+    source.buffer = buffer;
+    source.playbackRate.value = 1;
+    const gain = context.createGain();
+    gain.gain.value = 0.78;
+    source.connect(gain);
+    gain.connect(master);
+    source.start();
+    this.trace("bubble_played", {
+      generation: this.generation,
+      state: context.state,
+      unlockConfirmed: this.unlocked,
+      queuedForMs: Math.round(queuedForMs),
+    });
+    return true;
+  }
+
   reset() {
     this.lastPlayedAt = -Infinity;
     this.pendingContact = null;
+    this.pendingBubbleAt = null;
   }
 
   private createContext(reason: string) {
@@ -185,7 +236,8 @@ export class CeramicAudio {
     this.context = context;
     this.unlocked = false;
     this.recreateOnNextGesture = false;
-    this.buffers = [];
+    this.contactBuffers = [];
+    this.bubbleBuffer = null;
     this.master = context.createGain();
     this.master.gain.value = 0.72;
     this.master.connect(context.destination);
@@ -206,7 +258,8 @@ export class CeramicAudio {
     this.unlocked = false;
     this.resumePendingContext = null;
     this.unlockPulseContext = null;
-    this.buffers = [];
+    this.contactBuffers = [];
+    this.bubbleBuffer = null;
     if (previous && previous.state !== "closed") {
       void previous.close().catch((error) => {
         console.warn("Ceramic audio could not close its stale context", error);
@@ -231,7 +284,7 @@ export class CeramicAudio {
         this.unlocked = true;
         this.trace("unlock_confirmed", { generation, state: context.state });
         this.probeClock(context, "unlock");
-        this.flushPendingContact();
+        this.flushPendingSounds();
       }, { once: true });
       source.start(0);
       this.trace("unlock_pulse_started", { generation, state: context.state });
@@ -260,7 +313,7 @@ export class CeramicAudio {
     if (context.state === "running") {
       if (this.resumePendingContext === context) this.resumePendingContext = null;
       this.probeClock(context, reason);
-      this.flushPendingContact();
+      this.flushPendingSounds();
       return;
     }
     if (this.resumePendingContext === context) {
@@ -274,7 +327,7 @@ export class CeramicAudio {
       if (this.resumePendingContext === context) this.resumePendingContext = null;
       this.trace("context_resumed", { generation, reason, state: context.state });
       this.probeClock(context, reason);
-      this.flushPendingContact();
+      this.flushPendingSounds();
     }).catch((error) => {
       if (context !== this.context) return;
       if (this.resumePendingContext === context) this.resumePendingContext = null;
@@ -315,15 +368,34 @@ export class CeramicAudio {
       kind,
       reason,
       unlocked: this.unlocked,
-      buffers: this.buffers.length,
+      buffers: this.contactBuffers.length,
     });
+  }
+
+  private flushPendingSounds() {
+    this.flushPendingBubble();
+    this.flushPendingContact();
+  }
+
+  private flushPendingBubble() {
+    const queuedAt = this.pendingBubbleAt;
+    const context = this.context;
+    const master = this.master;
+    if (queuedAt === null || !context || !master || context.state !== "running" || !this.bubbleBuffer) return;
+    const queuedForMs = performance.now() - queuedAt;
+    this.pendingBubbleAt = null;
+    if (queuedForMs > pendingBubbleMaxDelayMs) {
+      this.trace("bubble_play_expired", { generation: this.generation, queuedForMs: Math.round(queuedForMs) });
+      return;
+    }
+    this.playBubbleReady(context, master, queuedForMs);
   }
 
   private flushPendingContact() {
     const pending = this.pendingContact;
     const context = this.context;
     const master = this.master;
-    if (!pending || !context || !master || context.state !== "running" || this.buffers.length === 0) return;
+    if (!pending || !context || !master || context.state !== "running" || this.contactBuffers.length === 0) return;
     const queuedForMs = performance.now() - pending.queuedAt;
     this.pendingContact = null;
     if (queuedForMs > pendingContactMaxDelayMs) {
@@ -335,27 +407,38 @@ export class CeramicAudio {
 
   private async load(context: RecoverableAudioContext, generation: number) {
     try {
-      const entries = await Promise.all((await this.sourceData).map(async ({ data }) => (
-        context.decodeAudioData(data.slice(0))
-      )));
+      const entries = await Promise.all((await this.sourceData).map(async ({ family, data }) => ({
+        family,
+        buffer: await context.decodeAudioData(data.slice(0)),
+      })));
       if (context !== this.context || generation !== this.generation) return;
-      this.buffers = entries;
-      this.trace("buffers_ready", { generation, count: entries.length });
-      this.flushPendingContact();
+      this.contactBuffers = entries.filter((entry) => entry.family === "contact").map((entry) => entry.buffer);
+      this.bubbleBuffer = entries.find((entry) => entry.family === "bubble")?.buffer ?? null;
+      this.trace("buffers_ready", {
+        generation,
+        count: entries.length,
+        contacts: this.contactBuffers.length,
+        bubble: Boolean(this.bubbleBuffer),
+      });
+      this.flushPendingSounds();
     } catch (error) {
       if (context !== this.context || generation !== this.generation) return;
       console.warn("Ceramic audio could not be loaded", error);
       this.trace("decode_failed", { generation, error: String(error) });
-      this.buffers = [];
+      this.contactBuffers = [];
+      this.bubbleBuffer = null;
     }
   }
 
   private async fetchSources() {
     return Promise.all(
-      bank.map(async (filename) => {
+      [
+        ...contactBank.map((filename) => ({ family: "contact" as const, filename })),
+        { family: "bubble" as const, filename: bubbleSound },
+      ].map(async ({ family, filename }) => {
         const response = await fetch(`${this.baseUrl}${filename}?v=${runtimeBankVersion}`);
         if (!response.ok) throw new Error(`Could not load ${filename}: ${response.status}`);
-        return { data: await response.arrayBuffer(), filename };
+        return { family, data: await response.arrayBuffer(), filename };
       }),
     );
   }

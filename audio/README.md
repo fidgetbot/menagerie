@@ -4,6 +4,8 @@ This directory defines the reproducible source prompts for Menagerie's physics-d
 
 The approved runtime copies are the exact normalized mono 44.1 kHz PCM16 previews Nicolas reviewed; they are not offline pitch-shifted. Runtime playback gives quiet settling a slightly brighter voice, ordinary animal contact a natural voice, and ground contact a lower, stronger voice without changing source provenance.
 
+The bubble pop is documented separately in `bubble-pop-v5.json`. It uses Stable Audio seed `277201`, selected from a human-lip-pop audition and then gently EQ'd from the preserved approved source: -1.5 dB low body at 220 Hz, +2 dB brightness at 3.2 kHz, and -3 dB uniform gain. The shipped mono PCM16 copy peaks at -7.5 dBFS and is loaded by the same hardened Web Audio lifecycle as contact sounds.
+
 ## Generate the candidate bank
 
 ```sh
@@ -43,4 +45,4 @@ Do not copy future candidates into the runtime bank merely because they pass tec
 
 ## Shipping and licensing
 
-Only selected generated WAV outputs will be distributed. Stable Audio model weights and runtime remain local. Menagerie's original code and project-owned audio assets are MIT-licensed; third-party models and tools retain their own terms. See `licensing` in `sfx-bank.json` for the terms reviewed for this generation.
+Only selected generated WAV outputs will be distributed. Stable Audio model weights and runtime remain local. Menagerie's original code and project-owned audio assets are MIT-licensed; third-party models and tools retain their own terms. See `licensing` in `sfx-bank.json` and `bubble-pop-v5.json` for the terms reviewed for these generations.

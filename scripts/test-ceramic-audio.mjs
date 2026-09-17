@@ -8,10 +8,12 @@ const audioResponses = [];
 
 page.on("pageerror", (error) => errors.push(error.message));
 page.on("response", (response) => {
-  if (response.url().includes("/audio/ceramic/")) audioResponses.push(response.status());
+  if (response.url().includes("/audio/")) audioResponses.push(response.status());
 });
 await page.addInitScript(() => {
   window.__menagerieAudioStarts = 0;
+  window.__menagerieBubbleStarts = 0;
+  window.__menagerieContactStarts = 0;
   window.__menagerieWarmupStarts = 0;
   window.__menagerieAudioResumes = 0;
   window.__menagerieAudioSuspends = 0;
@@ -91,6 +93,8 @@ await page.addInitScript(() => {
           else setTimeout(finish, 0);
         } else {
           window.__menagerieAudioStarts += 1;
+          if (node.buffer?.family === "bubble") window.__menagerieBubbleStarts += 1;
+          else window.__menagerieContactStarts += 1;
         }
       };
       return node;
@@ -101,11 +105,12 @@ await page.addInitScript(() => {
       return node;
     }
     async decodeAudioData() {
+      const assetIndex = window.__menagerieAudioDecodes % 5;
       window.__menagerieAudioDecodes += 1;
       if (window.__menagerieHoldDecodes) {
         await new Promise((resolve) => window.__menageriePendingDecodes.push(resolve));
       }
-      return { decoded: true };
+      return { decoded: true, family: assetIndex === 4 ? "bubble" : "contact" };
     }
     async resume() {
       window.__menagerieAudioResumes += 1;
@@ -135,14 +140,14 @@ await page.addInitScript(() => {
 
 await page.goto(`${root}?diagnostics=1&species=capybara&rx=0&ry=0&rz=0`);
 await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
-await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/ceramic/")).length === 4);
+await page.waitForFunction(() => performance.getEntriesByType("resource").filter((entry) => entry.name.includes("/audio/")).length === 5);
 
 // Unlock without placing the animal. The first context emulates WebKit's
 // pending-forever resume failure; pointerup must replace it inside the same
 // physical gesture before the first contact occurs.
 await page.mouse.click(5, 5);
 await page.waitForFunction(() => window.__menagerieWarmupStarts === 2);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 8);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 10);
 const initialResumeCount = await page.evaluate(() => window.__menagerieAudioResumes);
 if (initialResumeCount < 1) throw new Error("Interrupted AudioContext was not resumed by the first gesture");
 await page.waitForFunction(() => window.__menagerieAudioContexts.length === 2, undefined, { timeout: 2000 });
@@ -172,13 +177,14 @@ try {
 }
 const queuedFirstContact = await page.locator("#game").evaluate((canvas) => ({
   contact: canvas.dataset.audioContact,
+  bubblePop: canvas.dataset.audioBubblePop,
   starts: window.__menagerieAudioStarts,
 }));
-if (!queuedFirstContact.contact?.endsWith(":true") || queuedFirstContact.starts !== 0) {
-  throw new Error(`First contact was not accepted while decode and unlock confirmation were pending: ${JSON.stringify(queuedFirstContact)}`);
+if (queuedFirstContact.bubblePop !== "true" || !queuedFirstContact.contact?.endsWith(":true") || queuedFirstContact.starts !== 0) {
+  throw new Error(`Bubble pop and first contact were not both accepted while decode and unlock confirmation were pending: ${JSON.stringify(queuedFirstContact)}`);
 }
 await page.evaluate(() => window.__menagerieReleaseDecodes());
-await page.waitForFunction(() => window.__menagerieAudioStarts === 1, undefined, { timeout: 5000 });
+await page.waitForFunction(() => window.__menagerieAudioStarts === 2, undefined, { timeout: 5000 });
 await page.evaluate(() => window.__menagerieReleaseWarmups());
 await page.waitForTimeout(2500);
 
@@ -208,27 +214,32 @@ await page.waitForTimeout(450);
 await page.mouse.click(5, 5);
 await page.waitForFunction(() => window.__menagerieAudioContexts.length === 3);
 await page.waitForFunction(() => window.__menagerieWarmupStarts === 4);
-await page.waitForFunction(() => window.__menagerieAudioDecodes === 12);
+await page.waitForFunction(() => window.__menagerieAudioDecodes === 15);
 
 const lifecycle = await page.evaluate(() => ({
   contexts: window.__menagerieAudioContexts.length,
   closes: window.__menagerieAudioCloses,
   starts: window.__menagerieAudioStarts,
+  bubbleStarts: window.__menagerieBubbleStarts,
+  contactStarts: window.__menagerieContactStarts,
 }));
 const contact = await page.locator("#game").evaluate((canvas) => canvas.dataset.audioContact);
 if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
-if (audioResponses.length !== 4 || audioResponses.some((status) => status !== 200)) {
+if (audioResponses.length !== 5 || audioResponses.some((status) => status !== 200)) {
   throw new Error(`Runtime bank did not preload cleanly: ${audioResponses.join(",")}`);
 }
 if (lifecycle.contexts !== 3 || lifecycle.closes !== 2) {
   throw new Error(`Pending and stalled contexts were not each replaced exactly once: ${JSON.stringify(lifecycle)}`);
 }
-if (contact ? lifecycle.starts !== 1 : lifecycle.starts < 1) {
-  throw new Error(contact ? `Resting contact produced ${lifecycle.starts} sounds instead of one` : "Live contact produced no sound");
+if (lifecycle.bubbleStarts !== 1) {
+  throw new Error(`Quick tap produced ${lifecycle.bubbleStarts} bubble sounds instead of one`);
+}
+if (contact ? lifecycle.contactStarts !== 1 : lifecycle.contactStarts < 1) {
+  throw new Error(contact ? `Resting contact produced ${lifecycle.contactStarts} sounds instead of one` : "Live contact produced no sound");
 }
 if (contact && (!contact.startsWith("settling:") || !contact.endsWith(":true"))) {
   throw new Error(`Unexpected contact classification: ${contact}`);
 }
 
 await browser.close();
-console.log("Ceramic audio lifecycle: pending resume replacement, first-contact queue, background recovery and stale-clock replacement verified");
+console.log("Audio lifecycle: bubble-pop/contact queues, pending resume replacement, background recovery and stale-clock replacement verified");
