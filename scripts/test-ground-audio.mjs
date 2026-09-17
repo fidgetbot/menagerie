@@ -88,6 +88,12 @@ if (result.groundEvents.length !== 1 || !result.groundEvents[0].played) {
   throw new Error(`Expected one played ground event: ${JSON.stringify(result.groundEvents)}`);
 }
 if (result.starts < 1) throw new Error("Ground contact started no audio source");
+if (await page.locator("#drop").isHidden()) throw new Error("Replay button did not appear after the failed drop");
+await page.locator("#drop").click();
+await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies);
+if (!(await page.locator("#drop").isHidden()) || await page.locator("#score").textContent() !== "0") {
+  throw new Error("Replay did not begin a fresh zero-score run");
+}
 
 await browser.close();
-console.log("Ground audio: tilted ram produces one played platform-contact event");
+console.log("Ground audio: tilted ram produces one played platform-contact event and replay resets the run");
