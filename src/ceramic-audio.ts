@@ -9,6 +9,7 @@ const runtimeBankVersion = "muted-stoneware-v2-bubble-v5";
 const clockProbeDelayMs = 300;
 const pendingContactMaxDelayMs = 1000;
 const pendingBubbleMaxDelayMs = 800;
+const masterGain = 0.72;
 
 const contactBank = [
   "ceramic/stoneware_contact__seed-216001.wav",
@@ -53,6 +54,7 @@ export class CeramicAudio {
   private pendingBubbleAt: number | null = null;
   private resumePendingContext: RecoverableAudioContext | null = null;
   private unlockPulseContext: RecoverableAudioContext | null = null;
+  private muted = false;
 
   constructor(
     private readonly baseUrl: string,
@@ -82,6 +84,16 @@ export class CeramicAudio {
     this.trace("unlock_attempt", { generation: this.generation, state: context.state, unlocked: this.unlocked });
     this.startUnlockPulse(context);
     this.resumeContext(context, "gesture");
+  }
+
+  setMuted(muted: boolean) {
+    this.muted = muted;
+    if (muted) {
+      this.pendingContact = null;
+      this.pendingBubbleAt = null;
+    }
+    if (this.master) this.master.gain.value = muted ? 0 : masterGain;
+    this.trace("mute_changed", { muted });
   }
 
   suspendForBackground() {
@@ -117,6 +129,10 @@ export class CeramicAudio {
   }
 
   play(kind: ContactKind, strength: number, pan: number) {
+    if (this.muted) {
+      this.trace("play_blocked", { kind, reason: "muted" });
+      return false;
+    }
     const context = this.context;
     const master = this.master;
     const choices = this.contactBuffers;
@@ -138,6 +154,10 @@ export class CeramicAudio {
   }
 
   playBubble() {
+    if (this.muted) {
+      this.trace("bubble_play_blocked", { reason: "muted" });
+      return false;
+    }
     const context = this.context;
     const master = this.master;
     if (!context || !master) {
@@ -239,7 +259,7 @@ export class CeramicAudio {
     this.contactBuffers = [];
     this.bubbleBuffer = null;
     this.master = context.createGain();
-    this.master.gain.value = 0.72;
+    this.master.gain.value = this.muted ? 0 : masterGain;
     this.master.connect(context.destination);
     context.addEventListener("statechange", () => {
       if (context === this.context) this.trace("state_changed", { generation, state: context.state });

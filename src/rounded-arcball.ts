@@ -14,7 +14,7 @@ export class RoundedArcball {
   active = false;
 
   private readonly bubbleEnabled: boolean;
-  private readonly loopsEnabled: boolean;
+  private loopsEnabled: boolean;
   private readonly loopPaths: SVGPathElement[] = [];
   private loopsReady = false;
   private readonly start = new THREE.Vector3();
@@ -99,6 +99,14 @@ export class RoundedArcball {
 
   engageLoops() {
     if (this.active && this.loopsEnabled) this.bubble.classList.add("looping");
+  }
+
+  setLoopsEnabled(enabled: boolean) {
+    this.loopsEnabled = this.bubbleEnabled && enabled;
+    this.loopsReady = false;
+    this.bubble.dataset.loopsEnabled = String(this.loopsEnabled);
+    if (!this.loopsEnabled) this.bubble.classList.remove("looping");
+    return this.loopsEnabled;
   }
 
   move(x: number, y: number, orientation: THREE.Quaternion) {

@@ -14,6 +14,7 @@
     "test:audio": "node scripts/test-ceramic-audio.mjs",
     "test:audio-detector": "node scripts/test-contact-audio-detector.mjs",
     "test:audio-ground": "node scripts/test-ground-audio.mjs",
+    "test:hud": "node scripts/test-hud-controls.mjs",
     "test:expansion": "node scripts/test-expansion.mjs",
     "test:towers": "node scripts/test-towers.mjs",
     "test:rotation": "node scripts/test-rounded-arcball.mjs"

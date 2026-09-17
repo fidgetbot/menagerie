@@ -11,6 +11,8 @@ import expansionColliders from "./expansion-colliders.json";
 
 const canvas = document.querySelector<HTMLCanvasElement>("#game")!;
 const scoreElement = document.querySelector<HTMLOutputElement>("#score")!;
+const soundToggle = document.querySelector<HTMLButtonElement>("#sound-toggle")!;
+const loopsToggle = document.querySelector<HTMLButtonElement>("#loops-toggle")!;
 const dropButton = document.querySelector<HTMLButtonElement>("#drop")!;
 const shareTraceButton = document.querySelector<HTMLButtonElement>("#share-trace")!;
 const runtimeParams = new URLSearchParams(location.search);
@@ -22,15 +24,32 @@ const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticParams = devParams ?? (diagnosticsEnabled ? runtimeParams : null);
 const forgivingPlacementEnabled = diagnosticParams?.get("forgiving") !== "0";
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
-const bubbleLoopsEnabled = runtimeParams.get("loops") === "1";
-const audioEnabled = runtimeParams.get("audio") !== "0";
+const audioAvailable = runtimeParams.get("audio") !== "0";
+const preferenceKeys = { sound: "menagerie-sound-v1", loops: "menagerie-bubble-loops-v1" } as const;
+function readPreference(key: string, fallback: boolean) {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : value === "1";
+  } catch {
+    return fallback;
+  }
+}
+function writePreference(key: string, value: boolean) {
+  try { localStorage.setItem(key, value ? "1" : "0"); } catch { /* Storage can be unavailable in private contexts. */ }
+}
+const loopsParameter = runtimeParams.get("loops");
+let bubbleLoopsEnabled = bubbleEnabled && (loopsParameter === null
+  ? readPreference(preferenceKeys.loops, false)
+  : loopsParameter === "1");
+let soundEnabled = audioAvailable && readPreference(preferenceKeys.sound, true);
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const recorder = new FlightRecorder(runtimeParams.has("trace"));
 const ceramicAudio = new CeramicAudio(
   `${import.meta.env.BASE_URL}audio/`,
-  audioEnabled,
+  audioAvailable,
   (event, detail = {}) => recorder.event(`audio_${event}`, detail),
 );
+ceramicAudio.setMuted(!soundEnabled);
 shareTraceButton.hidden = !recorder.enabled;
 
 await RAPIER.init();
@@ -237,6 +256,31 @@ const crownFollowLimit = 0.65;
 const loweringSpeed = 4.2;
 const tapMaxDuration = 280;
 const tapMaxTravel = 10;
+
+function updateSoundToggle() {
+  soundToggle.disabled = !audioAvailable;
+  soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+  const label = audioAvailable
+    ? `Turn sound ${soundEnabled ? "off" : "on"}`
+    : "Sound unavailable";
+  soundToggle.setAttribute("aria-label", label);
+  soundToggle.title = label;
+  if (diagnosticsEnabled) canvas.dataset.soundEnabled = String(soundEnabled);
+}
+
+function updateLoopsToggle() {
+  loopsToggle.disabled = !bubbleEnabled;
+  loopsToggle.setAttribute("aria-pressed", String(bubbleLoopsEnabled));
+  const label = bubbleEnabled
+    ? `Turn bubble loops ${bubbleLoopsEnabled ? "off" : "on"}`
+    : "Bubble loops unavailable";
+  loopsToggle.setAttribute("aria-label", label);
+  loopsToggle.title = label;
+  if (diagnosticsEnabled) canvas.dataset.bubbleLoopsEnabled = String(bubbleLoopsEnabled);
+}
+
+updateSoundToggle();
+updateLoopsToggle();
 
 function number(value: number) {
   return Math.round(value * 10000) / 10000;
@@ -1312,6 +1356,24 @@ function restartGame() {
   if (engineFault) location.reload();
   else reset();
 }
+
+soundToggle.addEventListener("click", () => {
+  if (!audioAvailable) return;
+  soundEnabled = !soundEnabled;
+  ceramicAudio.setMuted(!soundEnabled);
+  writePreference(preferenceKeys.sound, soundEnabled);
+  updateSoundToggle();
+  recorder.event("sound_toggled", { enabled: soundEnabled });
+  if (soundEnabled) ceramicAudio.unlock();
+});
+
+loopsToggle.addEventListener("click", () => {
+  if (!bubbleEnabled) return;
+  bubbleLoopsEnabled = rotationControl.setLoopsEnabled(!bubbleLoopsEnabled);
+  writePreference(preferenceKeys.loops, bubbleLoopsEnabled);
+  updateLoopsToggle();
+  recorder.event("bubble_loops_toggled", { enabled: bubbleLoopsEnabled });
+});
 
 dropButton.addEventListener("click", () => {
   ceramicAudio.unlock();
