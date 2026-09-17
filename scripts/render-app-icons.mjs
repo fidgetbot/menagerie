@@ -27,7 +27,10 @@ async function waitForServer() {
 async function render(page, variant, filename) {
   await page.goto(`http://127.0.0.1:${port}/menagerie/scripts/icon-preview.html?variant=${variant}`);
   await page.waitForFunction(() => window.__iconReady === true);
-  await page.locator("canvas").screenshot({ path: path.join(output, filename) });
+  await page.locator("canvas").screenshot({
+    path: path.join(output, filename),
+    omitBackground: variant === "standard",
+  });
 }
 
 let browser;

@@ -6,7 +6,7 @@
     <title>Menagerie app icon source</title>
     <style>
       html, body, canvas { width: 100%; height: 100%; margin: 0; display: block; overflow: hidden; }
-      body { background: #dce8dd; }
+      body { background: transparent; }
     </style>
   </head>
   <body>
@@ -18,11 +18,12 @@
       const canvas = document.querySelector("#icon");
       const maskable = new URLSearchParams(location.search).get("variant") === "maskable";
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xdce8dd);
+      scene.background = maskable ? new THREE.Color(0xdce8dd) : null;
 
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: !maskable, preserveDrawingBuffer: true });
       renderer.setPixelRatio(1);
       renderer.setSize(innerWidth, innerHeight, false);
+      if (!maskable) renderer.setClearColor(0x000000, 0);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -45,23 +46,6 @@
       rim.position.set(5, 4, 7);
       scene.add(rim);
 
-      const ground = new THREE.Mesh(
-        new THREE.CircleGeometry(9, 96),
-        new THREE.MeshStandardMaterial({ color: 0xc6dcce, roughness: 1 }),
-      );
-      ground.position.set(0, 2, -0.34);
-      ground.receiveShadow = true;
-      scene.add(ground);
-
-      const platform = new THREE.Mesh(
-        new THREE.CylinderGeometry(1.85, 1.92, 0.32, 96),
-        new THREE.MeshStandardMaterial({ color: 0xf1f0e7, roughness: 0.72 }),
-      );
-      platform.position.z = -0.16;
-      platform.rotation.x = Math.PI / 2;
-      platform.receiveShadow = true;
-      scene.add(platform);
-
       const model = (await new GLTFLoader().loadAsync("../models/tortoise.glb")).scene;
       model.rotation.x = Math.PI / 2;
       model.updateMatrixWorld(true);
@@ -69,8 +53,6 @@
       const center = bounds.getCenter(new THREE.Vector3());
       model.position.sub(center);
       model.updateMatrixWorld(true);
-      const centeredBounds = new THREE.Box3().setFromObject(model);
-      model.position.z -= centeredBounds.min.z;
       model.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.castShadow = true;
@@ -79,16 +61,80 @@
       });
       scene.add(model);
 
-      const halfHeight = maskable ? 2.35 : 2.0;
-      const camera = new THREE.OrthographicCamera(-halfHeight, halfHeight, halfHeight, -halfHeight, 0.1, 60);
+      const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 60);
       camera.up.set(0, 0, 1);
-      const target = new THREE.Vector3(0, -0.02, 0.72);
+      const target = new THREE.Vector3();
       const view = new THREE.Vector3(6.9, -12.3, 6.0).normalize().multiplyScalar(15);
       camera.position.copy(target).add(view);
       camera.lookAt(target);
+      camera.updateMatrixWorld(true);
+
+      const cameraBounds = new THREE.Box3();
+      const visualBounds = new THREE.Box3().setFromObject(model);
+      for (const x of [visualBounds.min.x, visualBounds.max.x]) {
+        for (const y of [visualBounds.min.y, visualBounds.max.y]) {
+          for (const z of [visualBounds.min.z, visualBounds.max.z]) {
+            cameraBounds.expandByPoint(new THREE.Vector3(x, y, z).applyMatrix4(camera.matrixWorldInverse));
+          }
+        }
+      }
+      const projectedCenter = cameraBounds.getCenter(new THREE.Vector3());
+      const projectedSize = cameraBounds.getSize(new THREE.Vector3());
+      const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+      const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+      const centeringOffset = right.multiplyScalar(projectedCenter.x).add(up.multiplyScalar(projectedCenter.y));
+      camera.position.add(centeringOffset);
+      target.add(centeringOffset);
+      camera.lookAt(target);
+
+      const fill = maskable ? 0.70 : 1.08;
+      const halfHeight = Math.max(projectedSize.x, projectedSize.y) * 0.5 / fill;
+      camera.left = -halfHeight;
+      camera.right = halfHeight;
+      camera.top = halfHeight;
+      camera.bottom = -halfHeight;
       camera.updateProjectionMatrix();
 
       renderer.render(scene, camera);
+      if (!maskable) {
+        const gl = renderer.getContext();
+        const pixels = new Uint8Array(innerWidth * innerHeight * 4);
+        gl.readPixels(0, 0, innerWidth, innerHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let minX = innerWidth;
+        let minY = innerHeight;
+        let maxX = -1;
+        let maxY = -1;
+        for (let y = 0; y < innerHeight; y += 1) {
+          for (let x = 0; x < innerWidth; x += 1) {
+            if (pixels[(y * innerWidth + x) * 4 + 3] <= 2) continue;
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+          }
+        }
+        const actualWidth = maxX - minX + 1;
+        const actualHeight = maxY - minY + 1;
+        const pixelScale = (camera.top - camera.bottom) / innerHeight;
+        const screenCenterX = (minX + maxX) * 0.5;
+        const screenCenterY = (minY + maxY) * 0.5;
+        const cameraRight = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+        const cameraUp = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+        const pixelOffset = cameraRight.multiplyScalar((screenCenterX - innerWidth * 0.5) * pixelScale)
+          .add(cameraUp.multiplyScalar((screenCenterY - innerHeight * 0.5) * pixelScale));
+        camera.position.add(pixelOffset);
+        target.add(pixelOffset);
+        camera.lookAt(target);
+
+        const targetExtent = Math.min(innerWidth, innerHeight) * 0.92;
+        const scale = Math.max(actualWidth, actualHeight) / targetExtent;
+        camera.left *= scale;
+        camera.right *= scale;
+        camera.top *= scale;
+        camera.bottom *= scale;
+        camera.updateProjectionMatrix();
+        renderer.render(scene, camera);
+      }
       window.__iconReady = true;
     </script>
   </body>

@@ -1,11 +1,11 @@
-type ContactKind = "settling" | "body" | "ground";
+import { contactGain, type ContactKind } from "./audio-dynamics";
 
 type SoundFamily = "contact" | "bubble";
 type EncodedSound = { family: SoundFamily; data: ArrayBuffer; filename: string };
 type AudioTrace = (event: string, detail?: Record<string, unknown>) => void;
 type RecoverableAudioContext = AudioContext & { readonly state: AudioContextState | "interrupted" };
 type PendingContact = { kind: ContactKind; strength: number; pan: number; queuedAt: number };
-const runtimeBankVersion = "muted-stoneware-v2-bubble-v5";
+const runtimeBankVersion = "muted-stoneware-v3-dynamics-bubble-v5";
 const clockProbeDelayMs = 300;
 const pendingContactMaxDelayMs = 1000;
 const pendingBubbleMaxDelayMs = 800;
@@ -22,12 +22,10 @@ const bubbleSound = "ui/bubble_pop__seed-277201-v5.wav";
 const treatment: Record<ContactKind, {
   rate: number;
   rateSpread: number;
-  minimumGain: number;
-  maximumGain: number;
 }> = {
-  settling: { rate: 1.04, rateSpread: 0.05, minimumGain: 0.08, maximumGain: 0.18 },
-  body: { rate: 0.98, rateSpread: 0.07, minimumGain: 0.13, maximumGain: 0.32 },
-  ground: { rate: 0.86, rateSpread: 0.05, minimumGain: 0.20, maximumGain: 0.44 },
+  settling: { rate: 1.04, rateSpread: 0.05 },
+  body: { rate: 0.98, rateSpread: 0.07 },
+  ground: { rate: 0.86, rateSpread: 0.05 },
 };
 
 const AudioContextConstructor = window.AudioContext
@@ -199,8 +197,8 @@ export class CeramicAudio {
     source.playbackRate.value = voice.rate + (Math.random() - 0.5) * voice.rateSpread;
 
     const gain = context.createGain();
-    const shapedStrength = Math.sqrt(Math.min(1, Math.max(0, strength)));
-    gain.gain.value = voice.minimumGain + shapedStrength * (voice.maximumGain - voice.minimumGain);
+    const voiceGain = contactGain(kind, strength);
+    gain.gain.value = voiceGain;
 
     source.connect(gain);
     if (typeof context.createStereoPanner === "function") {
@@ -220,6 +218,8 @@ export class CeramicAudio {
       state: context.state,
       unlockConfirmed: this.unlocked,
       queuedForMs: Math.round(queuedForMs),
+      strength: Math.round(strength * 1000) / 1000,
+      gain: Math.round(voiceGain * 1000) / 1000,
     });
     return true;
   }

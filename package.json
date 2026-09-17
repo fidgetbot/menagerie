@@ -13,6 +13,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test:audio": "node scripts/test-ceramic-audio.mjs",
+    "test:audio-dynamics": "node scripts/test-audio-dynamics.mjs",
     "test:audio-detector": "node scripts/test-contact-audio-detector.mjs",
     "test:audio-ground": "node scripts/test-ground-audio.mjs",
     "test:hud": "node scripts/test-hud-controls.mjs",

@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import RAPIER from "@dimforge/rapier3d-compat";
 import { CeramicAudio } from "./ceramic-audio";
+import { contactStrengthFromWeightRatio } from "./audio-dynamics";
 import { observeContactAudio, type ContactAudioState } from "./contact-audio-detector";
 import { FlightRecorder } from "./trace";
 import { RoundedArcball } from "./rounded-arcball";
@@ -693,7 +694,7 @@ function emitContactAudio() {
     midpoint.project(camera);
     const kind = strongest.surface === "ground" ? "ground"
       : strongest.ratio >= 0.9 ? "body" : "settling";
-    const strength = THREE.MathUtils.clamp((strongest.ratio - 0.12) / 2.4, 0, 1);
+    const strength = contactStrengthFromWeightRatio(strongest.ratio);
     const played = ceramicAudio.play(kind, strength, midpoint.x);
     recorder.event("ceramic_contact", {
       pair: strongest.key,

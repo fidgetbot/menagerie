@@ -29,6 +29,55 @@ async function imageSize(page, path) {
   }, path);
 }
 
+async function cornerAlpha(page, path) {
+  return page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0);
+    return context.getImageData(0, 0, 1, 1).data[3];
+  }, path);
+}
+
+async function alphaBounds(page, path) {
+  return page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0);
+    const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    let minX = canvas.width;
+    let minY = canvas.height;
+    let maxX = -1;
+    let maxY = -1;
+    for (let y = 0; y < canvas.height; y += 1) {
+      for (let x = 0; x < canvas.width; x += 1) {
+        if (pixels[(y * canvas.width + x) * 4 + 3] <= 2) continue;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+    return {
+      width: maxX - minX + 1,
+      height: maxY - minY + 1,
+      centerX: (minX + maxX) * 0.5,
+      centerY: (minY + maxY) * 0.5,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+    };
+  }, path);
+}
+
 let browser;
 try {
   await waitForServer();
@@ -50,6 +99,7 @@ try {
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.background_color, "#dce8dd");
   assert.deepEqual(await imageSize(page, new URL(appleHref, appUrl).href), [180, 180]);
+  assert.equal(await cornerAlpha(page, new URL(appleHref, appUrl).href), 0);
 
   const expected = new Map([
     ["icons/icon-192.png", [192, 192]],
@@ -60,6 +110,13 @@ try {
     assert.deepEqual(await imageSize(page, new URL(icon.src, response.url).href), expected.get(icon.src));
   }
   assert.equal(manifest.icons.find((icon) => icon.purpose === "maskable")?.src, "icons/icon-maskable-512.png");
+  const standardIconUrl = new URL("icons/icon-512.png", response.url).href;
+  assert.equal(await cornerAlpha(page, standardIconUrl), 0);
+  assert.equal(await cornerAlpha(page, new URL("icons/icon-maskable-512.png", response.url).href), 255);
+  const bounds = await alphaBounds(page, standardIconUrl);
+  assert(bounds.width >= bounds.canvasWidth * 0.90, "The turtle does not fill the standard icon closely enough");
+  assert(Math.abs(bounds.centerX - bounds.canvasWidth * 0.5) <= bounds.canvasWidth * 0.015, "The turtle is not horizontally centered");
+  assert(Math.abs(bounds.centerY - bounds.canvasHeight * 0.5) <= bounds.canvasHeight * 0.015, "The turtle is not vertically centered");
   console.log("PWA manifest and all declared icon dimensions pass.");
 } finally {
   await browser?.close();
