@@ -25,7 +25,6 @@ const devParams = import.meta.env.DEV ? runtimeParams : null;
 const diagnosticParams = devParams ?? (diagnosticsEnabled ? runtimeParams : null);
 const forgivingPlacementEnabled = diagnosticParams?.get("forgiving") !== "0";
 const bubbleEnabled = runtimeParams.get("bubble") !== "0";
-const keepBubbleDuringCamera = runtimeParams.get("bubble") === "always";
 const audioAvailable = runtimeParams.get("audio") !== "0";
 const preferenceKeys = { sound: "menagerie-sound-v1", loops: "menagerie-bubble-loops-v1" } as const;
 function readPreference(key: string, fallback: boolean) {
@@ -1456,7 +1455,7 @@ function frame(nowMilliseconds: number) {
       updateCamera(dt);
     }
     rotationControl.update(held, camera, held ? heldAnchorPosition : undefined, held ? heldRotationRadius : undefined);
-    rotationControl.bubble.classList.toggle("exploring", cameraExploration.bubbleHidden && !keepBubbleDuringCamera);
+    rotationControl.bubble.classList.toggle("exploring", cameraExploration.bubbleHidden);
     promoteRecenteredPointer();
     renderer.render(scene, camera);
     recordTrace(dt);
