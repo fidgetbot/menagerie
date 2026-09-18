@@ -60,7 +60,7 @@ await page.addInitScript(() => {
   Object.defineProperty(window, "AudioContext", { value: FakeAudioContext, configurable: true });
 });
 
-await page.goto(`${root}?trace=1&diagnostics=1&sequence=ram&rx=180`);
+await page.goto(`${root}?trace=1&diagnostics=1&sequence=ram&rx=120`);
 await page.waitForFunction(() => document.querySelector("#game").dataset.heldSpecies === "ram");
 await page.waitForFunction(() => performance.getEntriesByType("resource")
   .filter((entry) => entry.name.includes("/audio/ceramic/")).length === 4);
@@ -83,7 +83,7 @@ const result = await page.evaluate(() => {
 });
 
 if (errors.length) throw new Error(`Browser errors: ${errors.join("; ")}`);
-if (!result.contact.endsWith(":true")) throw new Error(`Ground contact was not played: ${result.contact}`);
+if (!result.contact.endsWith(":true")) throw new Error(`Ground contact was not played: ${JSON.stringify(result)}`);
 if (result.groundEvents.length !== 1 || !result.groundEvents[0].played) {
   throw new Error(`Expected one played ground event: ${JSON.stringify(result.groundEvents)}`);
 }
@@ -96,4 +96,4 @@ if (!(await page.locator("#drop").isHidden()) || await page.locator("#score").te
 }
 
 await browser.close();
-console.log("Ground audio: tilted ram produces one played platform-contact event and replay resets the run");
+console.log("Ground audio: over-rotated ram produces one played platform-contact event and replay resets the run");

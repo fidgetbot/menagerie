@@ -117,6 +117,7 @@ type ModelTemplate = {
   model: THREE.Object3D;
   halfExtents: THREE.Vector3;
   rotationRadius: number;
+  shellHull?: Float32Array;
 };
 
 const speciesIds: SpeciesId[] = ["tortoise", "capybara", "toucan", "armadillo", "ram", "skunk"];
@@ -125,6 +126,21 @@ const loadedModels = await Promise.all(
   speciesIds.map(async (species) => [species, (await loader.loadAsync(`${import.meta.env.BASE_URL}models/${species}.glb`)).scene] as const),
 );
 const modelTemplates = new Map<SpeciesId, ModelTemplate>();
+
+function transformedMeshVertices(root: THREE.Object3D, meshName: string) {
+  const vertices: number[] = [];
+  root.traverse((object) => {
+    if (!(object instanceof THREE.Mesh) || object.name !== meshName) return;
+    const positions = object.geometry.getAttribute("position");
+    const vertex = new THREE.Vector3();
+    for (let index = 0; index < positions.count; index += 1) {
+      vertex.fromBufferAttribute(positions, index).applyMatrix4(object.matrixWorld);
+      vertices.push(vertex.x, vertex.y, vertex.z);
+    }
+  });
+  if (vertices.length < 12) throw new Error(`Missing collision source mesh: ${meshName}`);
+  return new Float32Array(vertices);
+}
 
 for (const [species, model] of loadedModels) {
   // glTF is Y-up; the game and Rapier world deliberately use Blender-style Z-up.
@@ -156,7 +172,10 @@ for (const [species, model] of loadedModels) {
       }
     }
   }
-  modelTemplates.set(species, { model, halfExtents, rotationRadius });
+  const shellHull = species === "tortoise"
+    ? transformedMeshVertices(model, "Golden_shell_foundation")
+    : undefined;
+  modelTemplates.set(species, { model, halfExtents, rotationRadius, shellHull });
 }
 
 const world = new RAPIER.World({ x: 0, y: 0, z: -9.81 });
@@ -341,7 +360,17 @@ function addAnimalColliders(body: RAPIER.RigidBody, species: SpeciesId, fixed: b
   if (species === "tortoise") {
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.26, 0.10).setTranslation(0, 0, -0.05), 0.55), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.72, 0.82, 0.06, 0.04).setTranslation(0, 0, -0.50), 3.2), body);
-    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.76, 0.86, 0.06, 0.02).setTranslation(0, 0, 0.54), 0.18), body);
+    // Follow the visible domed shell instead of suspending pieces on a broad,
+    // flat plate at the crown height. The source mesh is already convex and
+    // shares the model's centered body-local transform.
+    const shellHull = modelTemplates.get(species)?.shellHull;
+    if (!shellHull) throw new Error("Missing tortoise shell collision hull");
+    const shellShape = RAPIER.ColliderDesc.convexHull(shellHull);
+    if (!shellShape) throw new Error("Invalid tortoise shell collision hull");
+    world.createCollider(material(shellShape, 0.025), body);
+    // Preserve a small, nearly invisible crown patch for fair centered
+    // placements. Unlike the old plate, it does not reach the shell shoulders.
+    world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.36, 0.44, 0.015, 0.015).setTranslation(0, 0.05, 0.605), 0.10), body);
     world.createCollider(material(RAPIER.ColliderDesc.roundCuboid(0.31, 0.30, 0.18, 0.05).setTranslation(0, -1.10, -0.12), 0.20), body);
   } else if (species === "capybara") {
     // A long, useful bridge with its center of mass biased into the lower body.
