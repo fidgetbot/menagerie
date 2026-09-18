@@ -403,6 +403,51 @@ async function verifyTowerExploration(mobile) {
 
 for (const mobile of [true, false]) await verifyTowerExploration(mobile);
 
+async function verifyPersistentCameraBubble(mobile) {
+  const page = await browser.newPage({
+    viewport: mobile ? { width: 390, height: 714 } : { width: 1000, height: 800 },
+    isMobile: mobile,
+    hasTouch: mobile,
+    reducedMotion: "reduce",
+  });
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto(`${root}?audio=0&diagnostics=1&species=skunk&rx=0&ry=0&rz=0&bubble=always`);
+  await page.waitForSelector('canvas[data-held-species="skunk"]');
+  await page.waitForTimeout(200);
+
+  const bubble = page.locator("#rotation-bubble");
+  const geometry = () => bubble.evaluate((element) => ({
+    x: Number(element.dataset.centerX),
+    y: Number(element.dataset.centerY),
+    r: Number(element.dataset.radius),
+    opacity: Number(getComputedStyle(element).opacity),
+    exploring: element.classList.contains("exploring"),
+  }));
+  const before = await page.locator("#game").evaluate((canvas) => canvas.dataset.heldQuaternion.split(",").map(Number));
+  const current = await geometry();
+  await page.mouse.move(current.x, current.y + current.r + 13);
+  await page.mouse.down();
+  await page.mouse.move(current.x + 80, current.y + current.r + 90, { steps: 3 });
+  await page.waitForTimeout(40);
+
+  const during = await geometry();
+  const state = await page.locator("#game").evaluate((canvas) => ({
+    phase: canvas.dataset.cameraExplorePhase,
+    pointerMode: canvas.dataset.pointerMode,
+    q: canvas.dataset.heldQuaternion.split(",").map(Number),
+  }));
+  assert(state.phase === "dragging" && state.pointerMode === "explore", "Persistent-bubble URL did not start camera exploration");
+  assert(!during.exploring && during.opacity > 0.9, `Persistent-bubble URL hid the bubble during exploration: ${JSON.stringify(during)}`);
+  assert(quaternionDistance(before, state.q) < 0.001, "Visible exploration bubble allowed the animal to rotate");
+  assert(errors.length === 0, `Persistent-bubble URL raised page errors: ${errors.join("; ")}`);
+  await page.mouse.up();
+  await page.close();
+  console.log(`${mobile ? "Phone" : "Desktop"}: ?bubble=always keeps the locked bubble visible during camera exploration`);
+}
+
+for (const mobile of [true, false]) await verifyPersistentCameraBubble(mobile);
+
 const defaultPage = await browser.newPage({ viewport: { width: 390, height: 714 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
 await defaultPage.goto(`${root}?audio=0&diagnostics=1&species=armadillo&rx=0&ry=0&rz=0`);
 await defaultPage.waitForSelector('canvas[data-held-species="armadillo"]');
